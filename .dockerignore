@@ -4,9 +4,15 @@ dist
 .git
 .sites-runtime
 .wrangler
-backend
 .env
 .env.local
 outputs
 work
 *.zip
+backend/.venv
+backend/.env
+backend/db.sqlite3
+backend/media
+backend/staticfiles
+**/__pycache__
+*.pyc
