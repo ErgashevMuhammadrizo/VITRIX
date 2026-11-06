@@ -7,10 +7,10 @@ import {
   useRef,
   type ReactNode,
 } from "react";
+import { I18nProvider, createTranslator } from "../i18n/runtime";
 import { preferenceApi } from "../services/api";
 import { authApi } from "../services/auth";
 import { workspaceApi, publicApi, emptyWorkspace } from "../services/workspace";
-import { seed } from "../mocks/seed";
 import { dictionaries, type Language, type TranslationKey } from "../i18n";
 import type { Database, User } from "../types";
 import { uid } from "../lib/utils";
@@ -39,14 +39,21 @@ type Context = {
   t: (key: TranslationKey) => string;
 };
 const Store = createContext<Context | null>(null);
-const initial = () => ({ ...emptyWorkspace(), plans: seed.plans });
-export function AppProvider({ children }: { children: ReactNode }) {
+const initial = () => emptyWorkspace();
+export function AppProvider({
+  children,
+  initialLanguage = "uz",
+}: {
+  children?: ReactNode;
+  initialLanguage?: Language;
+}) {
   const [db, setDb] = useState<Database>(initial);
   const dbRef = useRef(db);
   const [user, setUser] = useState<User>();
   const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
-  const [language, setLanguage] = useState<Language>("uz");
+  const [language, setLanguage] = useState<Language>(initialLanguage);
+  const __t = createTranslator(language);
   const [dark, setDark] = useState(false);
   const queue = useRef<Promise<unknown>>(Promise.resolve());
   function apply(next: Database) {
@@ -79,8 +86,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
             if (active)
               setError(
                 e instanceof Error
-                  ? e.message
-                  : "Ma’lumotlarni ochib bo‘lmadi.",
+                  ? __t(e.message)
+                  : __t("Ma\u2019lumotlarni ochib bo\u2018lmadi."),
               );
           }
         }
@@ -110,7 +117,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [dark, language, ready]);
   async function update(
     fn: (d: Database) => void,
-    message = "Saqlandi",
+    message = __t("Saqlandi"),
   ): Promise<boolean> {
     const task = queue.current.then(async () => {
       try {
@@ -122,7 +129,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (message) toast.success(message);
         return true;
       } catch (e) {
-        toast.error(e instanceof Error ? e.message : "Saqlash bajarilmadi.");
+        toast.error(
+          e instanceof Error
+            ? __t(e.message)
+            : __t("Saqlash bajarilmadi."),
+        );
         return false;
       }
     });
@@ -134,52 +145,58 @@ export function AppProvider({ children }: { children: ReactNode }) {
     await reload();
   }
   return (
-    <Store.Provider
-      value={{
-        db,
-        user,
-        ready,
-        error,
-        language,
-        setLanguage,
-        dark,
-        toggleDark: () => setDark(!dark),
-        t: (k) => dictionaries[language][k],
-        update,
-        acceptUser,
-        reload,
-        requestPlan: async (id) => {
-          apply(await workspaceApi.requestPlan(id));
-          toast.success("Ariza yuborildi. Administrator tasdig‘ini kuting.");
-        },
-        reviewPlan: async (id, approve) => {
-          apply(await workspaceApi.reviewPlan(id, approve));
-          toast.success(
-            approve ? "Obuna faollashtirildi." : "Ariza rad etildi.",
-          );
-        },
-        login: async (username, password, remember) => {
-          const { user: account } = await authApi.login(
-            username,
-            password,
-            remember,
-          );
-          await acceptUser(account);
-          return account;
-        },
-        logout: async () => {
-          await authApi.logout();
-          setUser(undefined);
-          apply(initial());
-        },
-        reset: () => {
-          void reload().catch((e) => toast.error(e.message));
-        },
-      }}
-    >
-      {children}
-      <Toaster position="bottom-right" richColors closeButton />
-    </Store.Provider>
+    <I18nProvider language={language}>
+      <Store.Provider
+        value={{
+          db,
+          user,
+          ready,
+          error,
+          language,
+          setLanguage,
+          dark,
+          toggleDark: () => setDark(!dark),
+          t: (k) => dictionaries[language][k],
+          update,
+          acceptUser,
+          reload,
+          requestPlan: async (id) => {
+            apply(await workspaceApi.requestPlan(id));
+            toast.success(
+              __t("Ariza yuborildi. Administrator tasdig‘ini kuting."),
+            );
+          },
+          reviewPlan: async (id, approve) => {
+            apply(await workspaceApi.reviewPlan(id, approve));
+            toast.success(
+              approve
+                ? __t("Obuna faollashtirildi.")
+                : __t("Ariza rad etildi."),
+            );
+          },
+          login: async (username, password, remember) => {
+            const { user: account } = await authApi.login(
+              username,
+              password,
+              remember,
+            );
+            await acceptUser(account);
+            return account;
+          },
+          logout: async () => {
+            await authApi.logout();
+            setUser(undefined);
+            apply(initial());
+          },
+          reset: () => {
+            void reload().catch((e) => toast.error(__t(e.message)));
+          },
+        }}
+      >
+        {children}
+        <Toaster position="bottom-right" richColors closeButton />
+      </Store.Provider>
+    </I18nProvider>
   );
 }
 export const useApp = () => {

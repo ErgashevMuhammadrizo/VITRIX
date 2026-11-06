@@ -1,10 +1,12 @@
 "use client";
+import { useTranslator } from "../../i18n/runtime";
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, ArrowUpRight, ArrowRight } from "lucide-react";
 import { Logo, Preferences } from "../ui/shared";
 import { useApp } from "../../stores/app-store";
 export function Navbar() {
+  const __t = useTranslator();
   const { t } = useApp();
   const [open, setOpen] = useState(false);
   return (
@@ -15,7 +17,7 @@ export function Navbar() {
           <Link onClick={() => setOpen(false)} href="/features">
             {t("features")}
           </Link>
-          <Link onClick={() => setOpen(false)} href="/pricing">
+          <Link onClick={() => setOpen(false)} href="/dashboard/subscription">
             {t("pricing")}
           </Link>
           <Link onClick={() => setOpen(false)} href="/about">
@@ -36,7 +38,7 @@ export function Navbar() {
           </Link>
           <button
             className="icon-btn mobile-menu"
-            aria-label="Menyu"
+            aria-label={__t("Menyu")}
             onClick={() => setOpen(!open)}
           >
             {open ? <X /> : <Menu />}
@@ -47,32 +49,35 @@ export function Navbar() {
   );
 }
 export function Footer() {
+  const __t = useTranslator();
   const { db, t } = useApp();
   return (
     <footer className="footer container">
       <div>
         <Logo />
-        <p>Biznesingizning yangi manzili.</p>
+        <p>{__t("Biznesingizning yangi manzili.")}</p>
+        <small>{__t("VITRIX \u2014 DEALS loyihasi")}</small>
         <small>
-          © {new Date().getFullYear()} {db.platform.name}. Barcha huquqlar
-          himoyalangan.
+          © {new Date().getFullYear()} {db.platform.name}
+          {__t(". Barcha huquqlar himoyalangan.")}
         </small>
       </div>
       <div>
-        <h4>Platforma</h4>
+        <h4>{__t("Platforma")}</h4>
         <Link href="/features">{t("features")}</Link>
-        <Link href="/pricing">{t("pricing")}</Link>
-        <Link href="/demo">Namuna sayt</Link>
+        <Link href="/dashboard/subscription">{t("pricing")}</Link>
+        <Link href="/demo">{__t("Namuna sayt")}</Link>
       </div>
       <div>
-        <h4>Kompaniya</h4>
+        <h4>{__t("Kompaniya")}</h4>
         <Link href="/about">{t("about")}</Link>
         <Link href="/contact">{t("contact")}</Link>
-        <Link href="/terms">Foydalanish shartlari</Link>
-        <Link href="/privacy">Maxfiylik</Link>
+        <Link href="/terms">{__t("Foydalanish shartlari")}</Link>
+        <Link href="/privacy">{__t("Maxfiylik")}</Link>
       </div>
       <div className="footer-note">
-        <span className="live-dot" /> O‘zbekistondagi bizneslar uchun
+        <span className="live-dot" />
+        {__t("O\u2018zbekistondagi bizneslar uchun")}
         <br />
         {db.platform.email && (
           <a href={`mailto:${db.platform.email}`}>
@@ -85,19 +90,20 @@ export function Footer() {
   );
 }
 export function CTA() {
+  const __t = useTranslator();
   return (
     <section className="cta container">
       <div>
-        <span className="eyebrow">KEYINGI QADAM SIZDAN</span>
+        <span className="eyebrow">{__t("KEYINGI QADAM SIZDAN")}</span>
         <h2>
-          Biznesingizga yangi
+          {__t("Biznesingizga yangi")}
           <br />
-          imkoniyatlar eshigini oching.
+          {__t("imkoniyatlar eshigini oching.")}
         </h2>
-        <p>Mahsulotlaringiz. O‘z dizayningiz. Bitta havola.</p>
+        <p>{__t("Mahsulotlaringiz. O\u2018z dizayningiz. Bitta havola.")}</p>
       </div>
       <Link href="/register" className="btn white">
-        Bepul boshlash
+        {__t("Bepul boshlash")}
         <ArrowRight size={18} />
       </Link>
     </section>

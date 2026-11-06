@@ -107,3 +107,19 @@ export const businessFonts: Record<string, string> = {
   rounded: '"Trebuchet MS", sans-serif',
   system: "system-ui, sans-serif",
 };
+
+export const factoryDesign = {
+  ...appearanceDefaults,
+  theme: "modern",
+  primary: "#315bea",
+  secondary: "#f1f4ff",
+  font: "sans",
+  layout: "grid",
+  card: "rounded",
+  header: "center",
+  buttons: "solid",
+} as const;
+export const resetDesign = (business: Business): Business => ({
+  ...business,
+  ...factoryDesign,
+});

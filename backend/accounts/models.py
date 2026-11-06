@@ -56,6 +56,7 @@ class Plan(models.Model):
 
 
 class Business(models.Model):
+    translations = models.JSONField(default=dict, blank=True)
     id = models.CharField(primary_key=True, max_length=64, default=uuid.uuid4)
     owner = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="business"
@@ -253,6 +254,7 @@ class Business(models.Model):
 
 
 class Category(models.Model):
+    translations = models.JSONField(default=dict, blank=True)
     id = models.CharField(primary_key=True, max_length=64, default=uuid.uuid4)
     business = models.ForeignKey(
         Business, on_delete=models.CASCADE, related_name="categories"
@@ -265,6 +267,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    translations = models.JSONField(default=dict, blank=True)
     id = models.CharField(primary_key=True, max_length=64, default=uuid.uuid4)
     business = models.ForeignKey(
         Business, on_delete=models.CASCADE, related_name="products"

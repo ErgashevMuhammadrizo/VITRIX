@@ -1,4 +1,6 @@
 "use client";
+import { useNow } from "../../hooks/use-now";
+import { useTranslator } from "../../i18n/runtime";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
@@ -16,6 +18,7 @@ import { date, money } from "../../lib/utils";
 import type { Business } from "../../types";
 import { toast } from "sonner";
 export function AdminSubscriptions() {
+  const __t = useTranslator();
   const { db, reviewPlan } = useApp();
   const search = useSearchParams();
   const [q, setQ] = useState(search.get("q") || "");
@@ -46,9 +49,11 @@ export function AdminSubscriptions() {
     <>
       <div className="page-title">
         <div>
-          <h1>Obunalarni boshqarish</h1>
+          <h1>{__t("Obunalarni boshqarish")}</h1>
           <p>
-            ID yoki do‘kon orqali toping, to‘lovni tekshiring va obunani yoqing.
+            {__t(
+              "ID yoki do\u2018kon orqali toping, to\u2018lovni tekshiring va obunani yoqing.",
+            )}
           </p>
         </div>
       </div>
@@ -56,7 +61,7 @@ export function AdminSubscriptions() {
         <div className="search-input">
           <Search size={17} />
           <input
-            placeholder="VX-ID, do‘kon, email yoki telefon…"
+            placeholder={__t("VX-ID, do\u2018kon, email yoki telefon\u2026")}
             value={q}
             onChange={(e) => {
               setQ(e.target.value);
@@ -65,28 +70,28 @@ export function AdminSubscriptions() {
           />
         </div>
         <select
-          aria-label="Obuna holati"
+          aria-label={__t("Obuna holati")}
           value={filter}
           onChange={(e) => {
             setFilter(e.target.value);
             setPage(1);
           }}
         >
-          <option value="">Barchasi</option>
-          <option value="pending">Ariza kelgan</option>
-          <option value="active">Faol</option>
-          <option value="expired">Muddati tugagan</option>
+          <option value="">{__t("Barchasi")}</option>
+          <option value="pending">{__t("Ariza kelgan")}</option>
+          <option value="active">{__t("Faol")}</option>
+          <option value="expired">{__t("Muddati tugagan")}</option>
         </select>
       </div>
       <div className="panel table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Akkaunt ID</th>
-              <th>Do‘kon</th>
-              <th>Tarif</th>
-              <th>Muddat</th>
-              <th>Amal</th>
+              <th>{__t("Akkaunt ID")}</th>
+              <th>{__t("Do\u2018kon")}</th>
+              <th>{__t("Tarif")}</th>
+              <th>{__t("Muddat")}</th>
+              <th>{__t("Amal")}</th>
             </tr>
           </thead>
           <tbody>
@@ -99,26 +104,30 @@ export function AdminSubscriptions() {
                   <b>{b.name}</b>
                   <small className="block muted">/{b.slug}</small>
                   {pending(b.id) && (
-                    <span className="badge amber">Telegram arizasi</span>
+                    <span className="badge amber">
+                      {__t("Telegram arizasi")}
+                    </span>
                   )}
                 </td>
                 <td>{db.plans.find((p) => p.id === b.planId)?.name}</td>
                 <td>
-                  {date(b.expires)}
+                  {date(b.expires, __t.language)}
                   <small className="block muted">
-                    {new Date(b.expires) > new Date() ? "Faol" : "Tugagan"}
+                    {new Date(b.expires) > new Date()
+                      ? __t("Faol")
+                      : __t("Tugagan")}
                   </small>
                 </td>
                 <td>
                   <Button variant="small" onClick={() => setSelected(b)}>
-                    Obunani yoqish
+                    {__t("Obunani yoqish")}
                   </Button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        {!items.length && <Empty title="Biznes topilmadi" />}
+        {!items.length && <Empty title={__t("Biznes topilmadi")} />}
       </div>
       <Pagination
         page={current}
@@ -141,30 +150,32 @@ export function AdminSubscriptions() {
                   setSelected(db.businesses.find((b) => b.id === r.businessId))
                 }
               >
-                Ko‘rib chiqish
+                {__t("Ko\u2018rib chiqish")}
               </Button>
               <Button
                 variant="secondary small"
                 onClick={() =>
-                  reviewPlan(r.id, false).catch((e) => toast.error(e.message))
+                  reviewPlan(r.id, false).catch((e) =>
+                    toast.error(__t(e.message)),
+                  )
                 }
               >
-                Rad etish
+                {__t("Rad etish")}
               </Button>
             </div>
           </div>
         ))}
       <details className="panel subscription-history">
-        <summary>Faollashtirish tarixi</summary>
+        <summary>{__t("Faollashtirish tarixi")}</summary>
         {(db.subscriptionActivations || []).length ? (
           <div className="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>Do‘kon</th>
-                  <th>Tarif / muddat</th>
-                  <th>Yangi tugash sanasi</th>
-                  <th>Admin va izoh</th>
+                  <th>{__t("Do\u2018kon")}</th>
+                  <th>{__t("Tarif / muddat")}</th>
+                  <th>{__t("Yangi tugash sanasi")}</th>
+                  <th>{__t("Admin va izoh")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -175,13 +186,14 @@ export function AdminSubscriptions() {
                     </td>
                     <td>
                       {db.plans.find((p) => p.id === a.planId)?.name} ·{" "}
-                      {a.months} oy
+                      {a.months}
+                      {__t("oy")}
                     </td>
-                    <td>{date(a.newExpiry)}</td>
+                    <td>{date(a.newExpiry, __t.language)}</td>
                     <td>
                       {a.actor}
                       <small className="block muted">
-                        {date(a.createdAt)} · {a.note}
+                        {date(a.createdAt, __t.language)} · {a.note}
                       </small>
                     </td>
                   </tr>
@@ -190,7 +202,7 @@ export function AdminSubscriptions() {
             </table>
           </div>
         ) : (
-          <p className="muted">Hali faollashtirishlar yo‘q.</p>
+          <p className="muted">{__t("Hali faollashtirishlar yo\u2018q.")}</p>
         )}
       </details>
       {selected && (
@@ -209,6 +221,7 @@ function Activation({
   business: Business;
   onClose: () => void;
 }) {
+  const __t = useTranslator();
   const { db, reload } = useApp();
   const pending = db.subscriptionRequests?.find(
     (r) => r.businessId === b.id && r.status === "pending",
@@ -225,10 +238,11 @@ function Activation({
   const [busy, setBusy] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const plan = paid.find((p) => p.id === planId);
+  const now = useNow();
   const expiry = new Date(
     (mode === "extend"
-      ? Math.max(Date.now(), new Date(b.expires).getTime())
-      : Date.now()) +
+      ? Math.max(now, new Date(b.expires).getTime())
+      : now) +
       months * 30 * 86400000,
   ).toISOString();
   const changed = () => {
@@ -237,14 +251,17 @@ function Activation({
   };
   return (
     <Modal
-      title="Obunani faollashtirish"
+      title={__t("Obunani faollashtirish")}
       onClose={() => {
         if (!busy) onClose();
       }}
     >
       <h3>{b.name}</h3>
       <AccountId id={b.accountId || b.ownerId} />
-      <p>Hozirgi muddat: {date(b.expires)}</p>
+      <p>
+        {__t("Hozirgi muddat:")}
+        {date(b.expires, __t.language)}
+      </p>
       <form
         onSubmit={async (e) => {
           e.preventDefault();
@@ -259,17 +276,19 @@ function Activation({
               idempotencyKey: key,
             });
             await reload();
-            toast.success("Obuna faollashtirildi.");
+            toast.success(__t("Obuna faollashtirildi."));
             onClose();
           } catch (e) {
-            toast.error(e instanceof Error ? e.message : "Amal bajarilmadi.");
+            toast.error(
+              e instanceof Error ? __t(e.message) : __t("Amal bajarilmadi."),
+            );
           } finally {
             setBusy(false);
           }
         }}
       >
         <fieldset disabled={busy}>
-          <Field label="Tarif">
+          <Field label={__t("Tarif")}>
             <select
               required
               value={planId}
@@ -280,12 +299,13 @@ function Activation({
             >
               {paid.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.name} — {money(p.price)}/oy
+                  {p.name} — {money(p.price, __t.language)}
+                  {__t("/oy")}
                 </option>
               ))}
             </select>
           </Field>
-          <Field label="Muddat">
+          <Field label={__t("Muddat")}>
             <select
               value={months}
               onChange={(e) => {
@@ -295,12 +315,15 @@ function Activation({
             >
               {[1, 3, 6, 12].map((n) => (
                 <option key={n} value={n}>
-                  {n} oy ({n * 30} kun)
+                  {n}
+                  {__t("oy (")}
+                  {n * 30}
+                  {__t("kun)")}
                 </option>
               ))}
             </select>
           </Field>
-          <Field label="Boshlanishi">
+          <Field label={__t("Boshlanishi")}>
             <select
               value={mode}
               onChange={(e) => {
@@ -308,11 +331,13 @@ function Activation({
                 changed();
               }}
             >
-              <option value="extend">Joriy muddatdan uzaytirish</option>
-              <option value="restart">Bugundan boshlash</option>
+              <option value="extend">
+                {__t("Joriy muddatdan uzaytirish")}
+              </option>
+              <option value="restart">{__t("Bugundan boshlash")}</option>
             </select>
           </Field>
-          <Field label="To‘lov yoki admin izohi">
+          <Field label={__t("To\u2018lov yoki admin izohi")}>
             <textarea
               maxLength={300}
               value={note}
@@ -323,9 +348,11 @@ function Activation({
             />
           </Field>
           <div className="callout">
-            To‘lov: <b>{money((plan?.price || 0) * months)}</b>
+            {__t("To\u2018lov:")}
+            <b>{money((plan?.price || 0) * months, __t.language)}</b>
             <br />
-            Yangi muddat: <b>{date(expiry)}</b>
+            {__t("Yangi muddat:")}
+            <b>{date(expiry, __t.language)}</b>
           </div>
           <label className="check">
             <input
@@ -334,10 +361,12 @@ function Activation({
               checked={confirmed}
               onChange={(e) => setConfirmed(e.target.checked)}
             />
-            To‘lovni tekshirdim, do‘kon va muddat to‘g‘ri
+            {__t(
+              "To\u2018lovni tekshirdim, do\u2018kon va muddat to\u2018g\u2018ri",
+            )}
           </label>
           <Button disabled={!confirmed || !plan}>
-            {busy ? "Saqlanmoqda…" : "Obunani faollashtirish"}
+            {busy ? "Saqlanmoqda…" : __t("Obunani faollashtirish")}
           </Button>
         </fieldset>
       </form>

@@ -1,0 +1,2922 @@
+{
+  "Kutilmagan xatolik": {
+    "ru": "Непредвиденная ошибка",
+    "en": "Unexpected error"
+  },
+  "Qayta urinib ko‘ring.": {
+    "ru": "Попробуйте ещё раз.",
+    "en": "Please try again."
+  },
+  "Yangilash": {
+    "ru": "Обновить",
+    "en": "Refresh"
+  },
+  "Sayt vaqtincha ochilmadi": {
+    "ru": "Сайт временно недоступен",
+    "en": "Website temporarily unavailable"
+  },
+  "Qayta urinish": {
+    "ru": "Повторить",
+    "en": "Retry"
+  },
+  "Bosh sahifa": {
+    "ru": "Главная",
+    "en": "Home"
+  },
+  "BU MANZILDA HALI HECH KIM YO‘Q": {
+    "ru": "ПО ЭТОМУ АДРЕСУ ПОКА ПУСТО",
+    "en": "NOTHING AT THIS ADDRESS YET"
+  },
+  "Sayt topilmadi.": {
+    "ru": "Сайт не найден.",
+    "en": "Website not found."
+  },
+  "Havolani tekshiring. Biznes sayti o‘chirilgan": {
+    "ru": "Проверьте ссылку. Сайт мог быть удалён",
+    "en": "Check the link. The website may have been deleted"
+  },
+  "yoki vaqtincha yashirilgan bo‘lishi mumkin.": {
+    "ru": "или временно скрыт.",
+    "en": "or temporarily hidden."
+  },
+  "Bosh sahifaga qaytish": {
+    "ru": "На главную",
+    "en": "Back to home"
+  },
+  "Menyu": {
+    "ru": "Меню",
+    "en": "Menu"
+  },
+  "Biznesingizning yangi manzili.": {
+    "ru": "Новый адрес вашего бизнеса.",
+    "en": "A new home for your business."
+  },
+  "VITRIX — DEALS loyihasi": {
+    "ru": "VITRIX — проект DEALS",
+    "en": "VITRIX — a DEALS project"
+  },
+  ". Barcha huquqlar himoyalangan.": {
+    "ru": ". Все права защищены.",
+    "en": ". All rights reserved."
+  },
+  "Platforma": {
+    "ru": "Платформа",
+    "en": "Platform"
+  },
+  "Namuna sayt": {
+    "ru": "Пример сайта",
+    "en": "Sample website"
+  },
+  "Kompaniya": {
+    "ru": "Компания",
+    "en": "Company"
+  },
+  "Foydalanish shartlari": {
+    "ru": "Условия использования",
+    "en": "Terms of use"
+  },
+  "Maxfiylik": {
+    "ru": "Конфиденциальность",
+    "en": "Privacy"
+  },
+  "O‘zbekistondagi bizneslar uchun": {
+    "ru": "Для бизнеса в Узбекистане",
+    "en": "For businesses in Uzbekistan"
+  },
+  "KEYINGI QADAM SIZDAN": {
+    "ru": "СЛЕДУЮЩИЙ ШАГ ЗА ВАМИ",
+    "en": "TAKE THE NEXT STEP"
+  },
+  "Biznesingizga yangi": {
+    "ru": "Откройте для бизнеса",
+    "en": "Open new opportunities"
+  },
+  "imkoniyatlar eshigini oching.": {
+    "ru": "новые возможности.",
+    "en": "for your business."
+  },
+  "Mahsulotlaringiz. O‘z dizayningiz. Bitta havola.": {
+    "ru": "Ваши товары. Ваш дизайн. Одна ссылка.",
+    "en": "Your products. Your design. One link."
+  },
+  "Bepul boshlash": {
+    "ru": "Начать бесплатно",
+    "en": "Start free"
+  },
+  "Katalogdan qidirish": {
+    "ru": "Поиск в каталоге",
+    "en": "Search catalog"
+  },
+  "batafsil": {
+    "ru": "подробнее",
+    "en": "details"
+  },
+  "Biznes lokatsiyasi": {
+    "ru": "Расположение бизнеса",
+    "en": "Business location"
+  },
+  "Xaritada ochish ↗": {
+    "ru": "Открыть на карте ↗",
+    "en": "Open in maps ↗"
+  },
+  "Akkaunt ID nusxalash": {
+    "ru": "Скопировать ID аккаунта",
+    "en": "Copy account ID"
+  },
+  "Til": {
+    "ru": "Язык",
+    "en": "Language"
+  },
+  "Rang rejimi": {
+    "ru": "Цветовая тема",
+    "en": "Color mode"
+  },
+  "Yopish": {
+    "ru": "Закрыть",
+    "en": "Close"
+  },
+  "Bu amalni tasdiqlang. O‘chirilgan ma’lumot qaytarilmaydi.": {
+    "ru": "Подтвердите действие. Удалённые данные восстановить нельзя.",
+    "en": "Confirm this action. Deleted data cannot be restored."
+  },
+  "Bekor qilish": {
+    "ru": "Отмена",
+    "en": "Cancel"
+  },
+  "Tasdiqlash": {
+    "ru": "Подтвердить",
+    "en": "Confirm"
+  },
+  "Rasm o‘qilmadi": {
+    "ru": "Не удалось прочитать изображение",
+    "en": "Unable to read image"
+  },
+  "Yuklangan rasm": {
+    "ru": "Загруженное изображение",
+    "en": "Uploaded image"
+  },
+  "Rasmni o‘chirish": {
+    "ru": "Удалить изображение",
+    "en": "Remove image"
+  },
+  "Olib tashlang yoki tanlang · JPG, PNG, WebP · 2 MB": {
+    "ru": "Перетащите или выберите · JPG, PNG, WebP · 2 МБ",
+    "en": "Drop or choose · JPG, PNG, WebP · 2 MB"
+  },
+  "Hozircha ma’lumot yo‘q": {
+    "ru": "Пока нет данных",
+    "en": "No data yet"
+  },
+  "Yangi ma’lumot qo‘shing yoki filtrlarni o‘zgartiring.": {
+    "ru": "Добавьте данные или измените фильтры.",
+    "en": "Add data or change your filters."
+  },
+  "Yuklanmoqda": {
+    "ru": "Загрузка",
+    "en": "Loading"
+  },
+  "Yuklanmoqda…": {
+    "ru": "Загрузка…",
+    "en": "Loading…"
+  },
+  "Havolani nusxalash": {
+    "ru": "Скопировать ссылку",
+    "en": "Copy link"
+  },
+  "Nusxalab bo‘lmadi. Havolani qo‘lda belgilang.": {
+    "ru": "Не удалось скопировать. Выделите ссылку вручную.",
+    "en": "Unable to copy. Select the link manually."
+  },
+  "Saytni ochish": {
+    "ru": "Открыть сайт",
+    "en": "Open website"
+  },
+  "ta natija ·": {
+    "ru": "результатов ·",
+    "en": "results ·"
+  },
+  "Oldingi": {
+    "ru": "Назад",
+    "en": "Previous"
+  },
+  "Keyingi": {
+    "ru": "Далее",
+    "en": "Next"
+  },
+  "Saqlanmagan o‘zgarishlar bor. Sahifadan chiqasizmi?": {
+    "ru": "Есть несохранённые изменения. Покинуть страницу?",
+    "en": "You have unsaved changes. Leave this page?"
+  },
+  "Obunalarni boshqarish": {
+    "ru": "Управление подписками",
+    "en": "Manage subscriptions"
+  },
+  "ID yoki do‘kon orqali toping, to‘lovni tekshiring va obunani yoqing.": {
+    "ru": "Найдите по ID или магазину, проверьте оплату и активируйте подписку.",
+    "en": "Find by ID or shop, verify payment and activate the subscription."
+  },
+  "VX-ID, do‘kon, email yoki telefon…": {
+    "ru": "VX-ID, магазин, email или телефон…",
+    "en": "VX-ID, shop, email or phone…"
+  },
+  "Obuna holati": {
+    "ru": "Статус подписки",
+    "en": "Subscription status"
+  },
+  "Barchasi": {
+    "ru": "Все",
+    "en": "All"
+  },
+  "Ariza kelgan": {
+    "ru": "Есть заявка",
+    "en": "Pending request"
+  },
+  "Faol": {
+    "ru": "Активен",
+    "en": "Active"
+  },
+  "Muddati tugagan": {
+    "ru": "Срок истёк",
+    "en": "Expired"
+  },
+  "Akkaunt ID": {
+    "ru": "ID аккаунта",
+    "en": "Account ID"
+  },
+  "Do‘kon": {
+    "ru": "Магазин",
+    "en": "Shop"
+  },
+  "Tarif": {
+    "ru": "Тариф",
+    "en": "Plan"
+  },
+  "Muddat": {
+    "ru": "Срок",
+    "en": "Period"
+  },
+  "Amal": {
+    "ru": "Действие",
+    "en": "Action"
+  },
+  "Telegram arizasi": {
+    "ru": "Заявка из Telegram",
+    "en": "Telegram request"
+  },
+  "Tugagan": {
+    "ru": "Истёк",
+    "en": "Expired"
+  },
+  "Obunani yoqish": {
+    "ru": "Активировать подписку",
+    "en": "Activate subscription"
+  },
+  "Biznes topilmadi": {
+    "ru": "Бизнес не найден",
+    "en": "Business not found"
+  },
+  "Ko‘rib chiqish": {
+    "ru": "Рассмотреть",
+    "en": "Review"
+  },
+  "Rad etish": {
+    "ru": "Отклонить",
+    "en": "Reject"
+  },
+  "Faollashtirish tarixi": {
+    "ru": "История активаций",
+    "en": "Activation history"
+  },
+  "Tarif / muddat": {
+    "ru": "Тариф / срок",
+    "en": "Plan / period"
+  },
+  "Yangi tugash sanasi": {
+    "ru": "Новая дата окончания",
+    "en": "New expiry date"
+  },
+  "Admin va izoh": {
+    "ru": "Администратор и примечание",
+    "en": "Admin and note"
+  },
+  "oy": {
+    "ru": "мес.",
+    "en": "month(s)"
+  },
+  "Hali faollashtirishlar yo‘q.": {
+    "ru": "Активаций пока нет.",
+    "en": "No activations yet."
+  },
+  "Obunani faollashtirish": {
+    "ru": "Активация подписки",
+    "en": "Activate subscription"
+  },
+  "Hozirgi muddat:": {
+    "ru": "Текущий срок:",
+    "en": "Current expiry:"
+  },
+  "Obuna faollashtirildi.": {
+    "ru": "Подписка активирована.",
+    "en": "Subscription activated."
+  },
+  "/oy": {
+    "ru": "/мес.",
+    "en": "/month"
+  },
+  "oy (": {
+    "ru": "мес. (",
+    "en": "month(s) ("
+  },
+  "kun)": {
+    "ru": "дней)",
+    "en": "days)"
+  },
+  "Joriy muddatdan uzaytirish": {
+    "ru": "Продлить текущий срок",
+    "en": "Extend current period"
+  },
+  "Bugundan boshlash": {
+    "ru": "Начать с сегодняшнего дня",
+    "en": "Start today"
+  },
+  "To‘lov yoki admin izohi": {
+    "ru": "Оплата или примечание администратора",
+    "en": "Payment or admin note"
+  },
+  "To‘lov:": {
+    "ru": "Оплата:",
+    "en": "Payment:"
+  },
+  "Yangi muddat:": {
+    "ru": "Новый срок:",
+    "en": "New expiry:"
+  },
+  "To‘lovni tekshirdim, do‘kon va muddat to‘g‘ri": {
+    "ru": "Оплата проверена, магазин и срок верны",
+    "en": "I verified the payment, shop and period"
+  },
+  "Tarif sozlamalari": {
+    "ru": "Настройки тарифов",
+    "en": "Plan settings"
+  },
+  "Sahifa topilmadi": {
+    "ru": "Страница не найдена",
+    "en": "Page not found"
+  },
+  "PLATFORMA NAZORAT MARKAZI": {
+    "ru": "ЦЕНТР УПРАВЛЕНИЯ ПЛАТФОРМОЙ",
+    "en": "PLATFORM CONTROL CENTER"
+  },
+  "Platforma holati": {
+    "ru": "Состояние платформы",
+    "en": "Platform overview"
+  },
+  "Bizneslar, foydalanuvchilar va obunalar bir joyda.": {
+    "ru": "Бизнесы, пользователи и подписки в одном месте.",
+    "en": "Businesses, users and subscriptions in one place."
+  },
+  "SUPERADMIN": {
+    "ru": "СУПЕРАДМИНИСТРАТОР",
+    "en": "SUPERADMIN"
+  },
+  "Jami saytlar": {
+    "ru": "Всего сайтов",
+    "en": "Total websites"
+  },
+  "Faol saytlar": {
+    "ru": "Активные сайты",
+    "en": "Active websites"
+  },
+  "Faol obunalar": {
+    "ru": "Активные подписки",
+    "en": "Active subscriptions"
+  },
+  "Tugagan obunalar": {
+    "ru": "Истёкшие подписки",
+    "en": "Expired subscriptions"
+  },
+  "Jami tashriflar": {
+    "ru": "Всего посещений",
+    "en": "Total visits"
+  },
+  "So‘nggi ro‘yxatdan o‘tganlar": {
+    "ru": "Недавние регистрации",
+    "en": "Recent registrations"
+  },
+  "Foydalanuvchi": {
+    "ru": "Пользователь",
+    "en": "User"
+  },
+  "Email": {
+    "ru": "Эл. почта",
+    "en": "Email"
+  },
+  "Rol": {
+    "ru": "Роль",
+    "en": "Role"
+  },
+  "Ro‘yxatdan o‘tgan": {
+    "ru": "Дата регистрации",
+    "en": "Registered"
+  },
+  "Holat": {
+    "ru": "Статус",
+    "en": "Status"
+  },
+  "Foydalanuvchilar": {
+    "ru": "Пользователи",
+    "en": "Users"
+  },
+  "Akkauntlar va ularga tegishli bizneslar.": {
+    "ru": "Аккаунты и принадлежащие им бизнесы.",
+    "en": "Accounts and their businesses."
+  },
+  "Ism, email yoki username…": {
+    "ru": "Имя, email или логин…",
+    "en": "Name, email or username…"
+  },
+  "Foydalanuvchi holati": {
+    "ru": "Статус пользователя",
+    "en": "User status"
+  },
+  "Barcha holatlar": {
+    "ru": "Все статусы",
+    "en": "All statuses"
+  },
+  "Faolsiz": {
+    "ru": "Неактивен",
+    "en": "Inactive"
+  },
+  "Amallar": {
+    "ru": "Действия",
+    "en": "Actions"
+  },
+  "So‘rov bajarilmadi.": {
+    "ru": "Не удалось выполнить запрос.",
+    "en": "Request failed."
+  },
+  "O‘chirish": {
+    "ru": "Удалить",
+    "en": "Delete"
+  },
+  "Foydalanuvchi tafsilotlari": {
+    "ru": "Данные пользователя",
+    "en": "User details"
+  },
+  "Bizneslar": {
+    "ru": "Бизнесы",
+    "en": "Businesses"
+  },
+  "Yaratilgan:": {
+    "ru": "Создан:",
+    "en": "Created:"
+  },
+  "Foydalanuvchi va uning barcha biznes ma’lumotlari o‘chirilsinmi?": {
+    "ru": "Удалить пользователя и все данные его бизнеса?",
+    "en": "Delete this user and all their business data?"
+  },
+  "Foydalanuvchi o‘chirildi.": {
+    "ru": "Пользователь удалён.",
+    "en": "User deleted."
+  },
+  "O‘chirish bajarilmadi.": {
+    "ru": "Не удалось удалить.",
+    "en": "Delete failed."
+  },
+  "Mustaqil biznes saytlari va ularning holati.": {
+    "ru": "Сайты бизнесов и их статусы.",
+    "en": "Business websites and their status."
+  },
+  "Biznes qidirish…": {
+    "ru": "Поиск бизнеса…",
+    "en": "Search businesses…"
+  },
+  "Sayt holati": {
+    "ru": "Статус сайта",
+    "en": "Website status"
+  },
+  "Biznes": {
+    "ru": "Бизнес",
+    "en": "Business"
+  },
+  "Egasi": {
+    "ru": "Владелец",
+    "en": "Owner"
+  },
+  "Mahsulotlar": {
+    "ru": "Товары",
+    "en": "Products"
+  },
+  "Yaratilgan": {
+    "ru": "Создан",
+    "en": "Created"
+  },
+  "To‘xtatish": {
+    "ru": "Приостановить",
+    "en": "Pause"
+  },
+  "Saytni ko‘rish": {
+    "ru": "Посмотреть сайт",
+    "en": "View website"
+  },
+  "Obunani boshqarish": {
+    "ru": "Управление подпиской",
+    "en": "Manage subscription"
+  },
+  "Obuna:": {
+    "ru": "Подписка:",
+    "en": "Subscription:"
+  },
+  "Public sayt": {
+    "ru": "Публичный сайт",
+    "en": "Public website"
+  },
+  "Obunalar va tariflar": {
+    "ru": "Подписки и тарифы",
+    "en": "Subscriptions and plans"
+  },
+  "Tarif imkoniyatlari va bizneslarning obuna muddatlari.": {
+    "ru": "Возможности тарифов и сроки подписок бизнесов.",
+    "en": "Plan features and business subscription periods."
+  },
+  "Tarif yaratish": {
+    "ru": "Создать тариф",
+    "en": "Create plan"
+  },
+  "kun ·": {
+    "ru": "дней ·",
+    "en": "days ·"
+  },
+  "mahsulot": {
+    "ru": "товаров",
+    "en": "products"
+  },
+  "Tahrirlash": {
+    "ru": "Редактировать",
+    "en": "Edit"
+  },
+  "Tarifni o‘chirish": {
+    "ru": "Удалить тариф",
+    "en": "Delete plan"
+  },
+  "Tarif o‘chirilsinmi?": {
+    "ru": "Удалить тариф?",
+    "en": "Delete this plan?"
+  },
+  "Yangi tarif": {
+    "ru": "Новый тариф",
+    "en": "New plan"
+  },
+  "Tarif nomi": {
+    "ru": "Название тарифа",
+    "en": "Plan name"
+  },
+  "Narx (so‘m)": {
+    "ru": "Цена (сум)",
+    "en": "Price (UZS)"
+  },
+  "Davomiyligi (kun)": {
+    "ru": "Длительность (дни)",
+    "en": "Duration (days)"
+  },
+  "Mahsulot limiti": {
+    "ru": "Лимит товаров",
+    "en": "Product limit"
+  },
+  "Cheksiz mahsulotlar": {
+    "ru": "Неограниченное число товаров",
+    "en": "Unlimited products"
+  },
+  "Analitika (kun)": {
+    "ru": "Аналитика (дни)",
+    "en": "Analytics (days)"
+  },
+  "7 kun": {
+    "ru": "7 дней",
+    "en": "7 days"
+  },
+  "90 kun": {
+    "ru": "90 дней",
+    "en": "90 days"
+  },
+  "CSV eksporti": {
+    "ru": "Экспорт CSV",
+    "en": "CSV export"
+  },
+  "Saqlash": {
+    "ru": "Сохранить",
+    "en": "Save"
+  },
+  "Platforma sozlamalari": {
+    "ru": "Настройки платформы",
+    "en": "Platform settings"
+  },
+  "Brend va umumiy aloqa ma’lumotlari.": {
+    "ru": "Бренд и общие контактные данные.",
+    "en": "Brand and platform contact details."
+  },
+  "Platforma nomi": {
+    "ru": "Название платформы",
+    "en": "Platform name"
+  },
+  "Logo": {
+    "ru": "Логотип",
+    "en": "Logo"
+  },
+  "Telefon": {
+    "ru": "Телефон",
+    "en": "Phone"
+  },
+  "Obunalar uchun Telegram": {
+    "ru": "Telegram для подписок",
+    "en": "Subscription Telegram"
+  },
+  "Tugma shu akkaunt bilan suhbatni ochadi. Xabarda akkaunt ID, do‘kon, sayt va tarif avtomatik yoziladi.": {
+    "ru": "Кнопка открывает чат с этим аккаунтом. ID, магазин, сайт и тариф добавляются в текст автоматически.",
+    "en": "The button opens this account's chat. Account ID, shop, website and plan are added to the draft."
+  },
+  "Tavsif": {
+    "ru": "Описание",
+    "en": "Description"
+  },
+  "Tarif narxlarini boshqarish": {
+    "ru": "Управление ценами тарифов",
+    "en": "Manage plan prices"
+  },
+  "SIZNING BIZNESINGIZ. SIZNING SAYTINGIZ.": {
+    "ru": "ВАШ БИЗНЕС. ВАШ САЙТ.",
+    "en": "YOUR BUSINESS. YOUR WEBSITE."
+  },
+  "Katta g‘oyalar": {
+    "ru": "Большие идеи",
+    "en": "Great ideas"
+  },
+  "oddiy qadamdan": {
+    "ru": "начинаются",
+    "en": "start with"
+  },
+  "boshlanadi.": {
+    "ru": "с простого шага.",
+    "en": "a simple step."
+  },
+  "Mahsulotlaringizni ko‘rsating.": {
+    "ru": "Покажите свои товары.",
+    "en": "Showcase your products."
+  },
+  "Mijozlaringizga yaqinroq bo‘ling.": {
+    "ru": "Будьте ближе к клиентам.",
+    "en": "Get closer to your customers."
+  },
+  "Email orqali tasdiqlash": {
+    "ru": "Подтверждение по email",
+    "en": "Email verification"
+  },
+  "Hisobingiz faqat shaxsiy emailingizga yuborilgan kod bilan ochiladi.": {
+    "ru": "Аккаунт создаётся только после ввода кода из вашей почты.",
+    "en": "Your account is created only after verifying the code sent to your email."
+  },
+  "© 2026 VITRIX": {
+    "ru": "© 2026 VITRIX · проект DEALS",
+    "en": "© 2026 VITRIX · a DEALS project"
+  },
+  "VITRIX GA XUSH KELIBSIZ": {
+    "ru": "ДОБРО ПОЖАЛОВАТЬ В VITRIX",
+    "en": "WELCOME TO VITRIX"
+  },
+  "Birinchi 1 oy bepul. 1 000 tagacha mahsulot.": {
+    "ru": "Первый месяц бесплатно. До 1 000 товаров.",
+    "en": "First month free. Up to 1,000 products."
+  },
+  "Biznesingizni boshqarishni davom ettiring.": {
+    "ru": "Продолжайте управлять своим бизнесом.",
+    "en": "Continue managing your business."
+  },
+  "Parol": {
+    "ru": "Пароль",
+    "en": "Password"
+  },
+  "Parolni ko‘rsatish": {
+    "ru": "Показать пароль",
+    "en": "Show password"
+  },
+  "Meni eslab qolish": {
+    "ru": "Запомнить меня",
+    "en": "Remember me"
+  },
+  "Parolni unutdingizmi?": {
+    "ru": "Забыли пароль?",
+    "en": "Forgot password?"
+  },
+  "Kirish": {
+    "ru": "Войти",
+    "en": "Log in"
+  },
+  "Hisobingiz yo‘qmi?": {
+    "ru": "Нет аккаунта?",
+    "en": "Don't have an account?"
+  },
+  "Ro‘yxatdan o‘ting": {
+    "ru": "Зарегистрироваться",
+    "en": "Sign up"
+  },
+  "manziliga yuborilgan 6 xonali kodni kiriting. Kod 10 daqiqa amal qiladi.": {
+    "ru": "введите шестизначный код, отправленный на этот адрес. Код действует 10 минут.",
+    "en": "enter the six-digit code sent to this address. The code is valid for 10 minutes."
+  },
+  "Tasdiqlash va hisob yaratish": {
+    "ru": "Подтвердить и создать аккаунт",
+    "en": "Verify and create account"
+  },
+  "Emailni o‘zgartirish": {
+    "ru": "Изменить email",
+    "en": "Change email"
+  },
+  "Ism": {
+    "ru": "Имя",
+    "en": "First name"
+  },
+  "Familiya": {
+    "ru": "Фамилия",
+    "en": "Last name"
+  },
+  "ga roziman": {
+    "ru": "принимаю",
+    "en": "I agree to"
+  },
+  "Hisobingiz bormi?": {
+    "ru": "Уже есть аккаунт?",
+    "en": "Already have an account?"
+  },
+  "Parol yangilandi.": {
+    "ru": "Пароль обновлён.",
+    "en": "Password updated."
+  },
+  "Hisobingizga kirish": {
+    "ru": "Войти в аккаунт",
+    "en": "Log in to your account"
+  },
+  "Yangi parol": {
+    "ru": "Новый пароль",
+    "en": "New password"
+  },
+  "Parol kiriting": {
+    "ru": "Введите пароль",
+    "en": "Enter a password"
+  },
+  "Email noto‘g‘ri": {
+    "ru": "Некорректный email",
+    "en": "Invalid email"
+  },
+  "Telefon raqami noto‘g‘ri": {
+    "ru": "Некорректный номер телефона",
+    "en": "Invalid phone number"
+  },
+  "3–30 ta lotin harfi, raqam yoki _": {
+    "ru": "3–30 латинских букв, цифр или _",
+    "en": "3–30 Latin letters, digits or _"
+  },
+  "Shartlarga rozilik kerak": {
+    "ru": "Необходимо принять условия",
+    "en": "You must agree to the terms"
+  },
+  "Saytingiz, o‘z uslubingiz": {
+    "ru": "Ваш сайт, ваш стиль",
+    "en": "Your website, your style"
+  },
+  "Rang, joylashuv va bo‘limlarni o‘zingizga moslang.": {
+    "ru": "Настройте цвета, расположение и разделы под себя.",
+    "en": "Customize colors, layout and sections."
+  },
+  "Oq": {
+    "ru": "Светлая",
+    "en": "Light"
+  },
+  "Qora": {
+    "ru": "Тёмная",
+    "en": "Dark"
+  },
+  "Oq-qora": {
+    "ru": "Чёрно-белая",
+    "en": "Black and white"
+  },
+  "Ranglarni alohida sozlash": {
+    "ru": "Настроить цвета отдельно",
+    "en": "Customize individual colors"
+  },
+  "Banner foni": {
+    "ru": "Фон баннера",
+    "en": "Banner background"
+  },
+  "Banner sarlavhasi": {
+    "ru": "Заголовок баннера",
+    "en": "Banner heading"
+  },
+  "Banner": {
+    "ru": "Баннер",
+    "en": "Banner"
+  },
+  "Keng rasm": {
+    "ru": "Широкое изображение",
+    "en": "Full image"
+  },
+  "Faqat matn": {
+    "ru": "Только текст",
+    "en": "Text only"
+  },
+  "Sayt kengligi": {
+    "ru": "Ширина сайта",
+    "en": "Website width"
+  },
+  "To‘liq ekran": {
+    "ru": "Во весь экран",
+    "en": "Full width"
+  },
+  "Keng": {
+    "ru": "Широкий",
+    "en": "Wide"
+  },
+  "Ixcham": {
+    "ru": "Компактный",
+    "en": "Compact"
+  },
+  "To‘g‘ri": {
+    "ru": "Прямые",
+    "en": "Square"
+  },
+  "Yumshoq": {
+    "ru": "Слегка скруглённые",
+    "en": "Soft"
+  },
+  "Yumaloq": {
+    "ru": "Скруглённые",
+    "en": "Round"
+  },
+  "Telefon: ustunlar": {
+    "ru": "Столбцы на телефоне",
+    "en": "Mobile columns"
+  },
+  "Ko‘rinadigan bo‘limlar": {
+    "ru": "Видимые разделы",
+    "en": "Visible sections"
+  },
+  "Qidirish": {
+    "ru": "Поиск",
+    "en": "Search"
+  },
+  "Kategoriyalar": {
+    "ru": "Категории",
+    "en": "Categories"
+  },
+  "Manzil va xarita": {
+    "ru": "Адрес и карта",
+    "en": "Address and map"
+  },
+  "Yorug‘": {
+    "ru": "Светлый",
+    "en": "Light"
+  },
+  "Tungi": {
+    "ru": "Ночной",
+    "en": "Night"
+  },
+  "Oq va qora": {
+    "ru": "Чёрный и белый",
+    "en": "Black and white"
+  },
+  "Zumrad": {
+    "ru": "Изумруд",
+    "en": "Emerald"
+  },
+  "Qum va oltin": {
+    "ru": "Песок и золото",
+    "en": "Sand and gold"
+  },
+  "Binafsha": {
+    "ru": "Фиолетовый",
+    "en": "Violet"
+  },
+  "VITRIX namuna sayti": {
+    "ru": "Пример сайта VITRIX",
+    "en": "VITRIX sample website"
+  },
+  "Dizaynni sinab ko‘rish": {
+    "ru": "Попробовать дизайн",
+    "en": "Try the design"
+  },
+  "O‘z saytingizni yaratish ↗": {
+    "ru": "Создать свой сайт ↗",
+    "en": "Create your website ↗"
+  },
+  "Bu namuna. O‘zgarishlar saqlanmaydi.": {
+    "ru": "Это пример. Изменения не сохраняются.",
+    "en": "This is a sample. Changes are not saved."
+  },
+  "Aloqa ma’lumotlari": {
+    "ru": "Контактные данные",
+    "en": "Contact details"
+  },
+  "Sayt sozlamalari": {
+    "ru": "Настройки сайта",
+    "en": "Website settings"
+  },
+  "Saytingizdagi ma’lumotlar shu yerdan yangilanadi.": {
+    "ru": "Здесь обновляются данные вашего сайта.",
+    "en": "Update your website details here."
+  },
+  "Saqlanmagan o‘zgarishlar": {
+    "ru": "Несохранённые изменения",
+    "en": "Unsaved changes"
+  },
+  "Barcha o‘zgarishlar saqlangan": {
+    "ru": "Все изменения сохранены",
+    "en": "All changes saved"
+  },
+  "Slug band yoki noto‘g‘ri. Lotin harflari, raqam va tire ishlating.": {
+    "ru": "Адрес занят или неверен. Используйте латинские буквы, цифры и дефис.",
+    "en": "The URL is taken or invalid. Use Latin letters, digits and hyphens."
+  },
+  "Telegram username noto‘g‘ri": {
+    "ru": "Некорректный логин Telegram",
+    "en": "Invalid Telegram username"
+  },
+  "Ikkala koordinatani ham to‘g‘ri kiriting.": {
+    "ru": "Введите обе координаты правильно.",
+    "en": "Enter both coordinates correctly."
+  },
+  "Sayt ma’lumotlari yangilandi": {
+    "ru": "Данные сайта обновлены",
+    "en": "Website details updated"
+  },
+  "Mijozlar sizga qanday bog‘lanadi?": {
+    "ru": "Как клиенты могут связаться с вами?",
+    "en": "How can customers contact you?"
+  },
+  "Biznes haqida": {
+    "ru": "О бизнесе",
+    "en": "About the business"
+  },
+  "Biznes nomi *": {
+    "ru": "Название бизнеса *",
+    "en": "Business name *"
+  },
+  "Sayt manzili (slug) *": {
+    "ru": "Адрес сайта (slug) *",
+    "en": "Website URL (slug) *"
+  },
+  "Biznes tavsifi": {
+    "ru": "Описание бизнеса",
+    "en": "Business description"
+  },
+  "Telefon *": {
+    "ru": "Телефон *",
+    "en": "Phone *"
+  },
+  "Manzil": {
+    "ru": "Адрес",
+    "en": "Address"
+  },
+  "Sayt tili": {
+    "ru": "Язык сайта по умолчанию",
+    "en": "Default website language"
+  },
+  "Brend rasmlari": {
+    "ru": "Изображения бренда",
+    "en": "Brand images"
+  },
+  "Biznes logosi": {
+    "ru": "Логотип бизнеса",
+    "en": "Business logo"
+  },
+  "Banner rasmi": {
+    "ru": "Изображение баннера",
+    "en": "Banner image"
+  },
+  "Mustaqil sayt havolasi": {
+    "ru": "Ссылка на ваш сайт",
+    "en": "Your website link"
+  },
+  "Mijozlar bu havolani ochganda to‘g‘ridan-to‘g‘ri katalogingizga kiradi.": {
+    "ru": "По этой ссылке клиенты сразу попадут в ваш каталог.",
+    "en": "This link takes customers directly to your catalog."
+  },
+  "Saytni e’lon qilish": {
+    "ru": "Опубликовать сайт",
+    "en": "Publish website"
+  },
+  "O‘zgarishlaringizni saqlang.": {
+    "ru": "Сохраните изменения.",
+    "en": "Save your changes."
+  },
+  "Ma’lumotlar yangilangan.": {
+    "ru": "Данные обновлены.",
+    "en": "Details are up to date."
+  },
+  "O‘zgarishlarni saqlash": {
+    "ru": "Сохранить изменения",
+    "en": "Save changes"
+  },
+  "Dizayn va brending": {
+    "ru": "Дизайн и бренд",
+    "en": "Design and branding"
+  },
+  "O‘z uslubingizni yarating. Natijani darhol ko‘ring.": {
+    "ru": "Создайте свой стиль. Сразу оцените результат.",
+    "en": "Create your style. Preview changes instantly."
+  },
+  "Dizayn saqlandi": {
+    "ru": "Дизайн сохранён",
+    "en": "Design saved"
+  },
+  "Ortga": {
+    "ru": "Отменить",
+    "en": "Undo"
+  },
+  "Oldinga": {
+    "ru": "Повторить",
+    "en": "Redo"
+  },
+  "Saqlangan holatga qaytish": {
+    "ru": "Вернуть сохранённый вариант",
+    "en": "Revert to saved version"
+  },
+  "Dizayn boshlang‘ich holatga qaytarilsinmi? Mahsulot va aloqa ma’lumotlari saqlanadi.": {
+    "ru": "Вернуть исходный дизайн? Товары и контактные данные сохранятся.",
+    "en": "Reset to the original design? Products and contact details will be kept."
+  },
+  "Boshlang‘ich dizayn": {
+    "ru": "Исходный дизайн",
+    "en": "Default design"
+  },
+  "O‘zgarishlar Saqlash bosilganda saytda qo‘llanadi.": {
+    "ru": "Изменения появятся на сайте после нажатия «Сохранить».",
+    "en": "Changes go live after you press Save."
+  },
+  "Tayyor uslublar": {
+    "ru": "Готовые стили",
+    "en": "Preset styles"
+  },
+  "Shrift": {
+    "ru": "Шрифт",
+    "en": "Font"
+  },
+  "Ro‘yxat": {
+    "ru": "Список",
+    "en": "List"
+  },
+  "To‘ldirilgan": {
+    "ru": "Заливка",
+    "en": "Solid"
+  },
+  "Jonli ko‘rinish": {
+    "ru": "Предпросмотр",
+    "en": "Live preview"
+  },
+  "Desktop preview": {
+    "ru": "Предпросмотр на компьютере",
+    "en": "Desktop preview"
+  },
+  "Mobile preview": {
+    "ru": "Предпросмотр на телефоне",
+    "en": "Mobile preview"
+  },
+  "Mahsulotlaringizni tartiblang. Mijozingiz keraklisini tezroq topsin.": {
+    "ru": "Упорядочьте товары, чтобы клиент быстрее нашёл нужное.",
+    "en": "Organize products so customers find what they need faster."
+  },
+  "Kategoriya qo‘shish": {
+    "ru": "Добавить категорию",
+    "en": "Add category"
+  },
+  "Kategoriya qidirish…": {
+    "ru": "Поиск категории…",
+    "en": "Search categories…"
+  },
+  "ta kategoriya": {
+    "ru": "категорий",
+    "en": "categories"
+  },
+  "ta mahsulot · Tartib:": {
+    "ru": "товаров · Порядок:",
+    "en": "products · Order:"
+  },
+  "Kategoriya o‘chirildi": {
+    "ru": "Категория удалена",
+    "en": "Category deleted"
+  },
+  "Saqlanmagan o‘zgarishlar bor. Chiqasizmi?": {
+    "ru": "Есть несохранённые изменения. Выйти?",
+    "en": "You have unsaved changes. Leave?"
+  },
+  "Yangi kategoriya": {
+    "ru": "Новая категория",
+    "en": "New category"
+  },
+  "Kategoriya nomini kiriting": {
+    "ru": "Введите название категории",
+    "en": "Enter a category name"
+  },
+  "Kategoriya nomi *": {
+    "ru": "Название категории *",
+    "en": "Category name *"
+  },
+  "Faol kategoriya": {
+    "ru": "Активная категория",
+    "en": "Active category"
+  },
+  "Umumiy ko‘rinish": {
+    "ru": "Обзор",
+    "en": "Overview"
+  },
+  "Ma’lumotlarni ochib bo‘lmadi": {
+    "ru": "Не удалось загрузить данные",
+    "en": "Unable to load data"
+  },
+  "Qayta yuklash": {
+    "ru": "Перезагрузить",
+    "en": "Reload"
+  },
+  "Kabinetga kirish": {
+    "ru": "Войти в кабинет",
+    "en": "Open dashboard"
+  },
+  "Davom etish uchun hisobingizga kiring.": {
+    "ru": "Войдите в аккаунт, чтобы продолжить.",
+    "en": "Log in to continue."
+  },
+  "Ruxsat yo‘q": {
+    "ru": "Нет доступа",
+    "en": "Access denied"
+  },
+  "O‘z kabinetingizga o‘ting": {
+    "ru": "Перейдите в свой кабинет",
+    "en": "Go to your dashboard"
+  },
+  "Platforma boshqaruvi": {
+    "ru": "Управление платформой",
+    "en": "Platform management"
+  },
+  "BIZNES KABINETI": {
+    "ru": "КАБИНЕТ БИЗНЕСА",
+    "en": "BUSINESS DASHBOARD"
+  },
+  "PLATFORMA": {
+    "ru": "ПЛАТФОРМА",
+    "en": "PLATFORM"
+  },
+  "PRO IMKONIYATLAR": {
+    "ru": "ВОЗМОЖНОСТИ PRO",
+    "en": "PRO FEATURES"
+  },
+  "Biznesingiz bilan birga o‘sing.": {
+    "ru": "Растите вместе с бизнесом.",
+    "en": "Grow with your business."
+  },
+  "Ko‘proq mahsulot, ko‘proq imkoniyat.": {
+    "ru": "Больше товаров, больше возможностей.",
+    "en": "More products, more possibilities."
+  },
+  "Tariflarni ko‘rish": {
+    "ru": "Посмотреть тарифы",
+    "en": "View plans"
+  },
+  "Hisobdan chiqib bo‘lmadi.": {
+    "ru": "Не удалось выйти из аккаунта.",
+    "en": "Unable to sign out."
+  },
+  "Mening saytim": {
+    "ru": "Мой сайт",
+    "en": "My website"
+  },
+  "Mijozlaringiz saytingizni shunday ko‘radi.": {
+    "ru": "Так клиенты видят ваш сайт.",
+    "en": "This is how customers see your website."
+  },
+  "Joriy ma’lumotlar": {
+    "ru": "Текущие данные",
+    "en": "Current data"
+  },
+  "Tashriflar dinamikasi": {
+    "ru": "Динамика посещений",
+    "en": "Visit trends"
+  },
+  "Oxirgi": {
+    "ru": "Последние",
+    "en": "Last"
+  },
+  "kun": {
+    "ru": "дней",
+    "en": "days"
+  },
+  "SAYT STATISTIKASI": {
+    "ru": "СТАТИСТИКА САЙТА",
+    "en": "WEBSITE STATISTICS"
+  },
+  "BIZNESINGIZ NAZORAT OSTIDA": {
+    "ru": "ВАШ БИЗНЕС ПОД КОНТРОЛЕМ",
+    "en": "YOUR BUSINESS AT A GLANCE"
+  },
+  "Salom,": {
+    "ru": "Здравствуйте,",
+    "en": "Hello,"
+  },
+  "Bugun biznesingiz uchun yana bir yaxshi kun.": {
+    "ru": "Ещё один хороший день для вашего бизнеса.",
+    "en": "Another great day for your business."
+  },
+  "Mahsulot qo‘shish": {
+    "ru": "Добавить товар",
+    "en": "Add product"
+  },
+  "Saytingiz": {
+    "ru": "Ваш сайт",
+    "en": "Your website"
+  },
+  "Havolangizni ulashing. Yangi mijozlarga yaqinroq bo‘ling.": {
+    "ru": "Делитесь ссылкой и находите новых клиентов.",
+    "en": "Share your link and reach new customers."
+  },
+  "Jami sayt tashriflari": {
+    "ru": "Всего посещений сайта",
+    "en": "Total website visits"
+  },
+  "Bugungi sayt tashriflari": {
+    "ru": "Посещения сегодня",
+    "en": "Today's website visits"
+  },
+  "tasi e’lon qilingan": {
+    "ru": "опубликовано",
+    "en": "published"
+  },
+  "Katalog bo‘limlari": {
+    "ru": "Разделы каталога",
+    "en": "Catalog sections"
+  },
+  "Mijozlar bilan aloqa": {
+    "ru": "Контакты с клиентами",
+    "en": "Customer contacts"
+  },
+  "Aloqa tugmalariga bosilishlar": {
+    "ru": "Нажатия на кнопки связи",
+    "en": "Contact button clicks"
+  },
+  "Qo‘ng‘iroq tugmasi": {
+    "ru": "Кнопка звонка",
+    "en": "Call button"
+  },
+  "Xabar tugmasi": {
+    "ru": "Кнопка сообщения",
+    "en": "Message button"
+  },
+  "To‘g‘ridan-to‘g‘ri mijozingizga yaqin.": {
+    "ru": "Прямой контакт с клиентом.",
+    "en": "Direct contact with your customers."
+  },
+  "So‘nggi faoliyat": {
+    "ru": "Последние действия",
+    "en": "Recent activity"
+  },
+  "SIZNING TARIFINGIZ": {
+    "ru": "ВАШ ТАРИФ",
+    "en": "YOUR PLAN"
+  },
+  "Tarif topilmadi": {
+    "ru": "Тариф не найден",
+    "en": "Plan not found"
+  },
+  "Amal qilish muddati:": {
+    "ru": "Действует до:",
+    "en": "Valid until:"
+  },
+  "Tarifni boshqarish": {
+    "ru": "Управление тарифом",
+    "en": "Manage plan"
+  },
+  "Saytingizdan bir parcha": {
+    "ru": "Фрагмент вашего сайта",
+    "en": "A glimpse of your website"
+  },
+  "To‘liq ko‘rish": {
+    "ru": "Посмотреть полностью",
+    "en": "View full website"
+  },
+  "Analitika": {
+    "ru": "Аналитика",
+    "en": "Analytics"
+  },
+  "kun · saytingizda qayd etilgan hodisalar.": {
+    "ru": "дней · события, зарегистрированные на сайте.",
+    "en": "days · events recorded on your website."
+  },
+  "Statistika davri": {
+    "ru": "Период статистики",
+    "en": "Analytics period"
+  },
+  "CSV yuklash": {
+    "ru": "Скачать CSV",
+    "en": "Download CSV"
+  },
+  "VIP: 90 kun va CSV": {
+    "ru": "VIP: 90 дней и CSV",
+    "en": "VIP: 90 days and CSV"
+  },
+  "Profil": {
+    "ru": "Профиль",
+    "en": "Profile"
+  },
+  "Shaxsiy ma’lumotlaringizni yangilang.": {
+    "ru": "Обновите личные данные.",
+    "en": "Update your personal details."
+  },
+  "Profil saqlandi.": {
+    "ru": "Профиль сохранён.",
+    "en": "Profile saved."
+  },
+  "Saqlab bo‘lmadi.": {
+    "ru": "Не удалось сохранить.",
+    "en": "Unable to save."
+  },
+  "Parolni email kodi orqali yangilash": {
+    "ru": "Изменить пароль с помощью кода из письма",
+    "en": "Reset password with an email code"
+  },
+  "Lokatsiya": {
+    "ru": "Местоположение",
+    "en": "Location"
+  },
+  "Manzilni yozing va xaritadan belgilang. Pin joyini surish mumkin.": {
+    "ru": "Введите адрес и отметьте его на карте. Маркер можно перетаскивать.",
+    "en": "Enter the address and select it on the map. You can drag the pin."
+  },
+  "Lokatsiyani tanlash xaritasi": {
+    "ru": "Карта выбора местоположения",
+    "en": "Location picker map"
+  },
+  "Brauzer lokatsiyani qo‘llamaydi.": {
+    "ru": "Браузер не поддерживает геолокацию.",
+    "en": "Your browser does not support geolocation."
+  },
+  "Tozalash": {
+    "ru": "Очистить",
+    "en": "Clear"
+  },
+  "Xaritada tekshirish ↗": {
+    "ru": "Проверить на карте ↗",
+    "en": "Check on map ↗"
+  },
+  "O‘z saytingiz. O‘z manzilingiz.": {
+    "ru": "Ваш сайт. Ваш адрес.",
+    "en": "Your website. Your address."
+  },
+  "Har bir biznes uchun mustaqil sahifa. Faqat sizning brendingiz va mahsulotlaringiz.": {
+    "ru": "Отдельная страница для каждого бизнеса. Только ваш бренд и товары.",
+    "en": "A dedicated page for every business. Your brand and your products."
+  },
+  "Dizayn — didingizga mos": {
+    "ru": "Дизайн на ваш вкус",
+    "en": "Design to match your style"
+  },
+  "Uchta tayyor uslub, brend ranglari va rasmlaringiz bilan saytingizga o‘ziga xoslik bering.": {
+    "ru": "Три готовых стиля, цвета бренда и ваши изображения сделают сайт уникальным.",
+    "en": "Make your website unique with three styles, brand colors and your images."
+  },
+  "Telefon, planshet yoki kompyuter — mijozlaringizga hamisha qulay.": {
+    "ru": "Телефон, планшет или компьютер — клиентам всегда удобно.",
+    "en": "Comfortable browsing on phones, tablets and computers."
+  },
+  "Mahsulotlar, narxlar va kategoriyalarni bir joydan yangilang.": {
+    "ru": "Обновляйте товары, цены и категории в одном месте.",
+    "en": "Update products, prices and categories in one place."
+  },
+  "Mijoz bilan bevosita aloqa": {
+    "ru": "Прямая связь с клиентом",
+    "en": "Connect directly with customers"
+  },
+  "Mijozlar sizga telefon yoki Telegram orqali to‘g‘ridan-to‘g‘ri murojaat qiladi.": {
+    "ru": "Клиенты связываются с вами напрямую по телефону или в Telegram.",
+    "en": "Customers contact you directly by phone or Telegram."
+  },
+  "Saytga tashriflar va aloqa tugmalariga bosilishlarni kuzating.": {
+    "ru": "Следите за посещениями сайта и нажатиями на кнопки связи.",
+    "en": "Track website visits and contact button clicks."
+  },
+  "Tariflarni kabinetda ko‘ring": {
+    "ru": "Тарифы доступны в кабинете",
+    "en": "View plans in your dashboard"
+  },
+  "Ro‘yxatdan o‘ting yoki hisobingizga kiring.": {
+    "ru": "Зарегистрируйтесь или войдите в аккаунт.",
+    "en": "Sign up or log in to your account."
+  },
+  "Ro‘yxatdan o‘tish": {
+    "ru": "Регистрация",
+    "en": "Sign up"
+  },
+  "TAVSIYA ETAMIZ": {
+    "ru": "РЕКОМЕНДУЕМ",
+    "en": "RECOMMENDED"
+  },
+  "Birinchi qadamingiz uchun": {
+    "ru": "Для первого шага",
+    "en": "For your first step"
+  },
+  "O‘sayotgan biznesingiz uchun": {
+    "ru": "Для растущего бизнеса",
+    "en": "For your growing business"
+  },
+  "Hisobot va tahlilni qadrlaydiganlar uchun": {
+    "ru": "Для тех, кто ценит отчёты и аналитику",
+    "en": "For those who value reports and analytics"
+  },
+  "Bepul": {
+    "ru": "Бесплатно",
+    "en": "Free"
+  },
+  "/ oy": {
+    "ru": "/ мес.",
+    "en": "/ month"
+  },
+  "/ birinchi 1 oy": {
+    "ru": "/ первый месяц",
+    "en": "/ first month"
+  },
+  "1 oy bepul boshlash": {
+    "ru": "Начать с бесплатного месяца",
+    "en": "Start with a free month"
+  },
+  "Haqiqiy ta’m.": {
+    "ru": "Настоящий вкус.",
+    "en": "Real flavor."
+  },
+  "Har bir luqmada.": {
+    "ru": "В каждом кусочке.",
+    "en": "In every bite."
+  },
+  "Yangi masalliqlar va mehr bilan": {
+    "ru": "Свежие ингредиенты и любовь",
+    "en": "Fresh ingredients and care"
+  },
+  "tayyorlangan sevimli burgerlaringiz.": {
+    "ru": "в ваших любимых бургерах.",
+    "en": "in every favorite burger."
+  },
+  "Menyuni ko‘rish": {
+    "ru": "Посмотреть меню",
+    "en": "View menu"
+  },
+  "Burger House burgeri": {
+    "ru": "Бургер Burger House",
+    "en": "Burger House burger"
+  },
+  "Sevimlingizni tanlang": {
+    "ru": "Выберите любимое",
+    "en": "Choose your favorite"
+  },
+  "so‘m": {
+    "ru": "сум",
+    "en": "UZS"
+  },
+  "Saytingiz doimo ochiq": {
+    "ru": "Ваш сайт всегда открыт",
+    "en": "Your website is always open"
+  },
+  "onlayn": {
+    "ru": "онлайн",
+    "en": "online"
+  },
+  "Saytingiz tayyor!": {
+    "ru": "Ваш сайт готов!",
+    "en": "Your website is ready!"
+  },
+  "Sizning biznesingiz": {
+    "ru": "Ваш бизнес",
+    "en": "Your business"
+  },
+  "Biznesingiz uchun sayt.": {
+    "ru": "Сайт для вашего бизнеса.",
+    "en": "A website for your business."
+  },
+  "Professional.": {
+    "ru": "Профессионально.",
+    "en": "Professional."
+  },
+  "Dasturchisiz.": {
+    "ru": "Без программиста.",
+    "en": "No coding needed."
+  },
+  "KATTA IMKONIYATLAR. ODDIY BOSHLANISH.": {
+    "ru": "БОЛЬШИЕ ВОЗМОЖНОСТИ. ПРОСТОЙ СТАРТ.",
+    "en": "GREAT POSSIBILITIES. A SIMPLE START."
+  },
+  "Bir necha daqiqada o‘z biznes saytingizni yarating.": {
+    "ru": "Создайте сайт бизнеса за несколько минут.",
+    "en": "Create your business website in minutes."
+  },
+  "Mahsulotlaringizni joylang va mijozlaringizga": {
+    "ru": "Добавьте товары и делитесь с клиентами",
+    "en": "Add your products and share with customers"
+  },
+  "bitta havola bilan ulashing.": {
+    "ru": "одной ссылкой.",
+    "en": "using one link."
+  },
+  "Bepul boshlang": {
+    "ru": "Начните бесплатно",
+    "en": "Start for free"
+  },
+  "Karta talab qilinmaydi": {
+    "ru": "Банковская карта не нужна",
+    "en": "No card required"
+  },
+  "Bir necha daqiqada": {
+    "ru": "За несколько минут",
+    "en": "In a few minutes"
+  },
+  "HAR QANDAY BIZNES UCHUN": {
+    "ru": "ДЛЯ ЛЮБОГО БИЗНЕСА",
+    "en": "FOR EVERY BUSINESS"
+  },
+  "Kafe va restoran": {
+    "ru": "Кафе и рестораны",
+    "en": "Cafes and restaurants"
+  },
+  "Do‘kon va butik": {
+    "ru": "Магазины и бутики",
+    "en": "Shops and boutiques"
+  },
+  "Gul do‘konlari": {
+    "ru": "Цветочные магазины",
+    "en": "Flower shops"
+  },
+  "va yana ko‘plab bizneslar ↗": {
+    "ru": "и многие другие бизнесы ↗",
+    "en": "and many more businesses ↗"
+  },
+  "MURAKKABLIK ORTDA QOLSIN": {
+    "ru": "ОСТАВЬТЕ СЛОЖНОСТИ ПОЗАДИ",
+    "en": "LEAVE COMPLEXITY BEHIND"
+  },
+  "G‘oyangizdan saytingizgacha.": {
+    "ru": "От идеи до сайта.",
+    "en": "From your idea to your website."
+  },
+  "Atigi uchta qadam.": {
+    "ru": "Всего три шага.",
+    "en": "Just three steps."
+  },
+  "Texnik bilim shart emas.": {
+    "ru": "Технические знания не нужны.",
+    "en": "No technical knowledge required."
+  },
+  "Biznesingizni sizdan yaxshi kim biladi?": {
+    "ru": "Кто знает ваш бизнес лучше вас?",
+    "en": "Who knows your business better than you?"
+  },
+  "Nom, logo va aloqa ma’lumotlarini kiriting.": {
+    "ru": "Введите название, логотип и контакты.",
+    "en": "Enter your name, logo and contact details."
+  },
+  "Rasm, narx va tavsif bilan mahsulotlarni qo‘shing.": {
+    "ru": "Добавьте товары с фото, ценой и описанием.",
+    "en": "Add products with photos, prices and descriptions."
+  },
+  "Tayyor saytingizni Instagram va Telegramga joylang.": {
+    "ru": "Разместите ссылку в Instagram и Telegram.",
+    "en": "Share your website on Instagram and Telegram."
+  },
+  "BARCHASI BIR JOYDA": {
+    "ru": "ВСЁ В ОДНОМ МЕСТЕ",
+    "en": "EVERYTHING IN ONE PLACE"
+  },
+  "Kichik biznes uchun.": {
+    "ru": "Для малого бизнеса.",
+    "en": "For small businesses."
+  },
+  "Katta imkoniyatlar bilan.": {
+    "ru": "С большими возможностями.",
+    "en": "With great possibilities."
+  },
+  "Barcha imkoniyatlar": {
+    "ru": "Все возможности",
+    "en": "All features"
+  },
+  "SAVOLLARINGIZ BORMI?": {
+    "ru": "ЕСТЬ ВОПРОСЫ?",
+    "en": "HAVE QUESTIONS?"
+  },
+  "Javoblar": {
+    "ru": "Ответы",
+    "en": "Answers"
+  },
+  "shu yerda.": {
+    "ru": "здесь.",
+    "en": "are here."
+  },
+  "Biz bilan bog‘laning": {
+    "ru": "Свяжитесь с нами",
+    "en": "Contact us"
+  },
+  "Sayt yaratish uchun dasturlashni bilishim kerakmi?": {
+    "ru": "Нужно ли знать программирование для создания сайта?",
+    "en": "Do I need coding skills to create a website?"
+  },
+  "Yo‘q. Ma’lumotlarni kiriting, mahsulot qo‘shing va tayyor dizayndan birini tanlang.": {
+    "ru": "Нет. Введите данные, добавьте товары и выберите готовый дизайн.",
+    "en": "No. Enter your details, add products and choose a design."
+  },
+  "Mijozlarim ro‘yxatdan o‘tishi kerakmi?": {
+    "ru": "Нужно ли клиентам регистрироваться?",
+    "en": "Do my customers need to sign up?"
+  },
+  "Yo‘q. Saytingiz havolasi mijozlarga to‘g‘ridan-to‘g‘ri katalogingizni ochadi.": {
+    "ru": "Нет. Ссылка на сайт сразу открывает ваш каталог.",
+    "en": "No. Your website link opens your catalog directly."
+  },
+  "Mijozlaringiz telefon yoki Telegram tugmasi orqali siz bilan bog‘lanadi. Savatcha va to‘lov tizimi qo‘shilmagan.": {
+    "ru": "Клиенты связываются с вами по телефону или в Telegram. Корзина и онлайн-оплата не предусмотрены.",
+    "en": "Customers contact you by phone or Telegram. Shopping cart and online payments are not included."
+  },
+  "Ma’lumotlar qayerda saqlanadi?": {
+    "ru": "Где хранятся данные?",
+    "en": "Where is data stored?"
+  },
+  "Hisob va katalog ma’lumotlari serverda saqlanadi. Saytingizni boshqa qurilmadan ham ochish mumkin.": {
+    "ru": "Данные аккаунта и каталога хранятся на сервере. Сайт доступен и с других устройств.",
+    "en": "Account and catalog data are stored on the server and accessible from other devices."
+  },
+  "TARIFLAR": {
+    "ru": "ТАРИФЫ",
+    "en": "PLANS"
+  },
+  "Biznesingizga mos reja.": {
+    "ru": "Тариф для вашего бизнеса.",
+    "en": "A plan for your business."
+  },
+  "Barcha tariflarda mustaqil sayt va mobil dizayn.": {
+    "ru": "На всех тарифах — отдельный сайт и мобильный дизайн.",
+    "en": "Every plan includes a dedicated website and mobile design."
+  },
+  "Tariflar oylik. Obuna administrator to‘lovni tasdiqlagach faollashadi.": {
+    "ru": "Тарифы ежемесячные. Подписка активируется после подтверждения оплаты администратором.",
+    "en": "Plans are monthly. The administrator activates your subscription after verifying payment."
+  },
+  "IMKONIYATLAR": {
+    "ru": "ВОЗМОЖНОСТИ",
+    "en": "FEATURES"
+  },
+  "Boshqarish oson.": {
+    "ru": "Легко управлять.",
+    "en": "Easy to manage."
+  },
+  "Natijasi professional.": {
+    "ru": "Профессиональный результат.",
+    "en": "Professional results."
+  },
+  "BIZ HAQIMIZDA": {
+    "ru": "О НАС",
+    "en": "ABOUT US"
+  },
+  "Har bir biznesning": {
+    "ru": "У каждого бизнеса",
+    "en": "Every business deserves"
+  },
+  "o‘z manzili bo‘lsin.": {
+    "ru": "должен быть свой адрес.",
+    "en": "its own address."
+  },
+  "VITRIX — kichik va o‘rta bizneslar o‘z mahsulotlarini internetda sodda va chiroyli namoyish etishi uchun yaratilgan platforma.": {
+    "ru": "VITRIX — платформа для малого и среднего бизнеса, позволяющая просто и красиво представить товары в интернете.",
+    "en": "VITRIX helps small and medium businesses showcase their products online with a simple, attractive website."
+  },
+  "Biznes egasi uchun eng muhim ish — mijozlariga xizmat ko‘rsatish. Biz saytni boshqarishni qulay qilamiz: mahsulotlar, dizayn va aloqa ma’lumotlari bir kabinetda.": {
+    "ru": "Главная задача владельца бизнеса — забота о клиентах. Мы упрощаем управление сайтом: товары, дизайн и контакты в одном кабинете.",
+    "en": "Business owners should focus on their customers. We make website management simple: products, design and contacts in one dashboard."
+  },
+  "Mustaqil sahifa, bevosita aloqa.": {
+    "ru": "Собственная страница, прямая связь.",
+    "en": "Your own page, direct contact."
+  },
+  "Har bir biznes o‘z katalogiga ega. Mijozlar telefon va Telegram orqali bevosita sizga murojaat qiladi.": {
+    "ru": "У каждого бизнеса свой каталог. Клиенты обращаются к вам напрямую по телефону и в Telegram.",
+    "en": "Each business has its own catalog. Customers contact you directly by phone or Telegram."
+  },
+  "Boshlash": {
+    "ru": "Начать",
+    "en": "Get started"
+  },
+  "BOG‘LANISH": {
+    "ru": "КОНТАКТЫ",
+    "en": "CONTACT"
+  },
+  "Birgalikda": {
+    "ru": "Начнём",
+    "en": "Let's get"
+  },
+  "boshlaymiz.": {
+    "ru": "вместе.",
+    "en": "started together."
+  },
+  "Savollaringiz va takliflaringiz uchun ochiqmiz.": {
+    "ru": "Мы открыты для вопросов и предложений.",
+    "en": "We welcome your questions and suggestions."
+  },
+  "Aloqa ma’lumotlarini platforma administratori yangilaydi.": {
+    "ru": "Контактные данные обновляет администратор платформы.",
+    "en": "Platform contact details are managed by the administrator."
+  },
+  "Xabaringiz tayyor": {
+    "ru": "Ваше сообщение готово",
+    "en": "Your message is ready"
+  },
+  "Xabaringizni email ilovangiz orqali jo‘natish uchun quyidagi havoladan foydalaning.": {
+    "ru": "Используйте ссылку ниже, чтобы отправить сообщение через почтовое приложение.",
+    "en": "Use the link below to send your message through your email app."
+  },
+  "Email ochish": {
+    "ru": "Открыть почту",
+    "en": "Open email"
+  },
+  "Bizga yozing": {
+    "ru": "Напишите нам",
+    "en": "Write to us"
+  },
+  "Ismingiz": {
+    "ru": "Ваше имя",
+    "en": "Your name"
+  },
+  "siz@example.uz": {
+    "ru": "you@example.com",
+    "en": "you@example.com"
+  },
+  "Qanday yordam bera olamiz?": {
+    "ru": "Чем мы можем помочь?",
+    "en": "How can we help?"
+  },
+  "Davom etish": {
+    "ru": "Продолжить",
+    "en": "Continue"
+  },
+  "VITRIX hisobingiz email orqali tasdiqlanadi. Hisob, mahsulotlar, rasmlar va sayt sozlamalari platforma serverida saqlanadi.": {
+    "ru": "Аккаунт VITRIX подтверждается по email. Аккаунт, товары, изображения и настройки сайта хранятся на сервере платформы.",
+    "en": "Your VITRIX account is verified by email. Account details, products, images and website settings are stored on the platform server."
+  },
+  "Birinchi 30 kunlik sinov bepul: 1 000 tagacha mahsulot. Keyin Pro — 49 000 so‘m/oy yoki VIP — 99 000 so‘m/oy. Pullik tariflarda mahsulotlar soni cheklanmaydi. To‘lov administrator tasdig‘i bilan faollashtiriladi.": {
+    "ru": "Первые 30 дней бесплатно: до 1 000 товаров. Тарифы и актуальные цены доступны после регистрации. На платных тарифах число товаров не ограничено. Подписка активируется после подтверждения оплаты.",
+    "en": "The first 30 days are free for up to 1,000 products. Plans and current prices are available after registration. Paid plans have unlimited products. Subscriptions are activated after payment verification."
+  },
+  "Hisobingiz paroli va tasdiqlash kodini boshqalarga bermang. Joylangan mahsulotlar, rasmlar va aloqa ma’lumotlarining to‘g‘riligiga biznes egasi javob beradi. Shaxsiy ma’lumotlarni tuzatish yoki hisobni o‘chirish uchun platforma administratoriga murojaat qiling.": {
+    "ru": "Не передавайте пароль и код подтверждения другим лицам. Владелец бизнеса отвечает за достоверность товаров, изображений и контактов. Для исправления личных данных или удаления аккаунта обратитесь к администратору.",
+    "en": "Do not share your password or verification code. Business owners are responsible for their product, image and contact information. Contact the administrator to correct personal data or delete your account."
+  },
+  "Barcha bizneslar katalogini nazorat qiling.": {
+    "ru": "Контролируйте каталоги всех бизнесов.",
+    "en": "Monitor all business catalogs."
+  },
+  "Katalogingizni yangilang va mijozlaringizga namoyish eting.": {
+    "ru": "Обновляйте каталог и показывайте его клиентам.",
+    "en": "Update your catalog and showcase it to customers."
+  },
+  "Mahsulot qidirish": {
+    "ru": "Поиск товаров",
+    "en": "Search products"
+  },
+  "Mahsulot qidirish…": {
+    "ru": "Поиск товаров…",
+    "en": "Search products…"
+  },
+  "Kategoriya filtri": {
+    "ru": "Фильтр категорий",
+    "en": "Category filter"
+  },
+  "Barcha kategoriyalar": {
+    "ru": "Все категории",
+    "en": "All categories"
+  },
+  "Holat filtri": {
+    "ru": "Фильтр статусов",
+    "en": "Status filter"
+  },
+  "E’lon qilingan": {
+    "ru": "Опубликован",
+    "en": "Published"
+  },
+  "Qoralama": {
+    "ru": "Черновик",
+    "en": "Draft"
+  },
+  "Arxiv": {
+    "ru": "Архив",
+    "en": "Archived"
+  },
+  "Biznes filtri": {
+    "ru": "Фильтр бизнесов",
+    "en": "Business filter"
+  },
+  "Barcha bizneslar": {
+    "ru": "Все бизнесы",
+    "en": "All businesses"
+  },
+  "Saralash": {
+    "ru": "Сортировка",
+    "en": "Sort"
+  },
+  "Tartib bo‘yicha": {
+    "ru": "По порядку",
+    "en": "By order"
+  },
+  "Nomi bo‘yicha": {
+    "ru": "По названию",
+    "en": "By name"
+  },
+  "Narxi bo‘yicha": {
+    "ru": "По цене",
+    "en": "By price"
+  },
+  "Grid ko‘rinishi": {
+    "ru": "Плитки",
+    "en": "Grid view"
+  },
+  "Jadval ko‘rinishi": {
+    "ru": "Таблица",
+    "en": "Table view"
+  },
+  "Mavjud": {
+    "ru": "В наличии",
+    "en": "Available"
+  },
+  "Mavjud emas": {
+    "ru": "Нет в наличии",
+    "en": "Unavailable"
+  },
+  "E’lon qilish": {
+    "ru": "Опубликовать",
+    "en": "Publish"
+  },
+  "Arxivlash": {
+    "ru": "В архив",
+    "en": "Archive"
+  },
+  "Mahsulot": {
+    "ru": "Товар",
+    "en": "Product"
+  },
+  "Kategoriya / Biznes": {
+    "ru": "Категория / Бизнес",
+    "en": "Category / Business"
+  },
+  "Narx": {
+    "ru": "Цена",
+    "en": "Price"
+  },
+  "Holatni o‘zgartirish": {
+    "ru": "Изменить статус",
+    "en": "Change status"
+  },
+  "Mahsulot topilmadi": {
+    "ru": "Товары не найдены",
+    "en": "No products found"
+  },
+  "o‘chirildi": {
+    "ru": "удалён",
+    "en": "deleted"
+  },
+  "Mahsulot o‘chirildi": {
+    "ru": "Товар удалён",
+    "en": "Product deleted"
+  },
+  "Yangi mahsulot": {
+    "ru": "Новый товар",
+    "en": "New product"
+  },
+  "Obuna muddati tugagan. Davom etish uchun Pro yoki VIP tarifini tanlang.": {
+    "ru": "Срок подписки истёк. Выберите Pro или VIP для продолжения.",
+    "en": "Your subscription expired. Choose Pro or VIP to continue."
+  },
+  "qo‘shildi": {
+    "ru": "добавлен",
+    "en": "added"
+  },
+  "Mahsulot saqlandi": {
+    "ru": "Товар сохранён",
+    "en": "Product saved"
+  },
+  "Mahsulot nomi *": {
+    "ru": "Название товара *",
+    "en": "Product name *"
+  },
+  "Kategoriya": {
+    "ru": "Категория",
+    "en": "Category"
+  },
+  "Kategoriyasiz": {
+    "ru": "Без категории",
+    "en": "No category"
+  },
+  "Narx (so‘m) *": {
+    "ru": "Цена (сум) *",
+    "en": "Price (UZS) *"
+  },
+  "Eski narx (ixtiyoriy)": {
+    "ru": "Старая цена (необязательно)",
+    "en": "Old price (optional)"
+  },
+  "Qisqa tavsif": {
+    "ru": "Краткое описание",
+    "en": "Short description"
+  },
+  "To‘liq tavsif": {
+    "ru": "Полное описание",
+    "en": "Full description"
+  },
+  "Ko‘rsatish tartibi": {
+    "ru": "Порядок отображения",
+    "en": "Display order"
+  },
+  "Tavsiya etilgan mahsulot": {
+    "ru": "Рекомендуемый товар",
+    "en": "Featured product"
+  },
+  "Mahsulotni saqlash": {
+    "ru": "Сохранить товар",
+    "en": "Save product"
+  },
+  "Faqat lotin harflari, raqam va tire": {
+    "ru": "Только латинские буквы, цифры и дефис",
+    "en": "Only Latin letters, digits and hyphens"
+  },
+  "Narx manfiy bo‘lmasin": {
+    "ru": "Цена не может быть отрицательной",
+    "en": "Price cannot be negative"
+  },
+  "Eski narx joriy narxdan katta bo‘lsin": {
+    "ru": "Старая цена должна быть выше текущей",
+    "en": "Old price must be greater than the current price"
+  },
+  "JORIY TARIF": {
+    "ru": "ТЕКУЩИЙ ТАРИФ",
+    "en": "CURRENT PLAN"
+  },
+  "Obuna muddati tugagan": {
+    "ru": "Срок подписки истёк",
+    "en": "Subscription expired"
+  },
+  "Obuna faol": {
+    "ru": "Подписка активна",
+    "en": "Subscription active"
+  },
+  "Obunani boshqarish ↗": {
+    "ru": "Управление подпиской ↗",
+    "en": "Manage subscription ↗"
+  },
+  "Obuna va tariflar": {
+    "ru": "Подписка и тарифы",
+    "en": "Subscription and plans"
+  },
+  "gacha": {
+    "ru": "до",
+    "en": "until"
+  },
+  "Birinchi 30 kun bepul. Pullik obunani administrator to‘lov tasdig‘idan keyin faollashtiradi.": {
+    "ru": "Первые 30 дней бесплатно. Платную подписку активирует администратор после подтверждения оплаты.",
+    "en": "The first 30 days are free. The administrator activates paid subscriptions after verifying payment."
+  },
+  "Tugma @": {
+    "ru": "Кнопка откроет чат с @",
+    "en": "The button opens a chat with @"
+  },
+  "bilan Telegram suhbatini ochadi. ID, do‘kon va tarif yozilgan tayyor xabarni o‘zingiz yuborasiz.": {
+    "ru": "в Telegram. Отправьте подготовленное сообщение с ID, магазином и тарифом.",
+    "en": "on Telegram. Send the prepared message containing your ID, shop and plan."
+  },
+  "Administrator Telegram manzilini hali sozlamagan. Obuna uchun aloqa manzili sozlangach tugmalar ishlaydi.": {
+    "ru": "Администратор ещё не настроил Telegram. Кнопки станут доступны после настройки контакта.",
+    "en": "The administrator has not configured Telegram yet. Subscription buttons will work once a contact is set."
+  },
+  "birinchi oy": {
+    "ru": "первый месяц",
+    "en": "first month"
+  },
+  "30 kun ·": {
+    "ru": "30 дней ·",
+    "en": "30 days ·"
+  },
+  "Faqat bir marta — ro‘yxatdan o‘tganda": {
+    "ru": "Один раз — при регистрации",
+    "en": "Once only — at registration"
+  },
+  "Telegram orqali obuna bo‘lish": {
+    "ru": "Подписаться через Telegram",
+    "en": "Subscribe through Telegram"
+  },
+  "Serverga ulanib bo‘lmadi. Qayta urinib ko‘ring.": {
+    "ru": "Не удалось подключиться к серверу. Попробуйте ещё раз.",
+    "en": "Unable to connect to the server. Please try again."
+  },
+  "Server javobi noto‘g‘ri.": {
+    "ru": "Некорректный ответ сервера.",
+    "en": "Invalid server response."
+  },
+  "Cheksiz": {
+    "ru": "Без ограничений",
+    "en": "Unlimited"
+  },
+  "Biznes topilmadi.": {
+    "ru": "Бизнес не найден.",
+    "en": "Business not found."
+  },
+  "Bepul sinov faqat bir marta, ro‘yxatdan o‘tganda beriladi.": {
+    "ru": "Бесплатный период предоставляется один раз при регистрации.",
+    "en": "The free trial is available once at registration."
+  },
+  "Sayt xizmati hali sozlanmagan. Keyinroq qayta urinib ko‘ring.": {
+    "ru": "Сервис сайта ещё не настроен. Попробуйте позже.",
+    "en": "The website service is not configured yet. Please try later."
+  },
+  "Sayt xizmati vaqtincha javob bermadi.": {
+    "ru": "Сервис сайта временно не отвечает.",
+    "en": "The website service is temporarily unavailable."
+  },
+  "Sayt xizmati bilan aloqa uzildi. Keyinroq qayta urinib ko‘ring.": {
+    "ru": "Соединение с сервисом сайта прервано. Попробуйте позже.",
+    "en": "The website service connection was interrupted. Please try later."
+  },
+  "Ma’lumotlarni ochib bo‘lmadi.": {
+    "ru": "Не удалось загрузить данные.",
+    "en": "Unable to load data."
+  },
+  "Saqlash bajarilmadi.": {
+    "ru": "Не удалось сохранить.",
+    "en": "Save failed."
+  },
+  "Ariza yuborildi. Administrator tasdig‘ini kuting.": {
+    "ru": "Заявка отправлена. Дождитесь подтверждения администратора.",
+    "en": "Request submitted. Wait for administrator approval."
+  },
+  "ID nusxalandi.": {
+    "ru": "ID скопирован.",
+    "en": "ID copied."
+  },
+  "ID:": {
+    "ru": "ID:",
+    "en": "ID:"
+  },
+  "Rasm yuklash": {
+    "ru": "Загрузить изображение",
+    "en": "Upload image"
+  },
+  "JPG, PNG yoki WebP rasmini tanlang": {
+    "ru": "Выберите JPG, PNG или WebP",
+    "en": "Choose a JPG, PNG or WebP image"
+  },
+  "Rasm 2 MB dan oshmasin": {
+    "ru": "Размер изображения не должен превышать 2 МБ",
+    "en": "Image must not exceed 2 MB"
+  },
+  "Havola nusxalandi": {
+    "ru": "Ссылка скопирована",
+    "en": "Link copied"
+  },
+  "Amal bajarilmadi.": {
+    "ru": "Не удалось выполнить действие.",
+    "en": "Action failed."
+  },
+  "Boshlanishi": {
+    "ru": "Начало",
+    "en": "Start date"
+  },
+  "Faolsizlantirish": {
+    "ru": "Деактивировать",
+    "en": "Deactivate"
+  },
+  "Faollashtirish": {
+    "ru": "Активировать",
+    "en": "Activate"
+  },
+  "Yoqish": {
+    "ru": "Включить",
+    "en": "Enable"
+  },
+  "Bu tarifda bizneslar bor. Avval ularning tarifini almashtiring.": {
+    "ru": "На этом тарифе есть бизнесы. Сначала измените их тариф.",
+    "en": "Businesses use this plan. Change their plans first."
+  },
+  "Tarifni tahrirlash": {
+    "ru": "Редактировать тариф",
+    "en": "Edit plan"
+  },
+  "Imkoniyatlar (har qatorga bittadan)": {
+    "ru": "Возможности (по одной на строку)",
+    "en": "Features (one per line)"
+  },
+  "Kod emailingizga yuborildi.": {
+    "ru": "Код отправлен на вашу почту.",
+    "en": "Code sent to your email."
+  },
+  "Emailingizni tasdiqlang.": {
+    "ru": "Подтвердите email.",
+    "en": "Verify your email."
+  },
+  "Biznesingizni boshlang.": {
+    "ru": "Начните свой бизнес.",
+    "en": "Start your business."
+  },
+  "Parolni tiklash": {
+    "ru": "Восстановить пароль",
+    "en": "Reset password"
+  },
+  "Hisobingizga kiring.": {
+    "ru": "Войдите в аккаунт.",
+    "en": "Log in to your account."
+  },
+  "Tasdiqlash kodi orqali parolingizni yangilang.": {
+    "ru": "Обновите пароль с помощью кода подтверждения.",
+    "en": "Reset your password using a verification code."
+  },
+  "Email yoki username": {
+    "ru": "Email или логин",
+    "en": "Email or username"
+  },
+  "Tasdiqlash kodi": {
+    "ru": "Код подтверждения",
+    "en": "Verification code"
+  },
+  "Kodni qayta yuborish": {
+    "ru": "Отправить код повторно",
+    "en": "Resend code"
+  },
+  "Username": {
+    "ru": "Логин",
+    "en": "Username"
+  },
+  "Parolni tasdiqlash": {
+    "ru": "Подтвердите пароль",
+    "en": "Confirm password"
+  },
+  "Emailga kod yuborish": {
+    "ru": "Отправить код на почту",
+    "en": "Send email code"
+  },
+  "Parolni yangilash": {
+    "ru": "Обновить пароль",
+    "en": "Update password"
+  },
+  "Username kiriting": {
+    "ru": "Введите логин",
+    "en": "Enter a username"
+  },
+  "Kamida 2 belgi": {
+    "ru": "Минимум 2 символа",
+    "en": "At least 2 characters"
+  },
+  "Kamida 8 belgi": {
+    "ru": "Минимум 8 символов",
+    "en": "At least 8 characters"
+  },
+  "Parollar mos emas": {
+    "ru": "Пароли не совпадают",
+    "en": "Passwords do not match"
+  },
+  "Sahifa foni": {
+    "ru": "Фон страницы",
+    "en": "Page background"
+  },
+  "Karta foni": {
+    "ru": "Фон карточки",
+    "en": "Card background"
+  },
+  "Asosiy matn": {
+    "ru": "Основной текст",
+    "en": "Main text"
+  },
+  "Karta matni": {
+    "ru": "Текст карточки",
+    "en": "Card text"
+  },
+  "Yordamchi matn": {
+    "ru": "Второстепенный текст",
+    "en": "Secondary text"
+  },
+  "Asosiy rang": {
+    "ru": "Основной цвет",
+    "en": "Primary color"
+  },
+  "Rasm yonma-yon": {
+    "ru": "Изображение сбоку",
+    "en": "Side-by-side image"
+  },
+  "Burchaklar": {
+    "ru": "Углы",
+    "en": "Corners"
+  },
+  "Oraliqlar": {
+    "ru": "Отступы",
+    "en": "Spacing"
+  },
+  "Kompyuter: ustunlar": {
+    "ru": "Столбцы на компьютере",
+    "en": "Desktop columns"
+  },
+  "Narxlar": {
+    "ru": "Цены",
+    "en": "Prices"
+  },
+  "Aloqa tugmalari": {
+    "ru": "Кнопки связи",
+    "en": "Contact buttons"
+  },
+  "Sozlamalarni yopish": {
+    "ru": "Закрыть настройки",
+    "en": "Close settings"
+  },
+  "Xarita HTTPS havolasini tekshiring.": {
+    "ru": "Проверьте HTTPS-ссылку на карту.",
+    "en": "Check the HTTPS map link."
+  },
+  "Telegram username": {
+    "ru": "Логин Telegram",
+    "en": "Telegram username"
+  },
+  "Ish vaqti": {
+    "ru": "Время работы",
+    "en": "Opening hours"
+  },
+  "Instagram havolasi": {
+    "ru": "Ссылка Instagram",
+    "en": "Instagram link"
+  },
+  "Zamonaviy Sans": {
+    "ru": "Современный Sans",
+    "en": "Modern Sans"
+  },
+  "Klassik Serif": {
+    "ru": "Классический Serif",
+    "en": "Classic Serif"
+  },
+  "Tizim shrifti": {
+    "ru": "Системный шрифт",
+    "en": "System font"
+  },
+  "Katalog joylashuvi": {
+    "ru": "Расположение каталога",
+    "en": "Catalog layout"
+  },
+  "Grid": {
+    "ru": "Плитки",
+    "en": "Grid"
+  },
+  "Header uslubi": {
+    "ru": "Стиль шапки",
+    "en": "Header style"
+  },
+  "Kontur": {
+    "ru": "Контур",
+    "en": "Outline"
+  },
+  "Yashirilgan": {
+    "ru": "Скрыто",
+    "en": "Hidden"
+  },
+  "“{0}” kategoriyasi o‘chirilsinmi? Mahsulotlar kategoriyasiz qoladi.": {
+    "ru": "Удалить категорию «{0}»? Товары останутся без категории.",
+    "en": "Delete category “{0}”? Products will have no category."
+  },
+  "Kategoriyani tahrirlash": {
+    "ru": "Редактировать категорию",
+    "en": "Edit category"
+  },
+  "kategoriyasi saqlandi": {
+    "ru": "категория сохранена",
+    "en": "category saved"
+  },
+  "Tartib": {
+    "ru": "Порядок",
+    "en": "Order"
+  },
+  "Sahifa": {
+    "ru": "Страница",
+    "en": "Page"
+  },
+  "BOSHQARUV": {
+    "ru": "УПРАВЛЕНИЕ",
+    "en": "MANAGEMENT"
+  },
+  "Admin": {
+    "ru": "Администратор",
+    "en": "Admin"
+  },
+  "Kabinet": {
+    "ru": "Кабинет",
+    "en": "Dashboard"
+  },
+  "Tashriflar": {
+    "ru": "Посещения",
+    "en": "Visits"
+  },
+  "Umumiy tashriflar": {
+    "ru": "Все посещения",
+    "en": "Total visits"
+  },
+  "Bugungi tashriflar": {
+    "ru": "Посещения сегодня",
+    "en": "Today's visits"
+  },
+  "Hodisa,Sana": {
+    "ru": "Событие,Дата",
+    "en": "Event,Date"
+  },
+  "Aloqa / tashrif": {
+    "ru": "Контакты / посещения",
+    "en": "Contacts / visits"
+  },
+  "Bosilishlar / tashriflar": {
+    "ru": "Нажатия / посещения",
+    "en": "Clicks / visits"
+  },
+  "Tasdiqlangan email": {
+    "ru": "Подтверждённый email",
+    "en": "Verified email"
+  },
+  "Xarita yuklanmadi. Koordinata yoki havola kiriting.": {
+    "ru": "Карта не загрузилась. Введите координаты или ссылку.",
+    "en": "Map failed to load. Enter coordinates or a link."
+  },
+  "Uzunlik (longitude)": {
+    "ru": "Долгота (longitude)",
+    "en": "Longitude"
+  },
+  "Kenglik (latitude)": {
+    "ru": "Широта (latitude)",
+    "en": "Latitude"
+  },
+  "Xarita havolasi": {
+    "ru": "Ссылка на карту",
+    "en": "Map link"
+  },
+  "Ruxsat berilmadi. Xaritadan tanlang.": {
+    "ru": "Доступ не предоставлен. Выберите на карте.",
+    "en": "Permission denied. Select a point on the map."
+  },
+  "Joylashuvimni olish": {
+    "ru": "Моё местоположение",
+    "en": "Use my location"
+  },
+  "Har bir ekranda mukammal": {
+    "ru": "Удобно на любом экране",
+    "en": "Made for every screen"
+  },
+  "Katalogni oson boshqaring": {
+    "ru": "Управляйте каталогом легко",
+    "en": "Manage your catalog easily"
+  },
+  "Natijani kuzatib boring": {
+    "ru": "Следите за результатами",
+    "en": "Track your results"
+  },
+  "Tarifni tanlash": {
+    "ru": "Выбрать тариф",
+    "en": "Choose plan"
+  },
+  "Qandolatchilik": {
+    "ru": "Кондитерские",
+    "en": "Bakeries"
+  },
+  "Biznesingizni tanishtiring": {
+    "ru": "Расскажите о бизнесе",
+    "en": "Introduce your business"
+  },
+  "Katalogingizni yarating": {
+    "ru": "Создайте каталог",
+    "en": "Build your catalog"
+  },
+  "Havolangizni ulashing": {
+    "ru": "Поделитесь ссылкой",
+    "en": "Share your link"
+  },
+  "Buyurtmalarni qanday qabul qilaman?": {
+    "ru": "Как принимать заказы?",
+    "en": "How do I receive orders?"
+  },
+  "VITRIX:": {
+    "ru": "VITRIX:",
+    "en": "VITRIX:"
+  },
+  "Xabar": {
+    "ru": "Сообщение",
+    "en": "Message"
+  },
+  "Maxfiylik siyosati": {
+    "ru": "Политика конфиденциальности",
+    "en": "Privacy policy"
+  },
+  "holati yangilandi": {
+    "ru": "статус обновлён",
+    "en": "status updated"
+  },
+  "Mahsulotlar monitoringi": {
+    "ru": "Мониторинг товаров",
+    "en": "Product monitoring"
+  },
+  "Yashirish": {
+    "ru": "Скрыть",
+    "en": "Hide"
+  },
+  "“{0}” o‘chirilsinmi?": {
+    "ru": "Удалить «{0}»?",
+    "en": "Delete “{0}”?"
+  },
+  "Mahsulotni tahrirlash": {
+    "ru": "Редактировать товар",
+    "en": "Edit product"
+  },
+  "Bu slug band": {
+    "ru": "Этот адрес занят",
+    "en": "This URL is taken"
+  },
+  "Tarifdagi mahsulotlar limiti tugadi": {
+    "ru": "Достигнут лимит товаров тарифа",
+    "en": "Your plan's product limit has been reached"
+  },
+  "yangilandi": {
+    "ru": "обновлён",
+    "en": "updated"
+  },
+  "Slug *": {
+    "ru": "Адрес (slug) *",
+    "en": "URL slug *"
+  },
+  "Asosiy rasm": {
+    "ru": "Основное изображение",
+    "en": "Main image"
+  },
+  "Qo‘shimcha rasm {0}": {
+    "ru": "Дополнительное изображение {0}",
+    "en": "Additional image {0}"
+  },
+  "Mavjudligi": {
+    "ru": "Наличие",
+    "en": "Availability"
+  },
+  "{0} ta mahsulot": {
+    "ru": "{0} товаров",
+    "en": "{0} products"
+  },
+  "Telegram ochilmadi.": {
+    "ru": "Не удалось открыть Telegram.",
+    "en": "Unable to open Telegram."
+  },
+  "Autentifikatsiya serveri javob bermadi.": {
+    "ru": "Сервер авторизации не отвечает.",
+    "en": "Authentication server did not respond."
+  },
+  "Autentifikatsiya xizmati sozlanmagan.": {
+    "ru": "Сервис авторизации не настроен.",
+    "en": "Authentication service is not configured."
+  },
+  "Saqlandi": {
+    "ru": "Сохранено",
+    "en": "Saved"
+  },
+  "Ariza rad etildi.": {
+    "ru": "Заявка отклонена.",
+    "en": "Request rejected."
+  },
+  "UZ / RU / EN — matn tarjimalari": {
+    "ru": "UZ / RU / EN — переводы текста",
+    "en": "UZ / RU / EN — content translations"
+  },
+  "Har bir tildagi matnni kiriting. Bo‘sh maydon asosiy matnni ko‘rsatadi; avtomatik tarjima qilinmaydi.": {
+    "ru": "Введите текст на каждом языке. Пустое поле использует основной текст; автоматического перевода нет.",
+    "en": "Enter text for each language. Empty fields use the original text; content is not translated automatically."
+  },
+  "Biznes nomi": {
+    "ru": "Название бизнеса",
+    "en": "Business name"
+  },
+  "Kategoriya nomi": {
+    "ru": "Название категории",
+    "en": "Category name"
+  },
+  "Mahsulot nomi": {
+    "ru": "Название товара",
+    "en": "Product name"
+  },
+  "Cheksiz kategoriyalar": {
+    "ru": "Неограниченное число категорий",
+    "en": "Unlimited categories"
+  },
+  "3 ta dizayn": {
+    "ru": "3 стиля дизайна",
+    "en": "3 design styles"
+  },
+  "3 ta professional dizayn": {
+    "ru": "3 профессиональных стиля",
+    "en": "3 professional styles"
+  },
+  "To‘liq brending": {
+    "ru": "Полная настройка бренда",
+    "en": "Full branding"
+  },
+  "To‘liq brending sozlamalari": {
+    "ru": "Полные настройки бренда",
+    "en": "Full branding settings"
+  },
+  "Telefon va Telegram": {
+    "ru": "Телефон и Telegram",
+    "en": "Phone and Telegram"
+  },
+  "7 kunlik statistika": {
+    "ru": "Статистика за 7 дней",
+    "en": "7-day statistics"
+  },
+  "Oxirgi 7 kun statistikasi": {
+    "ru": "Статистика за последние 7 дней",
+    "en": "Last 7 days of statistics"
+  },
+  "Birinchi 1 oy bepul (30 kun)": {
+    "ru": "Первый месяц бесплатно (30 дней)",
+    "en": "First month free (30 days)"
+  },
+  "1 000 ta mahsulot": {
+    "ru": "1 000 товаров",
+    "en": "1,000 products"
+  },
+  "Barcha Pro imkoniyatlari": {
+    "ru": "Все возможности Pro",
+    "en": "All Pro features"
+  },
+  "7 / 30 / 90 kunlik analitika": {
+    "ru": "Аналитика за 7 / 30 / 90 дней",
+    "en": "7 / 30 / 90-day analytics"
+  },
+  "Davr bo‘yicha aloqa statistikasi": {
+    "ru": "Статистика контактов за период",
+    "en": "Contact statistics by period"
+  },
+  "Davr bo‘yicha aloqa ko‘rsatkichlari": {
+    "ru": "Показатели контактов за период",
+    "en": "Contact metrics by period"
+  },
+  "CSV hisobotlarini yuklash": {
+    "ru": "Скачивание отчётов CSV",
+    "en": "Download CSV reports"
+  },
+  "Bepul sinov": {
+    "ru": "Бесплатный период",
+    "en": "Free trial"
+  },
+  "Minimal": {
+    "ru": "Минимализм",
+    "en": "Minimal"
+  },
+  "Modern": {
+    "ru": "Современный",
+    "en": "Modern"
+  },
+  "Elegant": {
+    "ru": "Элегантный",
+    "en": "Elegant"
+  },
+  "admin": {
+    "ru": "администратор",
+    "en": "admin"
+  },
+  "user": {
+    "ru": "пользователь",
+    "en": "user"
+  },
+  "Pro yoki VIP tarifini tanlang.": {
+    "ru": "Выберите тариф Pro или VIP.",
+    "en": "Choose Pro or VIP."
+  },
+  "Obuna muddati tugagan. Pro yoki VIP tarifini tanlang.": {
+    "ru": "Срок подписки истёк. Выберите Pro или VIP.",
+    "en": "Your subscription expired. Choose Pro or VIP."
+  },
+  "Bu biznesga ruxsat yo‘q.": {
+    "ru": "Нет доступа к этому бизнесу.",
+    "en": "You do not have access to this business."
+  },
+  "Obunani faqat administrator o‘zgartiradi.": {
+    "ru": "Подписку может изменить только администратор.",
+    "en": "Only the administrator can change subscriptions."
+  },
+  "Administrator Telegram manzilini hali sozlamagan.": {
+    "ru": "Администратор ещё не настроил Telegram.",
+    "en": "The administrator has not configured Telegram yet."
+  },
+  "Tarjima maydonlarini tekshiring.": {
+    "ru": "Проверьте поля переводов.",
+    "en": "Check the translation fields."
+  },
+  "Sizning emailingiz uchun tasdiqlash kodi": {
+    "ru": "Код подтверждения для вашей почты",
+    "en": "Your email verification code"
+  },
+  "Birinchi 30 kunlik sinov bepul: 1 000 tagacha mahsulot. Tariflar va narxlar ro‘yxatdan o‘tgandan keyin kabinetda ko‘rsatiladi. Pullik tariflarda mahsulotlar soni cheklanmaydi. To‘lov administrator tasdig‘i bilan faollashtiriladi.": {
+    "ru": "Первые 30 дней бесплатно: до 1 000 товаров. Тарифы и цены доступны после регистрации в кабинете. На платных тарифах число товаров не ограничено. Подписка активируется после подтверждения оплаты.",
+    "en": "The first 30 days are free for up to 1,000 products. Plans and prices are available in your dashboard after registration. Paid plans have unlimited products. Subscriptions are activated after payment verification."
+  },
+  "Amal kaliti yoki so‘rov noto‘g‘ri. Qayta urinib ko‘ring.": {
+    "ru": "Неверный ключ операции или запрос. Попробуйте ещё раз.",
+    "en": "Invalid operation key or request. Please try again."
+  },
+  "Amal yoki ID noto‘g‘ri.": {
+    "ru": "Неверное действие или ID.",
+    "en": "Invalid action or ID."
+  },
+  "Ariza allaqachon ko‘rib chiqilgan.": {
+    "ru": "Заявка уже рассмотрена.",
+    "en": "Request has already been reviewed."
+  },
+  "Ariza topilmadi.": {
+    "ru": "Заявка не найдена.",
+    "en": "Request not found."
+  },
+  "Asosiy tariflarni o‘chirib bo‘lmaydi.": {
+    "ru": "Нельзя удалить основные тарифы.",
+    "en": "Core plans cannot be deleted."
+  },
+  "Biznesni almashtirib bo‘lmaydi.": {
+    "ru": "Нельзя изменить принадлежность бизнесу.",
+    "en": "Business ownership cannot be changed."
+  },
+  "Biznesni faqat admin o‘chiradi.": {
+    "ru": "Только администратор может удалить бизнес.",
+    "en": "Only an administrator can delete a business."
+  },
+  "Boshqa superadmin hisobini Django admin orqali boshqaring.": {
+    "ru": "Управляйте другим суперадминистратором через Django admin.",
+    "en": "Manage other superadmins through Django admin."
+  },
+  "Bu amal kaliti boshqa so‘rov uchun ishlatilgan.": {
+    "ru": "Этот ключ операции уже использован для другого запроса.",
+    "en": "This operation key was used for a different request."
+  },
+  "Bu email bilan hisob mavjud. Kirish sahifasidan foydalaning.": {
+    "ru": "Аккаунт с этим email уже существует. Перейдите на страницу входа.",
+    "en": "An account with this email already exists. Use the login page."
+  },
+  "Bu manzil band.": {
+    "ru": "Этот адрес занят.",
+    "en": "This address is taken."
+  },
+  "Bunday ma’lumot turini o‘zgartirib bo‘lmaydi.": {
+    "ru": "Этот тип данных нельзя изменять.",
+    "en": "This data type cannot be changed."
+  },
+  "Database unavailable.": {
+    "ru": "База данных недоступна.",
+    "en": "Database unavailable."
+  },
+  "Email manzilini to‘g‘ri kiriting.": {
+    "ru": "Введите корректный email.",
+    "en": "Enter a valid email address."
+  },
+  "Email yoki username band.": {
+    "ru": "Email или логин уже занят.",
+    "en": "Email or username is already taken."
+  },
+  "Eski narx joriy narxdan katta bo‘lsin.": {
+    "ru": "Старая цена должна быть выше текущей.",
+    "en": "The old price must exceed the current price."
+  },
+  "Foydalanish shartlariga rozilik kerak.": {
+    "ru": "Необходимо принять условия использования.",
+    "en": "You must agree to the terms of use."
+  },
+  "Hisob mavjud bo‘lsa, kod yuboriladi.": {
+    "ru": "Если аккаунт существует, код будет отправлен.",
+    "en": "If the account exists, a code will be sent."
+  },
+  "Hisob o‘chirildi.": {
+    "ru": "Аккаунт удалён.",
+    "en": "Account deleted."
+  },
+  "Hisob topilmadi.": {
+    "ru": "Аккаунт не найден.",
+    "en": "Account not found."
+  },
+  "Hisobdan chiqildi.": {
+    "ru": "Вы вышли из аккаунта.",
+    "en": "Signed out."
+  },
+  "Hodisa turi noto‘g‘ri.": {
+    "ru": "Неверный тип события.",
+    "en": "Invalid event type."
+  },
+  "Holat qiymati noto‘g‘ri.": {
+    "ru": "Неверное значение статуса.",
+    "en": "Invalid status value."
+  },
+  "Holatni tekshiring.": {
+    "ru": "Проверьте статус.",
+    "en": "Check the status."
+  },
+  "Ishonchli xarita HTTPS havolasini kiriting.": {
+    "ru": "Введите HTTPS-ссылку на поддерживаемую карту.",
+    "en": "Enter an HTTPS link to a supported map provider."
+  },
+  "Ism va familiyani kiriting.": {
+    "ru": "Введите имя и фамилию.",
+    "en": "Enter your first and last name."
+  },
+  "JPG, PNG yoki WebP rasm 2 MB dan oshmasin.": {
+    "ru": "JPG, PNG или WebP не должен превышать 2 МБ.",
+    "en": "JPG, PNG or WebP images must not exceed 2 MB."
+  },
+  "Kategoriya boshqa biznesga tegishli.": {
+    "ru": "Категория принадлежит другому бизнесу.",
+    "en": "The category belongs to a different business."
+  },
+  "Kenglik va uzunlikni birga kiriting.": {
+    "ru": "Укажите широту и долготу вместе.",
+    "en": "Enter latitude and longitude together."
+  },
+  "Kod muddati tugagan. Yangi kod oling.": {
+    "ru": "Срок кода истёк. Запросите новый.",
+    "en": "The code expired. Request a new one."
+  },
+  "Kod yoki email noto‘g‘ri.": {
+    "ru": "Неверный код или email.",
+    "en": "Invalid code or email."
+  },
+  "Koordinatalar raqam bo‘lishi kerak.": {
+    "ru": "Координаты должны быть числами.",
+    "en": "Coordinates must be numbers."
+  },
+  "Ko‘p urinish. 10 daqiqadan keyin qayta urining.": {
+    "ru": "Слишком много попыток. Повторите через 10 минут.",
+    "en": "Too many attempts. Try again in 10 minutes."
+  },
+  "Ko‘pi bilan 3 ta qo‘shimcha rasm.": {
+    "ru": "Не более 3 дополнительных изображений.",
+    "en": "Up to 3 additional images are allowed."
+  },
+  "Login va parolni kiriting.": {
+    "ru": "Введите логин и пароль.",
+    "en": "Enter your username and password."
+  },
+  "Login yoki parol noto‘g‘ri.": {
+    "ru": "Неверный логин или пароль.",
+    "en": "Incorrect username or password."
+  },
+  "Manzil faqat lotin harflari, raqam va tiredan iborat bo‘lsin.": {
+    "ru": "Адрес может содержать только латинские буквы, цифры и дефис.",
+    "en": "The address may contain only Latin letters, digits and hyphens."
+  },
+  "Ma’lumotlarni tekshiring. Bu yozuv band yoki boshqa yozuvlarga bog‘langan.": {
+    "ru": "Проверьте данные. Запись уже существует или связана с другими записями.",
+    "en": "Check the data. This record is taken or linked to other records."
+  },
+  "Migrations required.": {
+    "ru": "Требуются миграции.",
+    "en": "Migrations required."
+  },
+  "Muddat va izohni tekshiring.": {
+    "ru": "Проверьте срок и примечание.",
+    "en": "Check the period and note."
+  },
+  "Obunani maxsus faollashtirish tugmasi orqali o‘zgartiring.": {
+    "ru": "Измените подписку через кнопку активации.",
+    "en": "Change subscriptions using the activation button."
+  },
+  "Oldingi arizangiz hali ko‘rib chiqilmoqda.": {
+    "ru": "Предыдущая заявка ещё рассматривается.",
+    "en": "Your previous request is still under review."
+  },
+  "O‘z hisobingizni bu yerdan o‘zgartira olmaysiz.": {
+    "ru": "Здесь нельзя изменить собственный аккаунт.",
+    "en": "You cannot modify your own account here."
+  },
+  "O‘zgarish formati noto‘g‘ri.": {
+    "ru": "Неверный формат изменения.",
+    "en": "Invalid change format."
+  },
+  "O‘zgarishlar formati noto‘g‘ri.": {
+    "ru": "Неверный формат изменений.",
+    "en": "Invalid changes format."
+  },
+  "Parol yangilandi. Endi hisobingizga kiring.": {
+    "ru": "Пароль обновлён. Теперь войдите в аккаунт.",
+    "en": "Password updated. You can now log in."
+  },
+  "Platforma sozlamalarini faqat admin boshqaradi.": {
+    "ru": "Настройками платформы управляет только администратор.",
+    "en": "Only an administrator can manage platform settings."
+  },
+  "Pullik tarifni tanlang.": {
+    "ru": "Выберите платный тариф.",
+    "en": "Choose a paid plan."
+  },
+  "Qarorni tanlang.": {
+    "ru": "Выберите решение.",
+    "en": "Choose a decision."
+  },
+  "Qayta yuborish uchun 60 soniya kuting.": {
+    "ru": "Подождите 60 секунд перед повторной отправкой.",
+    "en": "Wait 60 seconds before resending."
+  },
+  "Rasm formati noto‘g‘ri.": {
+    "ru": "Неверный формат изображения.",
+    "en": "Invalid image format."
+  },
+  "Rasm havolasi noto‘g‘ri.": {
+    "ru": "Неверная ссылка на изображение.",
+    "en": "Invalid image URL."
+  },
+  "Ro‘yxatdan o‘tish ma’lumotlarini tekshiring.": {
+    "ru": "Проверьте регистрационные данные.",
+    "en": "Check your registration details."
+  },
+  "Ruxsat yo‘q.": {
+    "ru": "Нет доступа.",
+    "en": "Access denied."
+  },
+  "Sayt obunasi vaqtincha faol emas.": {
+    "ru": "Подписка сайта временно неактивна.",
+    "en": "The website subscription is temporarily inactive."
+  },
+  "Sessiya xavfsizlik tekshiruvi o‘tmadi. Sahifani yangilang va qayta urinib ko‘ring.": {
+    "ru": "Проверка безопасности сессии не пройдена. Обновите страницу и повторите попытку.",
+    "en": "Session security check failed. Refresh the page and try again."
+  },
+  "So‘rov formati noto‘g‘ri.": {
+    "ru": "Неверный формат запроса.",
+    "en": "Invalid request format."
+  },
+  "So‘rov noto‘g‘ri.": {
+    "ru": "Неверный запрос.",
+    "en": "Invalid request."
+  },
+  "So‘rov turi noto‘g‘ri.": {
+    "ru": "Неверный тип запроса.",
+    "en": "Invalid request type."
+  },
+  "So‘rovni tekshirib qayta urinib ko‘ring.": {
+    "ru": "Проверьте запрос и повторите попытку.",
+    "en": "Check the request and try again."
+  },
+  "Tarifdagi mahsulotlar limiti tugadi.": {
+    "ru": "Достигнут лимит товаров тарифа.",
+    "en": "Your plan's product limit has been reached."
+  },
+  "Tariflarni faqat admin boshqaradi.": {
+    "ru": "Тарифами управляет только администратор.",
+    "en": "Only an administrator can manage plans."
+  },
+  "Tasdiqlash kodi emailingizga yuborildi.": {
+    "ru": "Код подтверждения отправлен на вашу почту.",
+    "en": "A verification code was sent to your email."
+  },
+  "Tasdiqlash kodi noto‘g‘ri.": {
+    "ru": "Неверный код подтверждения.",
+    "en": "Invalid verification code."
+  },
+  "Telefon raqamini tekshiring.": {
+    "ru": "Проверьте номер телефона.",
+    "en": "Check your phone number."
+  },
+  "Urinishlar tugadi. 10 daqiqadan keyin qayta urining.": {
+    "ru": "Попытки исчерпаны. Повторите через 10 минут.",
+    "en": "No attempts left. Try again in 10 minutes."
+  },
+  "Urinishlar tugagan. Yangi kodni keyinroq so‘rang.": {
+    "ru": "Попытки исчерпаны. Запросите новый код позже.",
+    "en": "No attempts left. Request a new code later."
+  },
+  "Username 3–30 ta harf, raqam yoki _ dan iborat bo‘lsin.": {
+    "ru": "Логин должен содержать 3–30 букв, цифр или _.",
+    "en": "Username must contain 3–30 letters, digits or _."
+  },
+  "VITRIX — tasdiqlash kodi": {
+    "ru": "VITRIX — код подтверждения",
+    "en": "VITRIX — verification code"
+  },
+  "Xat yuborilmadi. Email xizmatini sozlash yoki keyinroq qayta urinish kerak.": {
+    "ru": "Письмо не отправлено. Настройте почтовый сервис или повторите позже.",
+    "en": "Email was not sent. Configure the email service or try again later."
+  },
+  "Yozuv formati noto‘g‘ri.": {
+    "ru": "Неверный формат записи.",
+    "en": "Invalid record format."
+  },
+  "Bog‘lanish": {
+    "ru": "Связаться",
+    "en": "Contact"
+  },
+  "YANGI. MAZALI. SIZ UCHUN.": {
+    "ru": "СВЕЖО. ВКУСНО. ДЛЯ ВАС.",
+    "en": "FRESH. TASTY. YOURS."
+  },
+  "Classic Burger": {
+    "ru": "Классический бургер",
+    "en": "Classic Burger"
+  },
+  "Double Cheese": {
+    "ru": "Двойной чизбургер",
+    "en": "Double Cheese"
+  },
+  "French Fries": {
+    "ru": "Картофель фри",
+    "en": "French Fries"
+  }
+}

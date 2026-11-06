@@ -1,4 +1,5 @@
 "use client";
+import { useTranslator } from "../../i18n/runtime";
 import type { Business } from "../../types";
 import { Field } from "../../components/ui/shared";
 import { appearanceOf, palettes } from "./appearance";
@@ -9,14 +10,15 @@ export function AppearanceControls({
   value: Business;
   onChange: (v: Business) => void;
 }) {
+  const __t = useTranslator();
   const a = appearanceOf(value);
   const set = (key: keyof Business, v: unknown) =>
     onChange({ ...value, [key]: v });
   return (
     <div className="appearance-controls">
-      <h3>Saytingiz, o‘z uslubingiz</h3>
+      <h3>{__t("Saytingiz, o\u2018z uslubingiz")}</h3>
       <p className="muted">
-        Rang, joylashuv va bo‘limlarni o‘zingizga moslang.
+        {__t("Rang, joylashuv va bo\u2018limlarni o\u2018zingizga moslang.")}
       </p>
       <div className="segmented">
         {(["light", "dark", "contrast"] as const).map((mode, i) => (
@@ -27,7 +29,7 @@ export function AppearanceControls({
             className={a.colorMode === mode ? "active" : ""}
             onClick={() => onChange({ ...value, ...palettes[i].colors })}
           >
-            {["Oq", "Qora", "Oq-qora"][i]}
+            {[__t("Oq"), __t("Qora"), __t("Oq-qora")][i]}
           </button>
         ))}
       </div>
@@ -35,7 +37,7 @@ export function AppearanceControls({
         {palettes.map((p) => (
           <button
             type="button"
-            key={p.name}
+            key={__t(p.name)}
             onClick={() => onChange({ ...value, ...p.colors })}
             className="palette-option"
           >
@@ -46,23 +48,23 @@ export function AppearanceControls({
               }}
             >
               <i style={{ background: p.colors.primary }} />
-              {p.name}
+              {__t(p.name)}
             </span>
           </button>
         ))}
       </div>
       <details>
-        <summary>Ranglarni alohida sozlash</summary>
+        <summary>{__t("Ranglarni alohida sozlash")}</summary>
         <div className="form-grid">
           {(
             [
-              ["backgroundColor", "Sahifa foni"],
-              ["surfaceColor", "Karta foni"],
-              ["textColor", "Asosiy matn"],
-              ["surfaceTextColor", "Karta matni"],
-              ["mutedColor", "Yordamchi matn"],
-              ["primary", "Asosiy rang"],
-              ["secondary", "Banner foni"],
+              ["backgroundColor", __t("Sahifa foni")],
+              ["surfaceColor", __t("Karta foni")],
+              ["textColor", __t("Asosiy matn")],
+              ["surfaceTextColor", __t("Karta matni")],
+              ["mutedColor", __t("Yordamchi matn")],
+              ["primary", __t("Asosiy rang")],
+              ["secondary", __t("Banner foni")],
             ] as const
           ).map(([key, label]) => (
             <Field key={key} label={label}>
@@ -75,7 +77,7 @@ export function AppearanceControls({
           ))}
         </div>
       </details>
-      <Field label="Banner sarlavhasi">
+      <Field label={__t("Banner sarlavhasi")}>
         <input
           maxLength={140}
           value={a.heroTitle}
@@ -87,37 +89,37 @@ export function AppearanceControls({
         [
           [
             "heroStyle",
-            "Banner",
+            __t("Banner"),
             [
-              ["split", "Rasm yonma-yon"],
-              ["cover", "Keng rasm"],
-              ["minimal", "Faqat matn"],
+              ["split", __t("Rasm yonma-yon")],
+              ["cover", __t("Keng rasm")],
+              ["minimal", __t("Faqat matn")],
             ],
           ],
           [
             "contentWidth",
-            "Sayt kengligi",
+            __t("Sayt kengligi"),
             [
-              ["full", "To‘liq ekran"],
-              ["wide", "Keng"],
-              ["compact", "Ixcham"],
+              ["full", __t("To\u2018liq ekran")],
+              ["wide", __t("Keng")],
+              ["compact", __t("Ixcham")],
             ],
           ],
           [
             "cornerStyle",
-            "Burchaklar",
+            __t("Burchaklar"),
             [
-              ["sharp", "To‘g‘ri"],
-              ["soft", "Yumshoq"],
-              ["round", "Yumaloq"],
+              ["sharp", __t("To\u2018g\u2018ri")],
+              ["soft", __t("Yumshoq")],
+              ["round", __t("Yumaloq")],
             ],
           ],
           [
             "density",
-            "Oraliqlar",
+            __t("Oraliqlar"),
             [
-              ["comfortable", "Keng"],
-              ["compact", "Ixcham"],
+              ["comfortable", __t("Keng")],
+              ["compact", __t("Ixcham")],
             ],
           ],
         ] as const
@@ -135,8 +137,8 @@ export function AppearanceControls({
       <div className="form-grid">
         {(
           [
-            ["productColumns", "Kompyuter: ustunlar", [2, 3, 4]],
-            ["mobileColumns", "Telefon: ustunlar", [1, 2]],
+            ["productColumns", __t("Kompyuter: ustunlar"), [2, 3, 4]],
+            ["mobileColumns", __t("Telefon: ustunlar"), [1, 2]],
           ] as const
         ).map(([key, label, options]) => (
           <Field label={label} key={key}>
@@ -153,15 +155,15 @@ export function AppearanceControls({
           </Field>
         ))}
       </div>
-      <h4>Ko‘rinadigan bo‘limlar</h4>
+      <h4>{__t("Ko\u2018rinadigan bo\u2018limlar")}</h4>
       {(
         [
-          ["showHero", "Banner"],
-          ["showSearch", "Qidirish"],
-          ["showCategories", "Kategoriyalar"],
-          ["showPrices", "Narxlar"],
-          ["showContacts", "Aloqa tugmalari"],
-          ["showLocation", "Manzil va xarita"],
+          ["showHero", __t("Banner")],
+          ["showSearch", __t("Qidirish")],
+          ["showCategories", __t("Kategoriyalar")],
+          ["showPrices", __t("Narxlar")],
+          ["showContacts", __t("Aloqa tugmalari")],
+          ["showLocation", __t("Manzil va xarita")],
         ] as const
       ).map(([key, label]) => (
         <label className="check" key={key}>

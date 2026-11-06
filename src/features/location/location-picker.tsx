@@ -1,4 +1,5 @@
 "use client";
+import { useTranslator } from "../../i18n/runtime";
 import { useEffect, useRef, useState } from "react";
 import type * as Leaflet from "leaflet";
 import type { Business } from "../../types";
@@ -15,11 +16,12 @@ export function LocationPicker({
   value: Business;
   onChange: (v: Business) => void;
 }) {
+  const __t = useTranslator();
   const host = useRef<HTMLDivElement>(null);
   const map = useRef<Leaflet.Map | null>(null);
   const marker = useRef<Leaflet.Marker | null>(null);
   const latest = useRef({ value, onChange });
-  latest.current = { value, onChange };
+  useEffect(() => { latest.current = { value, onChange }; }, [value, onChange]);
   const [error, setError] = useState("");
   const [locating, setLocating] = useState(false);
   useEffect(() => {
@@ -66,7 +68,7 @@ export function LocationPicker({
       })
       .catch(() => {
         if (!dead)
-          setError("Xarita yuklanmadi. Koordinata yoki havola kiriting.");
+          setError(__t("Xarita yuklanmadi. Koordinata yoki havola kiriting."));
       });
     return () => {
       dead = true;
@@ -87,14 +89,16 @@ export function LocationPicker({
   }, [value.latitude, value.longitude]);
   return (
     <div className="location-editor">
-      <h3>Lokatsiya</h3>
+      <h3>{__t("Lokatsiya")}</h3>
       <p className="muted">
-        Manzilni yozing va xaritadan belgilang. Pin joyini surish mumkin.
+        {__t(
+          "Manzilni yozing va xaritadan belgilang. Pin joyini surish mumkin.",
+        )}
       </p>
       <div
         className="location-map"
         ref={host}
-        aria-label="Lokatsiyani tanlash xaritasi"
+        aria-label={__t("Lokatsiyani tanlash xaritasi")}
       />
       {error && (
         <p className="error" role="alert">
@@ -105,7 +109,7 @@ export function LocationPicker({
         {(["latitude", "longitude"] as const).map((key, i) => (
           <Field
             key={key}
-            label={i ? "Uzunlik (longitude)" : "Kenglik (latitude)"}
+            label={i ? __t("Uzunlik (longitude)") : __t("Kenglik (latitude)")}
           >
             <input
               type="number"
@@ -123,7 +127,7 @@ export function LocationPicker({
           </Field>
         ))}
       </div>
-      <Field label="Xarita havolasi">
+      <Field label={__t("Xarita havolasi")}>
         <input
           type="url"
           placeholder="https://maps.google.com/..."
@@ -146,7 +150,7 @@ export function LocationPicker({
           disabled={locating}
           onClick={() => {
             if (!navigator.geolocation) {
-              setError("Brauzer lokatsiyani qo‘llamaydi.");
+              setError(__t("Brauzer lokatsiyani qo\u2018llamaydi."));
               return;
             }
             setLocating(true);
@@ -161,14 +165,14 @@ export function LocationPicker({
                 setError("");
               },
               () => {
-                setError("Ruxsat berilmadi. Xaritadan tanlang.");
+                setError(__t("Ruxsat berilmadi. Xaritadan tanlang."));
                 setLocating(false);
               },
               { timeout: 15000, enableHighAccuracy: true },
             );
           }}
         >
-          {locating ? "Aniqlanmoqda…" : "Joylashuvimni olish"}
+          {locating ? "Aniqlanmoqda…" : __t("Joylashuvimni olish")}
         </Button>
         <Button
           type="button"
@@ -177,7 +181,7 @@ export function LocationPicker({
             onChange({ ...value, latitude: null, longitude: null, mapUrl: "" })
           }
         >
-          Tozalash
+          {__t("Tozalash")}
         </Button>
         {mapLink(value) && (
           <a
@@ -186,7 +190,7 @@ export function LocationPicker({
             rel="noreferrer"
             className="text-link"
           >
-            Xaritada tekshirish ↗
+            {__t("Xaritada tekshirish \u2197")}
           </a>
         )}
       </div>

@@ -2,6 +2,8 @@
 
 Next.js frontend va Python Django backend bir paketda. Demo loginlar yo‘q. Ma’lumotlar bazasi, email kodi bilan ro‘yxatdan o‘tish, server tekshiradigan rollar va tenant izolyatsiyasi mavjud.
 
+Railway’dagi mavjud loyihani yangilash uchun avval **[START_HERE_UZ.md](START_HERE_UZ.md)** faylini o‘qing.
+
 ## Yangi imkoniyatlar
 
 - To‘liq ekran kengligi: noutbukda ortiqcha yon bo‘shliqlar qisqartirilgan. Merchant ixcham/keng/to‘liq ekran variantini tanlaydi.
@@ -18,8 +20,8 @@ Next.js frontend va Python Django backend bir paketda. Demo loginlar yo‘q. Ma�
 | Tarif | Narx | Mahsulotlar | Farqi |
 | --- | --- | --- | --- |
 | Bepul sinov | Birinchi 30 kun — 0 so‘m | 1 000 ta | Asosiy katalog, barcha dizaynlar, 7 kunlik statistika |
-| Pro | 20 000 so‘m / oy (30 kun) | Cheksiz | Cheksiz katalog, brending, 7 kunlik statistika |
-| VIP | 39 000 so‘m / oy (30 kun) | Cheksiz | Pro + 7/30/90 kunlik tahlil, davr ko‘rsatkichlari va CSV eksport |
+| Pro | 49 000 so‘m / oy (30 kun) | Cheksiz | Cheksiz katalog, brending, 7 kunlik statistika |
+| VIP | 99 000 so‘m / oy (30 kun) | Cheksiz | Pro + 7/30/90 kunlik tahlil, davr ko‘rsatkichlari va CSV eksport |
 
 Barcha tariflarda kategoriyalar cheklanmagan, telefon/Telegram aloqalari, 3 ta layout uslubi va keng dizayn sozlamalari bor. “Cheksiz” tarifda sun’iy mahsulot kvotasi yo‘qligini anglatadi; amaliy sig‘im server resurslariga bog‘liq.
 

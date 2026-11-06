@@ -1,4 +1,5 @@
 "use client";
+import { useTranslator } from "../../i18n/runtime";
 import {
   useEffect,
   useRef,
@@ -29,7 +30,9 @@ export function Button({
   variant = "",
   className = "",
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: string }) {
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: string;
+}) {
   return (
     <ShadcnButton
       {...props}
@@ -47,12 +50,13 @@ export function Button({
   );
 }
 export function Logo({ light = false }: { light?: boolean }) {
+  const __t = useTranslator();
   const { db } = useApp();
   return (
     <Link
       href="/"
       className={`brand ${light ? "brand-light" : ""}`}
-      aria-label="Bosh sahifa"
+      aria-label={__t("Bosh sahifa")}
     >
       {db.platform.logo ? (
         <img src={db.platform.logo} alt="" />
@@ -66,16 +70,17 @@ export function Logo({ light = false }: { light?: boolean }) {
   );
 }
 export function Preferences() {
+  const __t = useTranslator();
   const { dark, toggleDark, language, setLanguage } = useApp();
   return (
     <div className="preferences">
       <label className="sr-only" htmlFor="language">
-        Til
+        {__t("Til")}
       </label>
       <Globe size={15} />
       <select
         id="language"
-        aria-label="Til"
+        aria-label={__t("Til")}
         value={language}
         onChange={(e) => setLanguage(e.target.value as "uz" | "ru" | "en")}
       >
@@ -86,7 +91,7 @@ export function Preferences() {
       <button
         className="icon-btn"
         onClick={toggleDark}
-        aria-label="Rang rejimi"
+        aria-label={__t("Rang rejimi")}
       >
         {dark ? <Sun size={18} /> : <Moon size={18} />}
       </button>
@@ -102,11 +107,12 @@ export function Field({
   error?: string;
   children: ReactNode;
 }) {
+  const __t = useTranslator();
   return (
     <label className="field">
-      <span>{label}</span>
+      <span>{__t(label)}</span>
       {children}
-      {error && <small className="error">{error}</small>}
+      {error && <small className="error">{__t(error)}</small>}
     </label>
   );
 }
@@ -124,9 +130,10 @@ export function Modal({
   children: ReactNode;
   wide?: boolean;
 }) {
+  const __t = useTranslator();
   const ref = useRef<HTMLDivElement>(null);
   const closeRef = useRef(onClose);
-  closeRef.current = onClose;
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
   useEffect(() => {
     const previous = document.activeElement as HTMLElement;
     ref.current?.focus();
@@ -169,12 +176,16 @@ export function Modal({
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label={title}
+        aria-label={__t(title)}
         className={`modal ${wide ? "wide" : ""}`}
       >
         <div className="modal-title">
-          <h2>{title}</h2>
-          <button className="icon-btn" aria-label="Yopish" onClick={onClose}>
+          <h2>{__t(title)}</h2>
+          <button
+            className="icon-btn"
+            aria-label={__t("Yopish")}
+            onClick={onClose}
+          >
             <X />
           </button>
         </div>
@@ -192,12 +203,17 @@ export function Confirm({
   onConfirm: () => void;
   onClose: () => void;
 }) {
+  const __t = useTranslator();
   return (
     <Modal title={title} onClose={onClose}>
-      <p>Bu amalni tasdiqlang. O‘chirilgan ma’lumot qaytarilmaydi.</p>
+      <p>
+        {__t(
+          "Bu amalni tasdiqlang. O\u2018chirilgan ma\u2019lumot qaytarilmaydi.",
+        )}
+      </p>
       <div className="actions end">
         <Button variant="secondary" onClick={onClose}>
-          Bekor qilish
+          {__t("Bekor qilish")}
         </Button>
         <Button
           variant="danger"
@@ -206,7 +222,7 @@ export function Confirm({
             onClose();
           }}
         >
-          Tasdiqlash
+          {__t("Tasdiqlash")}
         </Button>
       </div>
     </Modal>
@@ -221,16 +237,17 @@ export function UploadImage({
   onChange: (s: string) => void;
   label?: string;
 }) {
+  const __t = useTranslator();
   const [busy, setBusy] = useState(false);
   const input = useRef<HTMLInputElement>(null);
   function read(file?: File) {
     if (!file) return;
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-      toast.error("JPG, PNG yoki WebP rasmini tanlang");
+      toast.error(__t("JPG, PNG yoki WebP rasmini tanlang"));
       return;
     }
     if (file.size > 2 * 1024 * 1024) {
-      toast.error("Rasm 2 MB dan oshmasin");
+      toast.error(__t("Rasm 2 MB dan oshmasin"));
       return;
     }
     setBusy(true);
@@ -240,7 +257,7 @@ export function UploadImage({
       setBusy(false);
     };
     reader.onerror = () => {
-      toast.error("Rasm o‘qilmadi");
+      toast.error(__t("Rasm o\u2018qilmadi"));
       setBusy(false);
     };
     reader.readAsDataURL(file);
@@ -266,11 +283,11 @@ export function UploadImage({
       />
       {value ? (
         <>
-          <img src={value} alt="Yuklangan rasm" />
+          <img src={value} alt={__t("Yuklangan rasm")} />
           <button
             type="button"
             className="remove-image"
-            aria-label="Rasmni o‘chirish"
+            aria-label={__t("Rasmni o\u2018chirish")}
             onClick={() => onChange("")}
           >
             <X size={16} />
@@ -284,9 +301,11 @@ export function UploadImage({
         disabled={busy}
         onClick={() => input.current?.click()}
       >
-        {busy ? "Yuklanmoqda…" : label}
+        {busy ? __t("Yuklanmoqda\u2026") : __t(label)}
       </button>
-      <small>Olib tashlang yoki tanlang · JPG, PNG, WebP · 2 MB</small>
+      <small>
+        {__t("Olib tashlang yoki tanlang \u00B7 JPG, PNG, WebP \u00B7 2 MB")}
+      </small>
     </div>
   );
 }
@@ -297,28 +316,36 @@ export function Empty({
   title?: string;
   children?: ReactNode;
 }) {
+  const __t = useTranslator();
   return (
     <div className="empty">
       <Search size={28} />
-      <h3>{title}</h3>
+      <h3>{__t(title)}</h3>
       <p>
-        {children ?? "Yangi ma’lumot qo‘shing yoki filtrlarni o‘zgartiring."}
+        {children ??
+          __t(
+            "Yangi ma\u2019lumot qo\u2018shing yoki filtrlarni o\u2018zgartiring.",
+          )}
       </p>
     </div>
   );
 }
 export function Loading() {
+  const __t = useTranslator();
   return (
-    <div className="loading" aria-label="Yuklanmoqda" role="status">
+    <div className="loading" aria-label={__t("Yuklanmoqda")} role="status">
       <div className="skeleton" />
       <div className="skeleton" />
       <div className="skeleton" />
-      <p>Yuklanmoqda…</p>
+      <p>{__t("Yuklanmoqda\u2026")}</p>
     </div>
   );
 }
 export function SiteLink({ slug }: { slug: string }) {
+  const __t = useTranslator();
   const [origin, setOrigin] = useState("");
+  // Read browser-only origin after hydration; the initial SSR value stays empty.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setOrigin(location.origin), []);
   return (
     <div className="site-link">
@@ -328,19 +355,21 @@ export function SiteLink({ slug }: { slug: string }) {
       </span>
       <button
         className="icon-btn"
-        title="Havolani nusxalash"
+        title={__t("Havolani nusxalash")}
         onClick={async () => {
           try {
             await navigator.clipboard.writeText(`${location.origin}/${slug}`);
-            toast.success("Havola nusxalandi");
+            toast.success(__t("Havola nusxalandi"));
           } catch {
-            toast.error("Nusxalab bo‘lmadi. Havolani qo‘lda belgilang.");
+            toast.error(
+              __t("Nusxalab bo\u2018lmadi. Havolani qo\u2018lda belgilang."),
+            );
           }
         }}
       >
         <Copy size={16} />
       </button>
-      <Link href={`/${slug}`} target="_blank" title="Saytni ochish">
+      <Link href={`/${slug}`} target="_blank" title={__t("Saytni ochish")}>
         <ExternalLink size={16} />
       </Link>
     </div>
@@ -357,11 +386,14 @@ export function Pagination({
   size?: number;
   onChange: (n: number) => void;
 }) {
+  const __t = useTranslator();
   const pages = Math.max(1, Math.ceil(total / size));
   return (
     <div className="pagination">
       <span>
-        {total} ta natija · {Math.min(page, pages)} / {pages}
+        {total}
+        {__t("ta natija \u00B7")}
+        {Math.min(page, pages)} / {pages}
       </span>
       <div className="actions">
         <Button
@@ -369,20 +401,21 @@ export function Pagination({
           disabled={page <= 1}
           onClick={() => onChange(page - 1)}
         >
-          Oldingi
+          {__t("Oldingi")}
         </Button>
         <Button
           variant="secondary small"
           disabled={page >= pages}
           onClick={() => onChange(page + 1)}
         >
-          Keyingi
+          {__t("Keyingi")}
         </Button>
       </div>
     </div>
   );
 }
 export function useDirtyWarning(dirty: boolean) {
+  const __t = useTranslator();
   useEffect(() => {
     const h = (e: BeforeUnloadEvent) => {
       if (dirty) e.preventDefault();
@@ -393,7 +426,9 @@ export function useDirtyWarning(dirty: boolean) {
       if (
         a &&
         a.href !== location.href &&
-        !window.confirm("Saqlanmagan o‘zgarishlar bor. Sahifadan chiqasizmi?")
+        !window.confirm(
+          __t("Saqlanmagan o\u2018zgarishlar bor. Sahifadan chiqasizmi?"),
+        )
       ) {
         e.preventDefault();
         e.stopPropagation();

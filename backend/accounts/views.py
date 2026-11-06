@@ -168,9 +168,13 @@ def request_code(request):
             not settings.EMAIL_HOST_USER or not settings.EMAIL_HOST_PASSWORD
         ):
             raise RuntimeError("SMTP not configured")
+        from .localization import translate
+        from django.utils.translation import get_language
+        lang = (get_language() or 'uz').split('-')[0]
+        body = {'uz':f"Tasdiqlash kodingiz: {value}\nKod 10 daqiqa amal qiladi. Kodni hech kimga bermang.\nVITRIX — DEALS loyihasi",'ru':f"Ваш код подтверждения: {value}\nКод действует 10 минут. Никому его не сообщайте.\nVITRIX — проект DEALS",'en':f"Your verification code: {value}\nThe code is valid for 10 minutes. Do not share it.\nVITRIX — a DEALS project"}
         send_mail(
-            "VITRIX — tasdiqlash kodi",
-            f"Tasdiqlash kodingiz: {value}\nKod 10 daqiqa amal qiladi. Kodni hech kimga bermang.\nVITRIX",
+            translate("VITRIX — tasdiqlash kodi"),
+            body.get(lang,body["uz"]),
             settings.DEFAULT_FROM_EMAIL,
             [email],
             fail_silently=False,

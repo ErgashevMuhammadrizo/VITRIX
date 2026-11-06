@@ -1,4 +1,6 @@
 "use client";
+import { useTranslator } from "../../i18n/runtime";
+import { ContentTranslationsEditor } from "../../components/ui/content-translations";
 import { useState } from "react";
 import { Plus, Search, Pencil, Trash2, FolderOpen } from "lucide-react";
 import { useApp, recordActivity } from "../../stores/app-store";
@@ -15,6 +17,7 @@ import { uid } from "../../lib/utils";
 import { toast } from "sonner";
 import type { Category } from "../../types";
 export function CategoryManager({ businessId }: { businessId: string }) {
+  const __t = useTranslator();
   const { db, update } = useApp();
   const [q, setQ] = useState("");
   const [edit, setEdit] = useState<Category | null | undefined>();
@@ -30,26 +33,31 @@ export function CategoryManager({ businessId }: { businessId: string }) {
     <>
       <div className="page-title">
         <div>
-          <h1>Kategoriyalar</h1>
+          <h1>{__t("Kategoriyalar")}</h1>
           <p>
-            Mahsulotlaringizni tartiblang. Mijozingiz keraklisini tezroq topsin.
+            {__t(
+              "Mahsulotlaringizni tartiblang. Mijozingiz keraklisini tezroq topsin.",
+            )}
           </p>
         </div>
         <Button onClick={() => setEdit(null)}>
           <Plus size={18} />
-          Kategoriya qo‘shish
+          {__t("Kategoriya qo\u2018shish")}
         </Button>
       </div>
       <div className="toolbar">
         <div className="search-input">
           <Search size={17} />
           <input
-            placeholder="Kategoriya qidirish…"
+            placeholder={__t("Kategoriya qidirish\u2026")}
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
         </div>
-        <span className="muted">{items.length} ta kategoriya</span>
+        <span className="muted">
+          {items.length}
+          {__t("ta kategoriya")}
+        </span>
       </div>
       {items.length ? (
         <div className="category-grid">
@@ -64,26 +72,27 @@ export function CategoryManager({ businessId }: { businessId: string }) {
               )}
               <div>
                 <span className={`badge ${c.active ? "green" : "gray"}`}>
-                  {c.active ? "Faol" : "Yashirilgan"}
+                  {c.active ? __t("Faol") : __t("Yashirilgan")}
                 </span>
                 <h3>{c.name}</h3>
                 <p>{c.description}</p>
                 <div className="between">
                   <small>
-                    {db.products.filter((p) => p.categoryId === c.id).length} ta
-                    mahsulot · Tartib: {c.order}
+                    {db.products.filter((p) => p.categoryId === c.id).length}
+                    {__t("ta mahsulot \u00B7 Tartib:")}
+                    {c.order}
                   </small>
                   <div className="actions">
                     <button
                       className="icon-btn"
-                      title="Tahrirlash"
+                      title={__t("Tahrirlash")}
                       onClick={() => setEdit(c)}
                     >
                       <Pencil size={16} />
                     </button>
                     <button
                       className="icon-btn red"
-                      title="O‘chirish"
+                      title={__t("O\u2018chirish")}
                       onClick={() => setDel(c)}
                     >
                       <Trash2 size={16} />
@@ -106,7 +115,10 @@ export function CategoryManager({ businessId }: { businessId: string }) {
       )}{" "}
       {del && (
         <Confirm
-          title={`“${del.name}” kategoriyasi o‘chirilsinmi? Mahsulotlar kategoriyasiz qoladi.`}
+          title={__t(
+            "\u201C{0}\u201D kategoriyasi o\u2018chirilsinmi? Mahsulotlar kategoriyasiz qoladi.",
+            { "0": del.name },
+          )}
           onClose={() => setDel(undefined)}
           onConfirm={() =>
             update((d) => {
@@ -114,7 +126,7 @@ export function CategoryManager({ businessId }: { businessId: string }) {
               d.products.forEach((p) => {
                 if (p.categoryId === del.id) p.categoryId = "";
               });
-            }, "Kategoriya o‘chirildi")
+            }, __t("Kategoriya o\u2018chirildi"))
           }
         />
       )}
@@ -130,6 +142,7 @@ function CategoryEditor({
   businessId: string;
   onClose: () => void;
 }) {
+  const __t = useTranslator();
   const { update } = useApp();
   const [v, setV] = useState<Category>(
     category ?? {
@@ -147,19 +160,24 @@ function CategoryEditor({
   const dirty = JSON.stringify(v) !== start;
   useDirtyWarning(dirty);
   const close = () => {
-    if (!dirty || confirm("Saqlanmagan o‘zgarishlar bor. Chiqasizmi?"))
+    if (
+      !dirty ||
+      confirm(__t("Saqlanmagan o\u2018zgarishlar bor. Chiqasizmi?"))
+    )
       onClose();
   };
   return (
     <Modal
-      title={category ? "Kategoriyani tahrirlash" : "Yangi kategoriya"}
+      title={
+        category ? __t("Kategoriyani tahrirlash") : __t("Yangi kategoriya")
+      }
       onClose={close}
     >
       <form
         onSubmit={async (e) => {
           e.preventDefault();
           if (v.name.trim().length < 2) {
-            toast.error("Kategoriya nomini kiriting");
+            toast.error(__t("Kategoriya nomini kiriting"));
             return;
           }
           if (
@@ -167,13 +185,17 @@ function CategoryEditor({
               if (category)
                 d.categories = d.categories.map((c) => (c.id === v.id ? v : c));
               else d.categories.push({ ...v, name: v.name.trim() });
-              recordActivity(d, businessId, v.name + " kategoriyasi saqlandi");
+              recordActivity(
+                d,
+                businessId,
+                v.name + __t(" kategoriyasi saqlandi"),
+              );
             })
           )
             onClose();
         }}
       >
-        <Field label="Kategoriya nomi *">
+        <Field label={__t("Kategoriya nomi *")}>
           <input
             required
             minLength={2}
@@ -182,18 +204,31 @@ function CategoryEditor({
             onChange={(e) => setV({ ...v, name: e.target.value })}
           />
         </Field>
-        <Field label="Tavsif">
+        <Field label={__t("Tavsif")}>
           <textarea
             maxLength={500}
             value={v.description}
             onChange={(e) => setV({ ...v, description: e.target.value })}
           />
         </Field>
+        <ContentTranslationsEditor
+          value={v.translations}
+          onChange={(translations) => setV({ ...v, translations })}
+          fields={[
+            { key: "name", label: __t("Kategoriya nomi"), max: 80 },
+            {
+              key: "description",
+              label: __t("Tavsif"),
+              max: 500,
+              multiline: true,
+            },
+          ]}
+        />
         <UploadImage
           value={v.image}
           onChange={(image) => setV({ ...v, image })}
         />
-        <Field label="Tartib">
+        <Field label={__t("Tartib")}>
           <input
             type="number"
             min="0"
@@ -208,13 +243,13 @@ function CategoryEditor({
             checked={v.active}
             onChange={(e) => setV({ ...v, active: e.target.checked })}
           />
-          Faol kategoriya
+          {__t("Faol kategoriya")}
         </label>
         <div className="actions end">
           <Button type="button" variant="secondary" onClick={close}>
-            Bekor qilish
+            {__t("Bekor qilish")}
           </Button>
-          <Button>Saqlash</Button>
+          <Button>{__t("Saqlash")}</Button>
         </div>
       </form>
     </Modal>

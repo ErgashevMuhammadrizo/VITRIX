@@ -1,22 +1,17 @@
-# VITRIX Premium MVP — QA
+# VITRIX — yangilanish tekshiruvi
 
-Sana: 2026-11-06. Asos: oldingi VITRIX full-stack MVP. Demo login/parollar qo‘shilmagan.
+Tekshiruv: 2026-11-06. Demo login/parollar kiritilmagan.
 
-## Tekshirilganlar
-
-- Django: 46/46 test. Email kodi, password hashing, CSRF, createsuperuser admin logini, tenant izolyatsiyasi, 1000 mahsulot limiti va obuna bloklash oqimlari.
-- Yangi backend testlar: server bergan ID; Telegram draftida haqiqiy ID/do‘kon/tarif; operator sozlanmaganida halol 503; env fallback; pending arizani takror bosishda yangilash; admin-only activation; 30 kun uzaytirish; retry muddatni ikki marta bermasligi; UUID boshqa payload bilan 409; muddati tugagan hisobni aktivlashtirish; audit tarixi; generic PATCH bilan obunani almashtirishni bloklash; rang/ustun/boolean validatsiya; matn va pin persistensi; unsafe map URL/koordinata rad etilishi; healthcheck.
-- Frontend: 13/13 domain va proxy testi. Palitralar real ranglarni almashtirishi, full width standarti, koordinatalarda nol/diapazon, Google/Yandex parsing va soxta hostlarni rad etish.
+- Django: 55/55 test. Auth/CSRF, email kodi, foydalanuvchi rollari, tenant izolyatsiyasi, mahsulot limitlari, obuna/admin aktivatsiyasi va audit, lokatsiya, kontent tarjimalari, lokalizatsiya, anonim tarif API uchun 401 va public config’da narxlar yo‘qligi.
+- Gmail API: mock HTTPS orqali OAuth refresh, MIME xabar manzili/kodi, muvaffaqiyat va xato natijalari tekshirildi. Haqiqiy Gmail xati ushbu tekshiruvda yuborilmadi.
+- Frontend: 21/21 test. Domain/proxy, tillar katalogi, RU/EN forma va CTA, uch tilli public katalog, tarjima fallback, dizaynni standartga qaytarishda kontentning saqlanishi, yangi narxlar va limitlar.
+- ESLint: tekshirilgan frontend bo‘limlarida 0 error; img optimizatsiyasi, ayrim foydalanilmagan importlar va effect dependency bo‘yicha ogohlantirishlar mavjud.
 - TypeScript noEmit: muvaffaqiyatli.
-- Next.js production build: muvaffaqiyatli. Vinext hosted build paketlash vaqtida ham tekshiriladi.
-- Django migration drift check: yangi 0005 migratsiyadan tashqari o‘zgarish yo‘q.
+- Next.js production build: muvaffaqiyatli.
+- Django makemigrations --check --dry-run: o‘zgarish aniqlanmadi.
+- start-all.sh: bash sintaksis tekshiruvi muvaffaqiyatli.
+- Brauzer: home UZ/RU/EN, tarjima qilingan sarlavha/nav/FAQ/CTA/footer, obuna narxlari yo‘qligi; demo katalog tillari, mahsulot/kategoriya/kontakt tarjimalari, tashrif buyuruvchi tilining paneldan mustaqilligi va tungi palitra tekshirildi.
 
-## Dizayn tekshiruvining chegarasi
+Chegaralar: bu tekshiruv foydalanuvchining Railway xizmatiga redeploy qilmadi. Docker image build, haqiqiy SMTP/Gmail yetkazilishi, domen/TLS va fizik telefonlar sinovi bu muhitda bajarilmadi. ZIPni push/redeploy qilgach o‘zingizning bazangiz va Variables bilan register/login, email kodi, rasmlar va obuna aktivatsiyasini smoke tekshiring.
 
-Yangi UI uchun brauzer preview URL’iga ulanish ERR_CONNECTION_REFUSED bilan ochilmadi. Keyingi browser reload ham URL policy tomonidan bloklandi. Yangi dizaynning brauzerdagi vizual ko‘rinishi, real karta/Telegram ilovasi va mobil viewport shu topshirishda tasdiqlanmagan. JSX/TypeScript, model saqlanishi va ikkala production build tekshiruvlari bajarildi. Real serverda smoke va vizual tekshiruvni tugating.
-
-## Tashqi sozlamalar
-
-Haqiqiy Gmail/SMTP xati jo‘natilmadi (Django test mailbox ishlatiladi). Telegram draftini API testi tekshiradi, haqiqiy operatorga xabar yuborilmagan. To‘lov administrator tomonidan tashqarida tekshiriladi, payment gateway yo‘q. Docker image build, real domen/TLS, production PostgreSQL, OSM tarmoq yuklanishi va fizik telefonlar sinovi hali bajarilmagan.
-
-`docs/DEPLOYMENT.md`da yangi o‘rnatish, mavjud bazani yangilash, Telegram, SMTP, healthcheck va backup buyruqlari bor. Paket serverga joylash uchun tayyorlangan; hosting rekvizitlari kiritilgach real ro‘yxatdan o‘tish va to‘lovdan keyingi aktivatsiya smoke sinovi zarur.
+Mahsulot va biznes matnlari avtomatik tarjima qilinmaydi. Tarjimalar kontent muharririda kiritiladi; bo‘sh maydon asosiy matnga qaytadi. 0006 va 0007 migratsiyalarini ishga tushirish kerak; start-all.sh buni avtomatik bajaradi. SQLite va media uchun /data persistent Volume talab qilinadi.

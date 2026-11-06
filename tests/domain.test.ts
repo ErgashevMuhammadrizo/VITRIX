@@ -116,7 +116,7 @@ test("trial caps at 1000 while Pro and VIP are unlimited", () => {
     assert.ok(canAddProduct(p, 1000000));
     assert.equal(productCapacity(p), "Cheksiz");
   }
-  assert.equal(db.plans.find((p) => p.id === "vip")?.price, 39000);
+  assert.equal(db.plans.find((p) => p.id === "vip")?.price, 99000);
 });
 test("VIP provides extended analytics and CSV while trial cannot be reactivated", () => {
   const db = cloneSeed();
@@ -228,4 +228,164 @@ test("map links parse coordinates and reject spoofed hosts", () => {
   assert.equal(safeMapUrl("https://google.com.evil.example/maps"), "");
   assert.equal(safeMapUrl("javascript:alert(1)"), "");
   assert.equal(safeMapUrl("https://user:pass@maps.google.com/"), "");
+});
+
+import { translate } from "../src/i18n/translate";
+import catalogue from "../src/i18n/catalogue.json";
+import { localizedContent } from "../src/i18n/content";
+import {
+  resetDesign,
+  factoryDesign,
+} from "../src/features/businesses/appearance";
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { I18nProvider } from "../src/i18n/runtime";
+import { AppearanceControls } from "../src/features/businesses/appearance-controls";
+import { CTA } from "../src/components/layout/marketing";
+import { AppProvider } from "../src/stores/app-store";
+import { BusinessSite } from "../src/components/public-website/business-site";
+import { Pricing } from "../src/features/marketing/pages";
+test("every catalogue entry has Russian and English translations", () => {
+  assert.ok(Object.keys(catalogue).length > 700);
+  for (const [key, text] of Object.entries(catalogue)) {
+    assert.ok(text.ru.trim(), key);
+    assert.ok(text.en.trim(), key);
+  }
+});
+test("translations handle interpolation, multiline features and validation", () => {
+  assert.equal(translate("Saqlash", "ru"), "Сохранить");
+  assert.equal(translate("Parollar mos emas", "en"), "Passwords do not match");
+  assert.equal(
+    translate("{0} ta mahsulot", "ru", { "0": 1000 }),
+    "1000 товаров",
+  );
+  assert.equal(
+    translate("Cheksiz mahsulotlar\nCSV eksporti", "en"),
+    "Unlimited products\nCSV export",
+  );
+});
+test("content locale selection preserves original and uses a safe fallback", () => {
+  const record = {
+    name: "Asosiy",
+    description: "Original",
+    translations: {
+      ru: { name: "Название", description: "" },
+      en: { name: "Name" },
+    },
+  };
+  assert.equal(localizedContent(record, "ru").name, "Название");
+  assert.equal(localizedContent(record, "ru").description, "Original");
+  assert.equal(record.name, "Asosiy");
+  assert.equal(localizedContent(record, "uz").name, "Asosiy");
+});
+test("design reset restores all style fields while preserving account catalog and branding", () => {
+  const original = {
+    ...cloneSeed().businesses[0],
+    colorMode: "dark" as const,
+    primary: "#123456",
+    logo: "/media/logo.png",
+    latitude: 41,
+    longitude: 69,
+    translations: { ru: { name: "Магазин" } },
+  };
+  const restored = resetDesign(original);
+  for (const [key, value] of Object.entries(factoryDesign))
+    assert.equal((restored as unknown as Record<string, unknown>)[key], value);
+  for (const key of [
+    "id",
+    "ownerId",
+    "name",
+    "slug",
+    "logo",
+    "planId",
+    "expires",
+    "latitude",
+    "longitude",
+    "translations",
+  ] as const)
+    assert.deepEqual(restored[key], original[key]);
+  assert.equal(original.colorMode, "dark");
+});
+test("updated plans keep the free trial limit and paid plans unlimited", () => {
+  const db = cloneSeed();
+  assert.equal(db.plans.find((p) => p.id === "pro")?.price, 49000);
+  assert.equal(db.plans.find((p) => p.id === "vip")?.price, 99000);
+  assert.equal(db.plans.find((p) => p.id === "starter")?.limit, 1000);
+  assert.equal(db.plans.find((p) => p.id === "vip")?.limit, null);
+});
+test("Russian and English design forms render translated labels and choices", () => {
+  for (const language of ["ru", "en"] as const) {
+    const markup = renderToStaticMarkup(
+      React.createElement(
+        I18nProvider,
+        { language },
+        React.createElement(AppearanceControls, {
+          value: cloneSeed().businesses[0],
+          onChange: () => {},
+        }),
+      ),
+    );
+    assert.ok(
+      markup.includes(language === "ru" ? "Ширина сайта" : "Website width"),
+    );
+    assert.ok(
+      markup.includes(language === "ru" ? "Фон страницы" : "Page background"),
+    );
+    assert.ok(!markup.includes("Sayt kengligi"));
+    assert.ok(!markup.includes("Asosiy matn"));
+  }
+});
+test("marketing CTA follows locale and guest pricing does not show prices", () => {
+  for (const language of ["ru", "en"] as const) {
+    const markup = renderToStaticMarkup(
+      React.createElement(I18nProvider, { language }, React.createElement(CTA)),
+    );
+    assert.ok(
+      markup.includes(language === "ru" ? "Начать бесплатно" : "Start free"),
+    );
+    assert.ok(!markup.includes("Bepul boshlash"));
+  }
+  const pricing = renderToStaticMarkup(
+    React.createElement(AppProvider, null, React.createElement(Pricing)),
+  );
+  assert.ok(!pricing.includes("49"));
+  assert.ok(!pricing.includes("99"));
+  assert.ok(pricing.includes("/register"));
+});
+test("public catalogs render UZ RU EN selector and chosen content without dashboard locale leaks", () => {
+  const base = cloneSeed();
+  for (const language of ["ru", "en"] as const) {
+    const business = {
+      ...base.businesses[0],
+      language,
+      translations: {
+        ru: { name: "Мой магазин", description: "Описание магазина" },
+        en: { name: "My shop", description: "Shop description" },
+      },
+    };
+    const markup = renderToStaticMarkup(
+      React.createElement(
+        AppProvider,
+        { initialLanguage: "uz" },
+        React.createElement(BusinessSite, {
+          business,
+          preview: true,
+          data: {
+            business,
+            products: base.products,
+            categories: base.categories,
+          },
+        }),
+      ),
+    );
+    assert.ok(markup.includes(language === "ru" ? "Мой магазин" : "My shop"));
+    assert.ok(
+      markup.includes(
+        language === "ru" ? "Выберите своё любимое." : "Find your favorite.",
+      ),
+    );
+    for (const value of ["uz", "ru", "en"])
+      assert.ok(markup.includes(`value="${value}"`));
+    assert.ok(markup.includes("DEALS"));
+  }
 });

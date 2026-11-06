@@ -78,8 +78,10 @@ PLATFORM_FIELDS = [
     "logo",
     "subscriptionTelegram",
 ]
-CATEGORY_FIELDS = ["name", "description", "image", "order", "active"]
+BUSINESS_FIELDS += ["translations"]
+CATEGORY_FIELDS = ["translations", "name", "description", "image", "order", "active"]
 PRODUCT_FIELDS = [
+    "translations",
     "name",
     "slug",
     "image",
@@ -281,6 +283,10 @@ def assign(obj, data, fields):
         if field not in data:
             continue
         value = data[field]
+        if field == "translations":
+            allowed = {Business: {"name":100,"description":2000,"address":300,"hours":120,"heroTitle":140}, Product:{"name":100,"description":4000,"shortDescription":180}, Category:{"name":80,"description":500}}.get(type(obj),{})
+            if not isinstance(value,dict) or any(lang not in ["uz","ru","en"] or not isinstance(content,dict) or any(key not in allowed or not isinstance(text,str) or len(text)>allowed[key] for key,text in content.items()) for lang,content in value.items()):
+                raise ValidationError("Tarjima maydonlarini tekshiring.")
         if field in ["logo", "cover", "image"]:
             value = image_url(value)
         if field == "images":
@@ -453,6 +459,7 @@ def workspace(request):
 
 
 @require_http_methods(["GET"])
+@protected()
 def plans(request):
     return JsonResponse(
         {
@@ -577,10 +584,7 @@ def public_config(request):
     return JsonResponse(
         {
             "platform": platform_record(platform),
-            "plans": [
-                {"id": p.pk, **record(p, PLAN_FIELDS)}
-                for p in Plan.objects.order_by("price")
-            ],
+            "plans": [],
         }
     )
 
@@ -613,21 +617,14 @@ def telegram_subscription(request):
                 r.save(update_fields=["plan"])
             else:
                 SubscriptionRequest.objects.create(business=b, plan=plan)
-        message = (
-            "Salom, men saytimga obuna aktivlashtirmoqchi edim.\n\nAkkaunt ID: "
-            + account_ref(request.user.pk)
-            + "\nDo‘kon: "
-            + b.name
-            + "\nSayt: "
-            + settings.FRONTEND_URL.rstrip("/")
-            + "/"
-            + b.slug
-            + "\nTarif: "
-            + plan.name
-            + "\nMuddat: 1 oy (30 kun)\nNarx: "
-            + f"{plan.price:,}".replace(",", " ")
-            + " so‘m"
-        )
+        from django.utils.translation import get_language
+        lang = (get_language() or "uz").split("-")[0]
+        wording = {"uz":["Salom, men saytimga obuna aktivlashtirmoqchi edim.","Akkaunt ID","Do‘kon","Sayt","Tarif","Muddat: 1 oy (30 kun)","Narx","so‘m"],"ru":["Здравствуйте! Хочу активировать подписку для своего сайта.","ID аккаунта","Магазин","Сайт","Тариф","Срок: 1 месяц (30 дней)","Цена","сум"],"en":["Hello! I would like to activate a subscription for my website.","Account ID","Shop","Website","Plan","Period: 1 month (30 days)","Price","UZS"]}.get(lang)
+        if not wording:
+            wording = ["Salom, men saytimga obuna aktivlashtirmoqchi edim.","Akkaunt ID","Do‘kon","Sayt","Tarif","Muddat: 1 oy (30 kun)","Narx","so‘m"]
+        url = settings.FRONTEND_URL.rstrip("/") + "/" + b.slug
+        price = f"{plan.price:,}".replace(",", " ")
+        message = f"{wording[0]}\n\n{wording[1]}: {account_ref(request.user.pk)}\n{wording[2]}: {b.name}\n{wording[3]}: {url}\n{wording[4]}: {plan.name}\n{wording[5]}\n{wording[6]}: {price} {wording[7]}"
         return JsonResponse(
             {"url": "https://t.me/" + operator + "?" + urlencode({"text": message})}
         )

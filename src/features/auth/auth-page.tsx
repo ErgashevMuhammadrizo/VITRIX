@@ -1,4 +1,5 @@
 "use client";
+import { useTranslator } from "../../i18n/runtime";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -12,6 +13,7 @@ import { useApp } from "../../stores/app-store";
 import { authApi } from "../../services/auth";
 import { toast } from "sonner";
 export function AuthPage({ mode }: { mode: string }) {
+  const __t = useTranslator();
   const { login, acceptUser } = useApp();
   const router = useRouter();
   const [show, setShow] = useState(false);
@@ -43,7 +45,9 @@ export function AuthPage({ mode }: { mode: string }) {
     try {
       await fn();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "So‘rov bajarilmadi.");
+      setError(
+        e instanceof Error ? __t(e.message) : __t("So\u2018rov bajarilmadi."),
+      );
     } finally {
       setBusy(false);
     }
@@ -51,7 +55,7 @@ export function AuthPage({ mode }: { mode: string }) {
   const requestCode = async (email: string, purpose: "register" | "reset") => {
     await authApi.requestCode(email, purpose);
     setCooldown(60);
-    toast.success("Kod emailingizga yuborildi.");
+    toast.success(__t("Kod emailingizga yuborildi."));
   };
   return (
     <div className="auth-page">
@@ -59,19 +63,19 @@ export function AuthPage({ mode }: { mode: string }) {
         <Logo light />
         <div>
           <span className="eyebrow">
-            SIZNING BIZNESINGIZ. SIZNING SAYTINGIZ.
+            {__t("SIZNING BIZNESINGIZ. SIZNING SAYTINGIZ.")}
           </span>
           <h1>
-            Katta g‘oyalar
+            {__t("Katta g\u2018oyalar")}
             <br />
-            oddiy qadamdan
+            {__t("oddiy qadamdan")}
             <br />
-            boshlanadi.
+            {__t("boshlanadi.")}
           </h1>
           <p>
-            Mahsulotlaringizni ko‘rsating.
+            {__t("Mahsulotlaringizni ko\u2018rsating.")}
             <br />
-            Mijozlaringizga yaqinroq bo‘ling.
+            {__t("Mijozlaringizga yaqinroq bo\u2018ling.")}
           </p>
           <div
             className="callout"
@@ -82,40 +86,41 @@ export function AuthPage({ mode }: { mode: string }) {
             }}
           >
             <Mail size={24} />
-            <h3 style={{ color: "white" }}>Email orqali tasdiqlash</h3>
+            <h3 style={{ color: "white" }}>{__t("Email orqali tasdiqlash")}</h3>
             <p>
-              Hisobingiz faqat shaxsiy emailingizga yuborilgan kod bilan
-              ochiladi.
+              {__t(
+                "Hisobingiz faqat shaxsiy emailingizga yuborilgan kod bilan ochiladi.",
+              )}
             </p>
           </div>
         </div>
-        <small>© 2026 VITRIX</small>
+        <small>{__t("\u00A9 2026 VITRIX")}</small>
       </aside>
       <main className="auth-main">
         <div className="auth-top">
           <Link href="/" className="text-link">
             <ArrowLeft size={16} />
-            Bosh sahifa
+            {__t("Bosh sahifa")}
           </Link>
           <Preferences />
         </div>
         <div className="auth-form">
-          <span className="eyebrow">VITRIX GA XUSH KELIBSIZ</span>
+          <span className="eyebrow">{__t("VITRIX GA XUSH KELIBSIZ")}</span>
           <h1>
             {mode === "register"
               ? pending
-                ? "Emailingizni tasdiqlang."
-                : "Biznesingizni boshlang."
+                ? __t("Emailingizni tasdiqlang.")
+                : __t("Biznesingizni boshlang.")
               : mode === "forgot-password"
-                ? "Parolni tiklash"
-                : "Hisobingizga kiring."}
+                ? __t("Parolni tiklash")
+                : __t("Hisobingizga kiring.")}
           </h1>
           <p>
             {mode === "register"
-              ? "Birinchi 1 oy bepul. 1 000 tagacha mahsulot."
+              ? __t("Birinchi 1 oy bepul. 1 000 tagacha mahsulot.")
               : mode === "forgot-password"
-                ? "Tasdiqlash kodi orqali parolingizni yangilang."
-                : "Biznesingizni boshqarishni davom ettiring."}
+                ? __t("Tasdiqlash kodi orqali parolingizni yangilang.")
+                : __t("Biznesingizni boshqarishni davom ettiring.")}
           </p>
           {mode === "login" ? (
             <>
@@ -130,8 +135,8 @@ export function AuthPage({ mode }: { mode: string }) {
                 )}
               >
                 <Field
-                  label="Email yoki username"
-                  error={form.formState.errors.username?.message}
+                  label={__t("Email yoki username")}
+                  error={__t(form.formState.errors.username?.message)}
                 >
                   <input
                     autoComplete="username"
@@ -139,8 +144,8 @@ export function AuthPage({ mode }: { mode: string }) {
                   />
                 </Field>
                 <Field
-                  label="Parol"
-                  error={form.formState.errors.password?.message}
+                  label={__t("Parol")}
+                  error={__t(form.formState.errors.password?.message)}
                 >
                   <span className="password-input">
                     <input
@@ -150,7 +155,7 @@ export function AuthPage({ mode }: { mode: string }) {
                     />
                     <button
                       type="button"
-                      aria-label="Parolni ko‘rsatish"
+                      aria-label={__t("Parolni ko\u2018rsatish")}
                       onClick={() => setShow(!show)}
                     >
                       {show ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -164,26 +169,32 @@ export function AuthPage({ mode }: { mode: string }) {
                       checked={remember}
                       onChange={(e) => setRemember(e.target.checked)}
                     />
-                    Meni eslab qolish
+                    {__t("Meni eslab qolish")}
                   </label>
-                  <Link href="/forgot-password">Parolni unutdingizmi?</Link>
+                  <Link href="/forgot-password">
+                    {__t("Parolni unutdingizmi?")}
+                  </Link>
                 </div>
                 <Button type="submit" disabled={busy} className="full">
-                  {busy ? "Kirilmoqda…" : "Kirish"}
+                  {busy ? "Kirilmoqda…" : __t("Kirish")}
                   <ArrowRight size={17} />
                 </Button>
               </form>
               <p className="center">
-                Hisobingiz yo‘qmi?{" "}
-                <Link href="/register">Ro‘yxatdan o‘ting</Link>
+                {__t("Hisobingiz yo\u2018qmi?")}{" "}
+                <Link href="/register">
+                  {__t("Ro\u2018yxatdan o\u2018ting")}
+                </Link>
               </p>
             </>
           ) : mode === "register" ? (
             pending ? (
               <>
                 <p>
-                  <b>{pending.email}</b> manziliga yuborilgan 6 xonali kodni
-                  kiriting. Kod 10 daqiqa amal qiladi.
+                  <b>{pending.email}</b>
+                  {__t(
+                    "manziliga yuborilgan 6 xonali kodni kiriting. Kod 10 daqiqa amal qiladi.",
+                  )}
                 </p>
                 <form
                   onSubmit={(e) => {
@@ -199,7 +210,7 @@ export function AuthPage({ mode }: { mode: string }) {
                     });
                   }}
                 >
-                  <Field label="Tasdiqlash kodi">
+                  <Field label={__t("Tasdiqlash kodi")}>
                     <input
                       required
                       inputMode="numeric"
@@ -213,7 +224,9 @@ export function AuthPage({ mode }: { mode: string }) {
                     />
                   </Field>
                   <Button type="submit" disabled={busy} className="full">
-                    {busy ? "Tekshirilmoqda…" : "Tasdiqlash va hisob yaratish"}
+                    {busy
+                      ? "Tekshirilmoqda…"
+                      : __t("Tasdiqlash va hisob yaratish")}
                     <Check size={17} />
                   </Button>
                 </form>
@@ -227,7 +240,7 @@ export function AuthPage({ mode }: { mode: string }) {
                   >
                     {cooldown
                       ? `Qayta yuborish (${cooldown}s)`
-                      : "Kodni qayta yuborish"}
+                      : __t("Kodni qayta yuborish")}
                   </Button>
                   <Button
                     variant="secondary small"
@@ -238,7 +251,7 @@ export function AuthPage({ mode }: { mode: string }) {
                       setError("");
                     }}
                   >
-                    Emailni o‘zgartirish
+                    {__t("Emailni o\u2018zgartirish")}
                   </Button>
                 </div>
               </>
@@ -268,16 +281,16 @@ export function AuthPage({ mode }: { mode: string }) {
                         key={key}
                         label={
                           [
-                            "Ism",
-                            "Familiya",
-                            "Email",
-                            "Telefon",
-                            "Username",
-                            "Parol",
-                            "Parolni tasdiqlash",
+                            __t("Ism"),
+                            __t("Familiya"),
+                            __t("Email"),
+                            __t("Telefon"),
+                            __t("Username"),
+                            __t("Parol"),
+                            __t("Parolni tasdiqlash"),
                           ][i]
                         }
-                        error={reg.formState.errors[key]?.message}
+                        error={__t(reg.formState.errors[key]?.message)}
                       >
                         <input
                           autoComplete={
@@ -303,38 +316,39 @@ export function AuthPage({ mode }: { mode: string }) {
                       checked={show}
                       onChange={(e) => setShow(e.target.checked)}
                     />
-                    Parolni ko‘rsatish
+                    {__t("Parolni ko\u2018rsatish")}
                   </label>
                   <label className="check">
                     <input type="checkbox" {...reg.register("terms")} />
                     <span>
                       <Link href="/terms" target="_blank">
-                        Foydalanish shartlari
+                        {__t("Foydalanish shartlari")}
                       </Link>
-                      ga roziman
+                      {__t("ga roziman")}
                     </span>
                   </label>
                   {reg.formState.errors.terms && (
                     <small className="error">
-                      {reg.formState.errors.terms.message}
+                      {__t(reg.formState.errors.terms.message)}
                     </small>
                   )}
                   <Button type="submit" disabled={busy} className="full">
-                    {busy ? "Yuborilmoqda…" : "Emailga kod yuborish"}
+                    {busy ? "Yuborilmoqda…" : __t("Emailga kod yuborish")}
                     <Mail size={17} />
                   </Button>
                 </form>
                 <p className="center">
-                  Hisobingiz bormi? <Link href="/login">Kirish</Link>
+                  {__t("Hisobingiz bormi?")}
+                  <Link href="/login">{__t("Kirish")}</Link>
                 </p>
               </>
             )
           ) : done ? (
             <div className="callout">
               <Check />
-              <h3>Parol yangilandi.</h3>
+              <h3>{__t("Parol yangilandi.")}</h3>
               <Link href="/login" className="btn">
-                Hisobingizga kirish
+                {__t("Hisobingizga kirish")}
               </Link>
             </div>
           ) : (
@@ -356,7 +370,7 @@ export function AuthPage({ mode }: { mode: string }) {
                 });
               }}
             >
-              <Field label="Email">
+              <Field label={__t("Email")}>
                 <input
                   type="email"
                   required
@@ -367,7 +381,7 @@ export function AuthPage({ mode }: { mode: string }) {
               </Field>
               {resetSent && (
                 <>
-                  <Field label="Tasdiqlash kodi">
+                  <Field label={__t("Tasdiqlash kodi")}>
                     <input
                       required
                       pattern="[0-9]{6}"
@@ -380,7 +394,7 @@ export function AuthPage({ mode }: { mode: string }) {
                       }
                     />
                   </Field>
-                  <Field label="Yangi parol">
+                  <Field label={__t("Yangi parol")}>
                     <input
                       type="password"
                       required
@@ -396,8 +410,8 @@ export function AuthPage({ mode }: { mode: string }) {
                 {busy
                   ? "Kutilmoqda…"
                   : resetSent
-                    ? "Parolni yangilash"
-                    : "Emailga kod yuborish"}
+                    ? __t("Parolni yangilash")
+                    : __t("Emailga kod yuborish")}
               </Button>
               {resetSent && (
                 <Button
@@ -408,7 +422,7 @@ export function AuthPage({ mode }: { mode: string }) {
                     void perform(() => requestCode(resetEmail, "reset"))
                   }
                 >
-                  {cooldown ? `${cooldown}s` : "Kodni qayta yuborish"}
+                  {cooldown ? `${cooldown}s` : __t("Kodni qayta yuborish")}
                 </Button>
               )}
             </form>

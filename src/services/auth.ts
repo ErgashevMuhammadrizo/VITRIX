@@ -7,6 +7,8 @@ export async function request<T>(
 ): Promise<T> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
+    "Accept-Language":
+      typeof document !== "undefined" ? document.documentElement.lang : "uz",
   };
   if (method !== "GET") {
     const csrf = await fetch(base + "/auth/csrf/", {

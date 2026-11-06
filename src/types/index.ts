@@ -12,7 +12,9 @@ export type User = {
   active: boolean;
   createdAt: string;
 };
+export type ContentTranslations = Partial<Record<"uz"|"ru"|"en", Record<string,string>>>;
 export type Business = {
+  translations?: ContentTranslations;
   id: string;
   ownerId: string;
   accountId?: string;
@@ -64,6 +66,7 @@ export type Business = {
   createdAt: string;
 };
 export type Category = {
+  translations?: ContentTranslations;
   id: string;
   businessId: string;
   name: string;
@@ -73,6 +76,7 @@ export type Category = {
   active: boolean;
 };
 export type Product = {
+  translations?: ContentTranslations;
   id: string;
   businessId: string;
   name: string;

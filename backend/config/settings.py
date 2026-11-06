@@ -38,6 +38,8 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+    "accounts.localization.JsonLocalizationMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -118,3 +120,5 @@ CSRF_FAILURE_VIEW = "accounts.views.csrf_failure"
 
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
 SUBSCRIPTION_TELEGRAM = os.environ.get("SUBSCRIPTION_TELEGRAM", "")
+
+LANGUAGES = [("uz", "O‘zbekcha"), ("ru", "Русский"), ("en", "English")]

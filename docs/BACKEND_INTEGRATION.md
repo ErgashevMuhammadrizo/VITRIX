@@ -20,8 +20,8 @@ Baza: `/api/v1`. Frontend Next proxy orqali Django’ga murojaat qiladi.
 | GET | `/health/` | Database/readiness |
 | POST | `/subscriptions/telegram/` | Owner; planId → Telegram draft URL; pending request |
 | POST | `/admin/businesses/:id/subscription/` | Superadmin; audited activation + UUID idempotencyKey |
-| GET | `/plans/` | Public tariflar |
-| GET | `/public/config/` | Public brend/kontaktlar/tariflar |
+| GET | `/plans/` | Faqat autentifikatsiya qilingan hisob |
+| GET | `/public/config/` | Public brend/kontaktlar; plans bo‘sh |
 | GET | `/public/businesses/:slug/` | Login talab qilmaydi |
 | POST | `/public/businesses/:slug/events/` | Visit/phone/telegram; CSRF bilan |
 | POST | `/subscriptions/request/` | Faqat o‘z biznesi uchun Pro/VIP arizasi |
@@ -69,3 +69,7 @@ Business qo‘shimcha maydonlari: `colorMode`, `backgroundColor`, `surfaceColor`
 Identity va business snapshot’da read-only `accountId` bor. Public API biznes egasining shu ochiq qo‘llab-quvvatlash ID’sini qaytaradi; bu autentifikatsiya siri emas. Platforma `subscriptionTelegram` (username)ni qaytaradi. `subscriptionActivations` faqat superadmin snapshot’ida bor.
 
 Activation JSON: `{"planId":"pro","months":1,"mode":"extend","note":"Payment checked","idempotencyKey":"UUID"}`. 1/3/6/12 oy, har oy 30 kun. `extend` joriy sana yoki aktiv expiry’dan; `restart` bugundan. Bir xil UUID/payload takror qaytsa o‘zgartirmaydi, boshqa payload bilan shu UUID 409. Client retry davomida UUIDni saqlaydi. Oddiy workspace PATCH orqali admin ham plan/expiryni almashtirmaydi. Eski request/review endpointlari orqaga moslik uchun saqlangan; yangi UI barcha aktivatsiyani maxsus endpointdan bajaradi.
+
+## Uch til
+
+Frontend `Accept-Language: uz/ru/en` yuboradi; JSON detail va tasdiqlash emaili shu tilda chiqadi. Business/Product/Category `translations` JSON maydoni `{ "ru": { "name": "..." }, "en": { "name": "..." } }` ko‘rinishida; faqat ruxsat etilgan matn maydonlari qabul qilinadi. Public katalog til tanlovini do‘kon bo‘yicha eslab qoladi; matnlar tanlangan tilga mos fallback bilan chiqariladi.

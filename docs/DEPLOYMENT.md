@@ -1,3 +1,5 @@
+Railway’da bitta konteyner va Gmail API uchun asosiy yo‘riqnoma: [START_HERE_UZ.md](../START_HERE_UZ.md). Quyida alohida Compose servisli muqobil o‘rnatish berilgan.
+
 # VITRIX — serverga joylash
 
 Talablar: Linux server, domen, Docker Engine + Docker Compose 2.24.4 yoki yangiroq (`!reset` uchun), Node.js 22+. Next.js + Django/Gunicorn + PostgreSQL ishlatiladi. Backend va baza public port ochmaydi; Caddy TLS reverse proxy frontendni chiqaradi.
@@ -53,7 +55,7 @@ Backend ishga tushganda migratsiyalar va static fayllar avtomatik bajariladi. He
 - Admin `/admin/subscriptions`da ID, do‘kon, email yoki telefon bilan qidiradi. To‘lovni tekshirib “Obunani yoqish”ni bosadi.
 - Standart 1 oy = 30 kun. 3/6/12 oy ham bor. “Joriy muddatdan uzaytirish” faol hisobda qolgan kunlarni saqlaydi; tugagan obunada bugundan boshlaydi. “Bugundan boshlash” qolgan muddatni hisobga olmaydi; modal yangi sanani ko‘rsatadi.
 - Faollashtirish uchun pullik tarif va admin roli serverda tekshiriladi. Bir xil amal kaliti bilan qayta urinish ikkinchi marta uzaytirmaydi. Admin, sana, izoh va oldingi/yangi tugash sanasi tarixga yoziladi.
-- Bepul sinov takror berilmaydi. Tariflar: 30 kun bepul / 1000 mahsulot; Pro 20 000 / cheksiz; VIP 39 000 / cheksiz + kengaytirilgan statistika/CSV.
+- Bepul sinov takror berilmaydi. Tariflar: 30 kun bepul / 1000 mahsulot; Pro 49 000 / cheksiz; VIP 99 000 / cheksiz + kengaytirilgan statistika/CSV.
 
 ## 4. Dizayn va lokatsiya
 

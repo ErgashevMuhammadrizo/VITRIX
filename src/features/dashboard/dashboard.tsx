@@ -1,4 +1,7 @@
 "use client";
+import { useNow } from "../../hooks/use-now";
+import { useTranslator } from "../../i18n/runtime";
+import { CurrentPlan } from "../subscriptions/current-plan";
 import { AccountId } from "../../components/ui/account-id";
 import { SubscriptionPage } from "../subscriptions/subscription-page";
 import { useState } from "react";
@@ -77,14 +80,6 @@ const ownerNav: [string, TranslationKey, typeof Globe][] = [
   ["subscription", "subscription", CreditCard],
   ["profile", "profile", User],
 ];
-const adminNav: [string, string, typeof Globe][] = [
-  ["", "Umumiy ko‘rinish", LayoutDashboard],
-  ["users", "Foydalanuvchilar", Users],
-  ["businesses", "Bizneslar", Store],
-  ["subscriptions", "Obunalar va tariflar", CreditCard],
-  ["products", "Mahsulotlar", Package],
-  ["settings", "Platforma sozlamalari", Settings],
-];
 export function Workspace({
   admin = false,
   section = "",
@@ -92,6 +87,15 @@ export function Workspace({
   admin?: boolean;
   section?: string;
 }) {
+  const __t = useTranslator();
+  const adminNav: [string, string, typeof Globe][] = [
+    ["", __t("Umumiy ko\u2018rinish"), LayoutDashboard],
+    ["users", __t("Foydalanuvchilar"), Users],
+    ["businesses", __t("Bizneslar"), Store],
+    ["subscriptions", __t("Obunalar va tariflar"), CreditCard],
+    ["products", __t("Mahsulotlar"), Package],
+    ["settings", __t("Platforma sozlamalari"), Settings],
+  ];
   const { db, user, ready, error, reset, logout, t } = useApp();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -100,9 +104,9 @@ export function Workspace({
   if (error)
     return (
       <div className="center section">
-        <h1>Ma’lumotlarni ochib bo‘lmadi</h1>
+        <h1>{__t("Ma\u2019lumotlarni ochib bo\u2018lmadi")}</h1>
         <p>{error}</p>
-        <Button onClick={reset}>Qayta yuklash</Button>
+        <Button onClick={reset}>{__t("Qayta yuklash")}</Button>
       </div>
     );
   if (!user)
@@ -110,10 +114,10 @@ export function Workspace({
       <div className="guard">
         <Logo />
         <ShieldCheck size={40} />
-        <h1>Kabinetga kirish</h1>
-        <p>Davom etish uchun hisobingizga kiring.</p>
+        <h1>{__t("Kabinetga kirish")}</h1>
+        <p>{__t("Davom etish uchun hisobingizga kiring.")}</p>
         <Link className="btn" href="/login">
-          Kirish
+          {__t("Kirish")}
           <ArrowRight size={18} />
         </Link>
       </div>
@@ -122,12 +126,12 @@ export function Workspace({
     return (
       <div className="guard">
         <ShieldCheck size={40} />
-        <h1>Ruxsat yo‘q</h1>
+        <h1>{__t("Ruxsat yo\u2018q")}</h1>
         <Link
           href={user.role === "admin" ? "/admin" : "/dashboard"}
           className="btn"
         >
-          O‘z kabinetingizga o‘ting
+          {__t("O\u2018z kabinetingizga o\u2018ting")}
         </Link>
       </div>
     );
@@ -138,7 +142,7 @@ export function Workspace({
         ([url, key, icon]) =>
           [url, t(key), icon] as [string, string, typeof Globe],
       );
-  const label = nav.find((n) => n[0] === section)?.[1] ?? "Sahifa";
+  const label = nav.find((n) => n[0] === section)?.[1] ?? __t("Sahifa");
   return (
     <div className="workspace">
       <div
@@ -150,7 +154,7 @@ export function Workspace({
           <Logo />
           <button
             className="icon-btn mobile-menu"
-            aria-label="Yopish"
+            aria-label={__t("Yopish")}
             onClick={() => setOpen(false)}
           >
             <X size={18} />
@@ -161,12 +165,14 @@ export function Workspace({
             {admin ? <ShieldCheck size={22} /> : business?.name.slice(0, 1)}
           </span>
           <div>
-            <strong>{admin ? "Platforma boshqaruvi" : business?.name}</strong>
-            <small>{admin ? "SUPERADMIN" : "BIZNES KABINETI"}</small>
+            <strong>
+              {admin ? __t("Platforma boshqaruvi") : business?.name}
+            </strong>
+            <small>{admin ? __t("SUPERADMIN") : __t("BIZNES KABINETI")}</small>
           </div>
         </div>
         <small className="nav-section">
-          {admin ? "PLATFORMA" : "BOSHQARUV"}
+          {admin ? __t("PLATFORMA") : __t("BOSHQARUV")}
         </small>
         <nav>
           {nav.map(([url, label, Icon]) => (
@@ -184,11 +190,11 @@ export function Workspace({
         </nav>
         {!admin && (
           <div className="sidebar-upgrade">
-            <span className="badge blue">PRO IMKONIYATLAR</span>
-            <h4>Biznesingiz bilan birga o‘sing.</h4>
-            <p>Ko‘proq mahsulot, ko‘proq imkoniyat.</p>
+            <span className="badge blue">{__t("PRO IMKONIYATLAR")}</span>
+            <h4>{__t("Biznesingiz bilan birga o\u2018sing.")}</h4>
+            <p>{__t("Ko\u2018proq mahsulot, ko\u2018proq imkoniyat.")}</p>
             <Link href="/dashboard/subscription">
-              Tariflarni ko‘rish
+              {__t("Tariflarni ko\u2018rish")}
               <ArrowUpRight size={15} />
             </Link>
           </div>
@@ -201,7 +207,9 @@ export function Workspace({
               router.push("/login");
             } catch (e) {
               toast.error(
-                e instanceof Error ? e.message : "Hisobdan chiqib bo‘lmadi.",
+                e instanceof Error
+                  ? __t(e.message)
+                  : __t("Hisobdan chiqib bo\u2018lmadi."),
               );
             }
           }}
@@ -228,12 +236,12 @@ export function Workspace({
             <button
               className="icon-btn mobile-menu"
               onClick={() => setOpen(true)}
-              aria-label="Menyu"
+              aria-label={__t("Menyu")}
             >
               <Menu size={20} />
             </button>
             <span>
-              {admin ? "Admin" : "Kabinet"}
+              {admin ? __t("Admin") : __t("Kabinet")}
               <ChevronRight size={13} />
               <b>{label}</b>
             </span>
@@ -246,7 +254,7 @@ export function Workspace({
                 target="_blank"
                 className="btn secondary small"
               >
-                Saytni ochish
+                {__t("Saytni ochish")}
                 <ArrowUpRight size={15} />
               </Link>
             )}
@@ -278,15 +286,17 @@ export function Workspace({
                 <>
                   <div className="page-title">
                     <div>
-                      <h1>Mening saytim</h1>
-                      <p>Mijozlaringiz saytingizni shunday ko‘radi.</p>
+                      <h1>{__t("Mening saytim")}</h1>
+                      <p>
+                        {__t("Mijozlaringiz saytingizni shunday ko\u2018radi.")}
+                      </p>
                     </div>
                     <Link
                       className="btn"
                       href={`/${business.slug}`}
                       target="_blank"
                     >
-                      Saytni ochish
+                      {__t("Saytni ochish")}
                       <ArrowUpRight size={16} />
                     </Link>
                   </div>
@@ -300,15 +310,16 @@ export function Workspace({
               ) : section === "profile" ? (
                 <Profile />
               ) : (
-                <Empty title="Sahifa topilmadi" />
+                <Empty title={__t("Sahifa topilmadi")} />
               )}
             </>
           ) : (
-            <Empty title="Biznes topilmadi" />
+            <Empty title={__t("Biznes topilmadi")} />
           )}
         </main>
         <footer className="workspace-footer">
-          © 2026 VITRIX <span>Biznesingizning yangi manzili.</span>
+          {__t("VITRIX — DEALS loyihasi")}
+          <span>{__t("Biznesingizning yangi manzili.")}</span>
         </footer>
       </div>
     </div>
@@ -324,16 +335,17 @@ export function Stats({
     note?: string;
   }[];
 }) {
+  const __t = useTranslator();
   return (
     <div className="stats-grid">
       {items.map((i) => (
-        <article className="stat-card" key={i.label}>
+        <article className="stat-card" key={__t(i.label)}>
           <div>
-            <span>{i.label}</span>
+            <span>{__t(i.label)}</span>
             <i.icon size={18} />
           </div>
           <strong>{i.value}</strong>
-          <small>{i.note ?? "Joriy ma’lumotlar"}</small>
+          <small>{__t(i.note ?? "Joriy ma’lumotlar")}</small>
         </article>
       ))}
     </div>
@@ -346,6 +358,7 @@ export function TrafficChart({
   businessId: string;
   days?: number;
 }) {
+  const __t = useTranslator();
   const { db } = useApp();
   const chart = Array.from({ length: days }, (_, i) => {
     const d = new Date();
@@ -365,10 +378,14 @@ export function TrafficChart({
     <div className="panel traffic-panel">
       <div className="between">
         <div>
-          <h3>Tashriflar dinamikasi</h3>
-          <p className="muted">Oxirgi {days} kun</p>
+          <h3>{__t("Tashriflar dinamikasi")}</h3>
+          <p className="muted">
+            {__t("Oxirgi")}
+            {days}
+            {__t("kun")}
+          </p>
         </div>
-        <span className="badge blue">SAYT STATISTIKASI</span>
+        <span className="badge blue">{__t("SAYT STATISTIKASI")}</span>
       </div>
       <div className="chart">
         <ResponsiveContainer width="100%" height="100%">
@@ -409,7 +426,7 @@ export function TrafficChart({
             <Area
               type="monotone"
               dataKey="visits"
-              name="Tashriflar"
+              name={__t("Tashriflar")}
               stroke="#315bea"
               strokeWidth={2.5}
               fill="url(#area)"
@@ -421,23 +438,26 @@ export function TrafficChart({
   );
 }
 function Overview({ business }: { business: Business }) {
+  const __t = useTranslator();
   const { db, user } = useApp();
   const products = db.products.filter((p) => p.businessId === business.id);
   const events = db.events.filter((e) => e.businessId === business.id);
   const total = events.filter((e) => e.kind === "visit").length;
   return (
     <>
+      <CurrentPlan business={business} />
       <div className="page-title">
         <div>
-          <span className="eyebrow">BIZNESINGIZ NAZORAT OSTIDA</span>
+          <span className="eyebrow">{__t("BIZNESINGIZ NAZORAT OSTIDA")}</span>
           <h1>
-            Salom, {user?.firstName} <span className="wave">✳</span>
+            {__t("Salom,")}
+            {user?.firstName} <span className="wave">✳</span>
           </h1>
-          <p>Bugun biznesingiz uchun yana bir yaxshi kun.</p>
+          <p>{__t("Bugun biznesingiz uchun yana bir yaxshi kun.")}</p>
         </div>
         <Link className="btn" href="/dashboard/products">
           <Plus size={17} />
-          Mahsulot qo‘shish
+          {__t("Mahsulot qo\u2018shish")}
         </Link>
       </div>
       <div className="website-status-banner">
@@ -446,61 +466,67 @@ function Overview({ business }: { business: Business }) {
         </span>
         <div>
           <strong>
-            Saytingiz {business.active ? "internetda" : "yashirilgan"}
+            {__t("Saytingiz")}
+            {business.active ? "internetda" : "yashirilgan"}
             <span className={`badge ${business.active ? "green" : "gray"}`}>
-              {business.active ? "Faol" : "Faolsiz"}
+              {business.active ? __t("Faol") : __t("Faolsiz")}
             </span>
           </strong>
-          <p>Havolangizni ulashing. Yangi mijozlarga yaqinroq bo‘ling.</p>
+          <p>
+            {__t(
+              "Havolangizni ulashing. Yangi mijozlarga yaqinroq bo\u2018ling.",
+            )}
+          </p>
         </div>
         <SiteLink slug={business.slug} />
       </div>
       <Stats
         items={[
           {
-            label: "Umumiy tashriflar",
+            label: __t("Umumiy tashriflar"),
             value: total,
             icon: Eye,
-            note: "Jami sayt tashriflari",
+            note: __t("Jami sayt tashriflari"),
           },
           {
-            label: "Bugungi tashriflar",
+            label: __t("Bugungi tashriflar"),
             value: events.filter(
               (e) =>
                 e.kind === "visit" &&
                 e.at.slice(0, 10) === new Date().toISOString().slice(0, 10),
             ).length,
             icon: BarChart3,
-            note: "Bugungi sayt tashriflari",
+            note: __t("Bugungi sayt tashriflari"),
           },
           {
-            label: "Mahsulotlar",
+            label: __t("Mahsulotlar"),
             value: products.length,
             icon: Package,
             note:
               products.filter((p) => p.status === "published").length +
-              " tasi e’lon qilingan",
+              __t(" tasi e\u2019lon qilingan"),
           },
           {
-            label: "Kategoriyalar",
+            label: __t("Kategoriyalar"),
             value: db.categories.filter((c) => c.businessId === business.id)
               .length,
             icon: FolderOpen,
-            note: "Katalog bo‘limlari",
+            note: __t("Katalog bo\u2018limlari"),
           },
         ]}
       />
       <div className="overview-grid">
         <TrafficChart businessId={business.id} />
         <section className="panel contact-stats">
-          <h3>Mijozlar bilan aloqa</h3>
-          <p className="muted">Aloqa tugmalariga bosilishlar</p>
+          <h3>{__t("Mijozlar bilan aloqa")}</h3>
+          <p className="muted">{__t("Aloqa tugmalariga bosilishlar")}</p>
           <div>
             <span className="contact-stat-icon">
               <Phone size={20} />
             </span>
             <span>
-              Telefon<small>Qo‘ng‘iroq tugmasi</small>
+              {__t("Telefon")}
+              <small>{__t("Qo\u2018ng\u2018iroq tugmasi")}</small>
             </span>
             <strong>{events.filter((e) => e.kind === "phone").length}</strong>
           </div>
@@ -509,21 +535,22 @@ function Overview({ business }: { business: Business }) {
               <Send size={20} />
             </span>
             <span>
-              Telegram<small>Xabar tugmasi</small>
+              Telegram<small>{__t("Xabar tugmasi")}</small>
             </span>
             <strong>
               {events.filter((e) => e.kind === "telegram").length}
             </strong>
           </div>
           <div className="callout">
-            <span className="live-dot" /> To‘g‘ridan-to‘g‘ri mijozingizga yaqin.
+            <span className="live-dot" />
+            {__t("To\u2018g\u2018ridan-to\u2018g\u2018ri mijozingizga yaqin.")}
           </div>
         </section>
       </div>
       <div className="overview-grid">
         <section className="panel">
           <div className="between">
-            <h3>So‘nggi faoliyat</h3>
+            <h3>{__t("So\u2018nggi faoliyat")}</h3>
             <Activity size={18} />
           </div>
           <div className="activity-list">
@@ -537,34 +564,39 @@ function Overview({ business }: { business: Business }) {
                   </span>
                   <div>
                     <strong>{a.text}</strong>
-                    <small>{date(a.at)}</small>
+                    <small>{date(a.at, __t.language)}</small>
                   </div>
                 </div>
               ))}
           </div>
         </section>
         <section className="panel subscription-mini">
-          <span className="eyebrow">SIZNING TARIFINGIZ</span>
+          <span className="eyebrow">{__t("SIZNING TARIFINGIZ")}</span>
           <h2>
-            {db.plans.find((p) => p.id === business.planId)?.name ??
-              "Tarif topilmadi"}
+            {__t(
+              db.plans.find((p) => p.id === business.planId)?.name ??
+                "Tarif topilmadi",
+            )}
             <span
               className={`badge ${new Date(business.expires) > new Date() ? "blue" : "amber"}`}
             >
               {new Date(business.expires) > new Date()
-                ? "Faol"
-                : "Muddati tugagan"}
+                ? __t("Faol")
+                : __t("Muddati tugagan")}
             </span>
           </h2>
-          <p>Amal qilish muddati: {date(business.expires)}</p>
+          <p>
+            {__t("Amal qilish muddati:")}
+            {date(business.expires, __t.language)}
+          </p>
           <div className="between">
             <span>
               {products.length} /{" "}
               {productCapacity(db.plans.find((p) => p.id === business.planId))}{" "}
-              mahsulot
+              {__t("mahsulot")}
             </span>
             <Link className="text-link" href="/dashboard/subscription">
-              Tarifni boshqarish
+              {__t("Tarifni boshqarish")}
               <ArrowUpRight size={15} />
             </Link>
           </div>
@@ -587,13 +619,14 @@ function Overview({ business }: { business: Business }) {
       <section className="panel overview-preview">
         <div className="between">
           <div>
-            <h3>Saytingizdan bir parcha</h3>
+            <h3>{__t("Saytingizdan bir parcha")}</h3>
             <p className="muted">
-              {business.name} · {products.length} mahsulot
+              {business.name} · {products.length}
+              {__t("mahsulot")}
             </p>
           </div>
           <Link href="/dashboard/website" className="text-link">
-            To‘liq ko‘rish
+            {__t("To\u2018liq ko\u2018rish")}
             <ArrowUpRight size={16} />
           </Link>
         </div>
@@ -603,7 +636,7 @@ function Overview({ business }: { business: Business }) {
               <img src={p.image || "/images/burger.jpg"} alt={p.name} />
               <span>
                 {p.name}
-                <strong>{money(p.price)}</strong>
+                <strong>{money(p.price, __t.language)}</strong>
               </span>
             </div>
           ))}
@@ -613,11 +646,13 @@ function Overview({ business }: { business: Business }) {
   );
 }
 function Analytics({ business }: { business: Business }) {
+  const __t = useTranslator();
   const { db } = useApp();
   const plan = db.plans.find((p) => p.id === business.planId);
   const [days, setDays] = useState(7);
   const range = Math.min(days, analyticsDays(plan));
-  const since = Date.now() - range * 86400000;
+  const now = useNow();
+  const since = now - range * 86400000;
   const e = db.events.filter(
     (e) => e.businessId === business.id && new Date(e.at).getTime() >= since,
   );
@@ -627,12 +662,16 @@ function Analytics({ business }: { business: Business }) {
     <>
       <div className="page-title">
         <div>
-          <h1>Analitika</h1>
-          <p>Oxirgi {range} kun · saytingizda qayd etilgan hodisalar.</p>
+          <h1>{__t("Analitika")}</h1>
+          <p>
+            {__t("Oxirgi")}
+            {range}
+            {__t("kun \u00B7 saytingizda qayd etilgan hodisalar.")}
+          </p>
         </div>
         <div className="actions">
           <select
-            aria-label="Statistika davri"
+            aria-label={__t("Statistika davri")}
             value={range}
             onChange={(e) => setDays(Number(e.target.value))}
           >
@@ -640,7 +679,8 @@ function Analytics({ business }: { business: Business }) {
               .filter((n) => n <= analyticsDays(plan))
               .map((n) => (
                 <option key={n} value={n}>
-                  {n} kun
+                  {n}
+                  {__t("kun")}
                 </option>
               ))}
           </select>
@@ -649,7 +689,7 @@ function Analytics({ business }: { business: Business }) {
               variant="secondary"
               onClick={() => {
                 const csv =
-                  "Hodisa,Sana\n" +
+                  __t("Hodisa,Sana\n") +
                   e.map((v) => `${v.kind},${v.at}`).join("\n");
                 const a = document.createElement("a");
                 a.href = URL.createObjectURL(
@@ -660,7 +700,7 @@ function Analytics({ business }: { business: Business }) {
                 URL.revokeObjectURL(a.href);
               }}
             >
-              CSV yuklash
+              {__t("CSV yuklash")}
               <ArrowUpRight size={16} />
             </Button>
           ) : (
@@ -668,7 +708,7 @@ function Analytics({ business }: { business: Business }) {
               className="btn secondary small"
               href="/dashboard/subscription"
             >
-              VIP: 90 kun va CSV
+              {__t("VIP: 90 kun va CSV")}
               <ArrowUpRight size={15} />
             </Link>
           )}
@@ -676,9 +716,9 @@ function Analytics({ business }: { business: Business }) {
       </div>
       <Stats
         items={[
-          { label: "Tashriflar", value: visits, icon: Eye },
+          { label: __t("Tashriflar"), value: visits, icon: Eye },
           {
-            label: "Telefon",
+            label: __t("Telefon"),
             value: e.filter((e) => e.kind === "phone").length,
             icon: Phone,
           },
@@ -688,10 +728,10 @@ function Analytics({ business }: { business: Business }) {
             icon: Send,
           },
           {
-            label: "Aloqa / tashrif",
+            label: __t("Aloqa / tashrif"),
             value: (visits ? Math.round((clicks / visits) * 100) : 0) + "%",
             icon: BarChart3,
-            note: "Bosilishlar / tashriflar",
+            note: __t("Bosilishlar / tashriflar"),
           },
         ]}
       />
@@ -700,6 +740,7 @@ function Analytics({ business }: { business: Business }) {
   );
 }
 function Profile() {
+  const __t = useTranslator();
   const { user, acceptUser } = useApp();
   const [v, setV] = useState({
     firstName: user!.firstName,
@@ -711,9 +752,9 @@ function Profile() {
     <>
       <div className="page-title">
         <div>
-          <h1>Profil</h1>
+          <h1>{__t("Profil")}</h1>
           <AccountId id={user!.accountId || user!.id} />
-          <p>Shaxsiy ma’lumotlaringizni yangilang.</p>
+          <p>{__t("Shaxsiy ma\u2019lumotlaringizni yangilang.")}</p>
         </div>
       </div>
       <form
@@ -724,16 +765,23 @@ function Profile() {
           try {
             const result = await authApi.profile(v);
             await acceptUser(result.user);
-            toast.success("Profil saqlandi.");
+            toast.success(__t("Profil saqlandi."));
           } catch (e) {
-            toast.error(e instanceof Error ? e.message : "Saqlab bo‘lmadi.");
+            toast.error(
+              e instanceof Error
+                ? __t(e.message)
+                : __t("Saqlab bo\u2018lmadi."),
+            );
           } finally {
             setBusy(false);
           }
         }}
       >
         {(["firstName", "lastName", "phone"] as const).map((key, i) => (
-          <Field key={key} label={["Ism", "Familiya", "Telefon"][i]}>
+          <Field
+            key={key}
+            label={[__t("Ism"), __t("Familiya"), __t("Telefon")][i]}
+          >
             <input
               required
               value={v[key]}
@@ -741,12 +789,14 @@ function Profile() {
             />
           </Field>
         ))}
-        <Field label="Tasdiqlangan email">
+        <Field label={__t("Tasdiqlangan email")}>
           <input value={user?.email} readOnly />
         </Field>
-        <Button disabled={busy}>{busy ? "Saqlanmoqda…" : "Saqlash"}</Button>
+        <Button disabled={busy}>
+          {busy ? "Saqlanmoqda…" : __t("Saqlash")}
+        </Button>
         <Link className="text-link" href="/forgot-password">
-          Parolni email kodi orqali yangilash
+          {__t("Parolni email kodi orqali yangilash")}
         </Link>
       </form>
     </>

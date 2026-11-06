@@ -1,4 +1,7 @@
 "use client";
+import { useTranslator } from "../../i18n/runtime";
+import { ContentTranslationsEditor } from "../../components/ui/content-translations";
+import type { ContentTranslations } from "../../types";
 import { useState } from "react";
 import {
   Plus,
@@ -39,6 +42,7 @@ export function ProductManager({
   businessId?: string;
   monitor?: boolean;
 }) {
+  const __t = useTranslator();
   const { db, update } = useApp();
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("");
@@ -74,24 +78,28 @@ export function ProductManager({
     update((d) => {
       const target = d.products.find((i) => i.id === p.id);
       if (target) target.status = status;
-      recordActivity(d, p.businessId, p.name + " holati yangilandi");
+      recordActivity(d, p.businessId, p.name + __t(" holati yangilandi"));
     });
   }
   return (
     <>
       <div className="page-title">
         <div>
-          <h1>{monitor ? "Mahsulotlar monitoringi" : "Mahsulotlar"}</h1>
+          <h1>
+            {monitor ? __t("Mahsulotlar monitoringi") : __t("Mahsulotlar")}
+          </h1>
           <p>
             {monitor
-              ? "Barcha bizneslar katalogini nazorat qiling."
-              : "Katalogingizni yangilang va mijozlaringizga namoyish eting."}
+              ? __t("Barcha bizneslar katalogini nazorat qiling.")
+              : __t(
+                  "Katalogingizni yangilang va mijozlaringizga namoyish eting.",
+                )}
           </p>
         </div>
         {!monitor && (
           <Button onClick={() => setEdit(null)}>
             <Plus size={18} />
-            Mahsulot qo‘shish
+            {__t("Mahsulot qo\u2018shish")}
           </Button>
         )}
       </div>
@@ -99,8 +107,8 @@ export function ProductManager({
         <div className="search-input">
           <Search size={17} />
           <input
-            aria-label="Mahsulot qidirish"
-            placeholder="Mahsulot qidirish…"
+            aria-label={__t("Mahsulot qidirish")}
+            placeholder={__t("Mahsulot qidirish\u2026")}
             value={q}
             onChange={(e) => {
               setQ(e.target.value);
@@ -109,14 +117,14 @@ export function ProductManager({
           />
         </div>
         <select
-          aria-label="Kategoriya filtri"
+          aria-label={__t("Kategoriya filtri")}
           value={cat}
           onChange={(e) => {
             setCat(e.target.value);
             setPage(1);
           }}
         >
-          <option value="">Barcha kategoriyalar</option>
+          <option value="">{__t("Barcha kategoriyalar")}</option>
           {categories.map((c) => (
             <option value={c.id} key={c.id}>
               {c.name}
@@ -124,28 +132,28 @@ export function ProductManager({
           ))}
         </select>
         <select
-          aria-label="Holat filtri"
+          aria-label={__t("Holat filtri")}
           value={status}
           onChange={(e) => {
             setStatus(e.target.value);
             setPage(1);
           }}
         >
-          <option value="">Barcha holatlar</option>
-          <option value="published">E’lon qilingan</option>
-          <option value="draft">Qoralama</option>
-          <option value="archived">Arxiv</option>
+          <option value="">{__t("Barcha holatlar")}</option>
+          <option value="published">{__t("E\u2019lon qilingan")}</option>
+          <option value="draft">{__t("Qoralama")}</option>
+          <option value="archived">{__t("Arxiv")}</option>
         </select>
         {monitor && (
           <select
-            aria-label="Biznes filtri"
+            aria-label={__t("Biznes filtri")}
             value={owner}
             onChange={(e) => {
               setOwner(e.target.value);
               setPage(1);
             }}
           >
-            <option value="">Barcha bizneslar</option>
+            <option value="">{__t("Barcha bizneslar")}</option>
             {db.businesses.map((b) => (
               <option key={b.id} value={b.id}>
                 {b.name}
@@ -154,24 +162,24 @@ export function ProductManager({
           </select>
         )}
         <select
-          aria-label="Saralash"
+          aria-label={__t("Saralash")}
           value={sort}
           onChange={(e) => setSort(e.target.value)}
         >
-          <option value="order">Tartib bo‘yicha</option>
-          <option value="name">Nomi bo‘yicha</option>
-          <option value="price">Narxi bo‘yicha</option>
+          <option value="order">{__t("Tartib bo\u2018yicha")}</option>
+          <option value="name">{__t("Nomi bo\u2018yicha")}</option>
+          <option value="price">{__t("Narxi bo\u2018yicha")}</option>
         </select>
         <div className="segmented">
           <button
-            aria-label="Grid ko‘rinishi"
+            aria-label={__t("Grid ko\u2018rinishi")}
             className={grid ? "active" : ""}
             onClick={() => setGrid(true)}
           >
             <LayoutGrid size={17} />
           </button>
           <button
-            aria-label="Jadval ko‘rinishi"
+            aria-label={__t("Jadval ko\u2018rinishi")}
             className={!grid ? "active" : ""}
             onClick={() => setGrid(false)}
           >
@@ -194,10 +202,10 @@ export function ProductManager({
                     className={`badge ${p.status === "published" ? "green" : "gray"}`}
                   >
                     {p.status === "published"
-                      ? "E’lon qilingan"
+                      ? __t("E\u2019lon qilingan")
                       : p.status === "draft"
-                        ? "Qoralama"
-                        : "Arxiv"}
+                        ? __t("Qoralama")
+                        : __t("Arxiv")}
                   </span>
                   {p.featured && <span className="featured-star">★</span>}
                 </div>
@@ -206,16 +214,16 @@ export function ProductManager({
                     {monitor
                       ? db.businesses.find((b) => b.id === p.businessId)?.name
                       : (categories.find((c) => c.id === p.categoryId)?.name ??
-                        "Kategoriyasiz")}
+                        __t("Kategoriyasiz"))}
                   </small>
                   <h3>{p.name}</h3>
                   <p>{p.shortDescription}</p>
                   <div className="between">
-                    <strong>{money(p.price)}</strong>
+                    <strong>{money(p.price, __t.language)}</strong>
                     <small>
                       {p.availability === "available"
-                        ? "Mavjud"
-                        : "Mavjud emas"}
+                        ? __t("Mavjud")
+                        : __t("Mavjud emas")}
                     </small>
                   </div>
                   <div className="product-tools">
@@ -225,13 +233,15 @@ export function ProductManager({
                         onClick={() => setEdit(p)}
                       >
                         <Pencil size={14} />
-                        Tahrirlash
+                        {__t("Tahrirlash")}
                       </Button>
                     )}
                     <button
                       className="icon-btn"
                       title={
-                        p.status === "published" ? "Yashirish" : "E’lon qilish"
+                        p.status === "published"
+                          ? __t("Yashirish")
+                          : __t("E\u2019lon qilish")
                       }
                       onClick={() =>
                         change(
@@ -248,14 +258,14 @@ export function ProductManager({
                     </button>
                     <button
                       className="icon-btn"
-                      title="Arxivlash"
+                      title={__t("Arxivlash")}
                       onClick={() => change(p, "archived")}
                     >
                       <Archive size={16} />
                     </button>
                     <button
                       className="icon-btn red"
-                      title="O‘chirish"
+                      title={__t("O\u2018chirish")}
                       onClick={() => setDel(p)}
                     >
                       <Trash2 size={16} />
@@ -270,11 +280,11 @@ export function ProductManager({
             <table>
               <thead>
                 <tr>
-                  <th>Mahsulot</th>
-                  <th>Kategoriya / Biznes</th>
-                  <th>Narx</th>
-                  <th>Holat</th>
-                  <th>Amallar</th>
+                  <th>{__t("Mahsulot")}</th>
+                  <th>{__t("Kategoriya / Biznes")}</th>
+                  <th>{__t("Narx")}</th>
+                  <th>{__t("Holat")}</th>
+                  <th>{__t("Amallar")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -291,14 +301,14 @@ export function ProductManager({
                         ? db.businesses.find((b) => b.id === p.businessId)?.name
                         : categories.find((c) => c.id === p.categoryId)?.name}
                     </td>
-                    <td>{money(p.price)}</td>
+                    <td>{money(p.price, __t.language)}</td>
                     <td>{p.status}</td>
                     <td>
                       <div className="actions">
                         {!monitor && (
                           <button
                             className="icon-btn"
-                            title="Tahrirlash"
+                            title={__t("Tahrirlash")}
                             onClick={() => setEdit(p)}
                           >
                             <Pencil size={16} />
@@ -306,7 +316,7 @@ export function ProductManager({
                         )}
                         <button
                           className="icon-btn"
-                          title="Holatni o‘zgartirish"
+                          title={__t("Holatni o\u2018zgartirish")}
                           onClick={() =>
                             change(
                               p,
@@ -318,14 +328,14 @@ export function ProductManager({
                         </button>
                         <button
                           className="icon-btn"
-                          title="Arxivlash"
+                          title={__t("Arxivlash")}
                           onClick={() => change(p, "archived")}
                         >
                           <Archive size={16} />
                         </button>
                         <button
                           className="icon-btn red"
-                          title="O‘chirish"
+                          title={__t("O\u2018chirish")}
                           onClick={() => setDel(p)}
                         >
                           <Trash2 size={16} />
@@ -339,7 +349,7 @@ export function ProductManager({
           </div>
         )
       ) : (
-        <Empty title="Mahsulot topilmadi" />
+        <Empty title={__t("Mahsulot topilmadi")} />
       )}
       <Pagination page={current} total={products.length} onChange={setPage} />
       {edit !== undefined && businessId && (
@@ -351,13 +361,17 @@ export function ProductManager({
       )}{" "}
       {del && (
         <Confirm
-          title={`“${del.name}” o‘chirilsinmi?`}
+          title={__t("\u201C{0}\u201D o\u2018chirilsinmi?", { "0": del.name })}
           onClose={() => setDel(undefined)}
           onConfirm={() =>
             update((d) => {
               d.products = d.products.filter((p) => p.id !== del.id);
-              recordActivity(d, del.businessId, del.name + " o‘chirildi");
-            }, "Mahsulot o‘chirildi")
+              recordActivity(
+                d,
+                del.businessId,
+                del.name + __t(" o\u2018chirildi"),
+              );
+            }, __t("Mahsulot o\u2018chirildi"))
           }
         />
       )}
@@ -373,7 +387,11 @@ function ProductEditor({
   businessId: string;
   onClose: () => void;
 }) {
+  const __t = useTranslator();
   const { db, update } = useApp();
+  const [translations, setTranslations] = useState<ContentTranslations>(
+    product?.translations || {},
+  );
   const [image, setImage] = useState(product?.image ?? "");
   const [images, setImages] = useState<string[]>(product?.images ?? []);
   const form = useForm<z.infer<typeof schema>>({
@@ -393,17 +411,22 @@ function ProductEditor({
     },
   });
   const dirty =
+    JSON.stringify(translations) !==
+      JSON.stringify(product?.translations || {}) ||
     form.formState.isDirty ||
     image !== (product?.image ?? "") ||
     JSON.stringify(images) !== JSON.stringify(product?.images ?? []);
   useDirtyWarning(dirty);
   function close() {
-    if (!dirty || confirm("Saqlanmagan o‘zgarishlar bor. Chiqasizmi?"))
+    if (
+      !dirty ||
+      confirm(__t("Saqlanmagan o\u2018zgarishlar bor. Chiqasizmi?"))
+    )
       onClose();
   }
   return (
     <Modal
-      title={product ? "Mahsulotni tahrirlash" : "Yangi mahsulot"}
+      title={product ? __t("Mahsulotni tahrirlash") : __t("Yangi mahsulot")}
       onClose={close}
       wide
     >
@@ -417,14 +440,16 @@ function ProductEditor({
                 p.id !== product?.id,
             )
           ) {
-            form.setError("slug", { message: "Bu slug band" });
+            form.setError("slug", { message: __t("Bu slug band") });
             return;
           }
           const b = db.businesses.find((b) => b.id === businessId);
           const plan = db.plans.find((p) => p.id === b?.planId);
           if (b && isExpired(b)) {
             toast.error(
-              "Obuna muddati tugagan. Davom etish uchun Pro yoki VIP tarifini tanlang.",
+              __t(
+                "Obuna muddati tugagan. Davom etish uchun Pro yoki VIP tarifini tanlang.",
+              ),
             );
             return;
           }
@@ -435,11 +460,12 @@ function ProductEditor({
               db.products.filter((p) => p.businessId === businessId).length,
             )
           ) {
-            toast.error("Tarifdagi mahsulotlar limiti tugadi");
+            toast.error(__t("Tarifdagi mahsulotlar limiti tugadi"));
             return;
           }
           const p: Product = {
             ...values,
+            translations,
             id: product?.id ?? uid(),
             businessId,
             image,
@@ -453,17 +479,32 @@ function ProductEditor({
               recordActivity(
                 d,
                 businessId,
-                p.name + (product ? " yangilandi" : " qo‘shildi"),
+                p.name +
+                  (product ? __t(" yangilandi") : __t(" qo\u2018shildi")),
               );
-            }, "Mahsulot saqlandi")
+            }, __t("Mahsulot saqlandi"))
           )
             onClose();
         })}
       >
+        <ContentTranslationsEditor
+          value={translations}
+          onChange={setTranslations}
+          fields={[
+            { key: "name", label: __t("Mahsulot nomi"), max: 100 },
+            {
+              key: "description",
+              label: __t("To\u2018liq tavsif"),
+              max: 4000,
+              multiline: true,
+            },
+            { key: "shortDescription", label: __t("Qisqa tavsif"), max: 180 },
+          ]}
+        />
         <div className="form-grid">
           <Field
-            label="Mahsulot nomi *"
-            error={form.formState.errors.name?.message}
+            label={__t("Mahsulot nomi *")}
+            error={__t(form.formState.errors.name?.message)}
           >
             <input
               {...form.register("name", {
@@ -473,12 +514,15 @@ function ProductEditor({
               })}
             />
           </Field>
-          <Field label="Slug *" error={form.formState.errors.slug?.message}>
+          <Field
+            label={__t("Slug *")}
+            error={__t(form.formState.errors.slug?.message)}
+          >
             <input {...form.register("slug")} />
           </Field>
-          <Field label="Kategoriya">
+          <Field label={__t("Kategoriya")}>
             <select {...form.register("categoryId")}>
-              <option value="">Kategoriyasiz</option>
+              <option value="">{__t("Kategoriyasiz")}</option>
               {db.categories
                 .filter((c) => c.businessId === businessId)
                 .map((c) => (
@@ -488,27 +532,27 @@ function ProductEditor({
                 ))}
             </select>
           </Field>
-          <Field label="Holat">
+          <Field label={__t("Holat")}>
             <select {...form.register("status")}>
-              <option value="published">E’lon qilingan</option>
-              <option value="draft">Qoralama</option>
-              <option value="archived">Arxiv</option>
+              <option value="published">{__t("E\u2019lon qilingan")}</option>
+              <option value="draft">{__t("Qoralama")}</option>
+              <option value="archived">{__t("Arxiv")}</option>
             </select>
           </Field>
           <Field
-            label="Narx (so‘m) *"
-            error={form.formState.errors.price?.message}
+            label={__t("Narx (so\u2018m) *")}
+            error={__t(form.formState.errors.price?.message)}
           >
             <input type="number" {...form.register("price")} />
           </Field>
           <Field
-            label="Eski narx (ixtiyoriy)"
-            error={form.formState.errors.oldPrice?.message}
+            label={__t("Eski narx (ixtiyoriy)")}
+            error={__t(form.formState.errors.oldPrice?.message)}
           >
             <input type="number" {...form.register("oldPrice")} />
           </Field>
         </div>
-        <Field label="Asosiy rasm">
+        <Field label={__t("Asosiy rasm")}>
           <UploadImage value={image} onChange={setImage} />
         </Field>
         <div className="form-grid">
@@ -516,7 +560,7 @@ function ProductEditor({
             <UploadImage
               key={i}
               value={images[i] ?? ""}
-              label={`Qo‘shimcha rasm ${i + 1}`}
+              label={__t("Qo\u2018shimcha rasm {0}", { "0": i + 1 })}
               onChange={(s) =>
                 setImages((prev) => {
                   const n = [...prev];
@@ -528,40 +572,40 @@ function ProductEditor({
           ))}
         </div>
         <Field
-          label="Qisqa tavsif"
-          error={form.formState.errors.shortDescription?.message}
+          label={__t("Qisqa tavsif")}
+          error={__t(form.formState.errors.shortDescription?.message)}
         >
           <textarea rows={2} {...form.register("shortDescription")} />
         </Field>
         <Field
-          label="To‘liq tavsif"
-          error={form.formState.errors.description?.message}
+          label={__t("To\u2018liq tavsif")}
+          error={__t(form.formState.errors.description?.message)}
         >
           <textarea rows={4} {...form.register("description")} />
         </Field>
         <div className="form-grid">
-          <Field label="Mavjudligi">
+          <Field label={__t("Mavjudligi")}>
             <select {...form.register("availability")}>
-              <option value="available">Mavjud</option>
-              <option value="unavailable">Mavjud emas</option>
+              <option value="available">{__t("Mavjud")}</option>
+              <option value="unavailable">{__t("Mavjud emas")}</option>
             </select>
           </Field>
           <Field
-            label="Ko‘rsatish tartibi"
-            error={form.formState.errors.order?.message}
+            label={__t("Ko\u2018rsatish tartibi")}
+            error={__t(form.formState.errors.order?.message)}
           >
             <input type="number" {...form.register("order")} />
           </Field>
         </div>
         <label className="check">
           <input type="checkbox" {...form.register("featured")} />
-          Tavsiya etilgan mahsulot
+          {__t("Tavsiya etilgan mahsulot")}
         </label>
         <div className="actions end">
           <Button type="button" variant="secondary" onClick={close}>
-            Bekor qilish
+            {__t("Bekor qilish")}
           </Button>
-          <Button type="submit">Mahsulotni saqlash</Button>
+          <Button type="submit">{__t("Mahsulotni saqlash")}</Button>
         </div>
       </form>
     </Modal>

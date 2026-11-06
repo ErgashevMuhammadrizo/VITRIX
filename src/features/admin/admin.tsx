@@ -1,4 +1,5 @@
 "use client";
+import { useTranslator } from "../../i18n/runtime";
 import { AdminSubscriptions } from "./admin-subscriptions";
 import { AccountId, accountId } from "../../components/ui/account-id";
 import { useState, useEffect } from "react";
@@ -37,6 +38,7 @@ import { date, money, uid } from "../../lib/utils";
 import type { Plan, User } from "../../types";
 import { toast } from "sonner";
 export function AdminPage({ section }: { section: string }) {
+  const __t = useTranslator();
   return section === "" ? (
     <AdminOverview />
   ) : section === "users" ? (
@@ -47,7 +49,7 @@ export function AdminPage({ section }: { section: string }) {
     <>
       <AdminSubscriptions />
       <details className="panel">
-        <summary>Tarif sozlamalari</summary>
+        <summary>{__t("Tarif sozlamalari")}</summary>
         <Plans />
       </details>
     </>
@@ -56,10 +58,11 @@ export function AdminPage({ section }: { section: string }) {
   ) : section === "settings" ? (
     <PlatformSettings />
   ) : (
-    <Empty title="Sahifa topilmadi" />
+    <Empty title={__t("Sahifa topilmadi")} />
   );
 }
 function AdminOverview() {
+  const __t = useTranslator();
   const { db } = useApp();
   const active = db.businesses.filter(
     (b) => new Date(b.expires) > new Date(),
@@ -68,34 +71,46 @@ function AdminOverview() {
     <>
       <div className="page-title">
         <div>
-          <span className="eyebrow">PLATFORMA NAZORAT MARKAZI</span>
-          <h1>Platforma holati</h1>
-          <p>Bizneslar, foydalanuvchilar va obunalar bir joyda.</p>
+          <span className="eyebrow">{__t("PLATFORMA NAZORAT MARKAZI")}</span>
+          <h1>{__t("Platforma holati")}</h1>
+          <p>{__t("Bizneslar, foydalanuvchilar va obunalar bir joyda.")}</p>
         </div>
         <span className="badge blue">
           <ShieldCheck size={14} />
-          SUPERADMIN
+          {__t("SUPERADMIN")}
         </span>
       </div>
       <Stats
         items={[
-          { label: "Foydalanuvchilar", value: db.users.length, icon: Users },
-          { label: "Bizneslar", value: db.businesses.length, icon: Store },
-          { label: "Jami saytlar", value: db.businesses.length, icon: Globe },
           {
-            label: "Faol saytlar",
+            label: __t("Foydalanuvchilar"),
+            value: db.users.length,
+            icon: Users,
+          },
+          { label: __t("Bizneslar"), value: db.businesses.length, icon: Store },
+          {
+            label: __t("Jami saytlar"),
+            value: db.businesses.length,
+            icon: Globe,
+          },
+          {
+            label: __t("Faol saytlar"),
             value: db.businesses.filter((b) => b.active).length,
             icon: Globe,
           },
-          { label: "Mahsulotlar", value: db.products.length, icon: Package },
-          { label: "Faol obunalar", value: active, icon: CreditCard },
           {
-            label: "Tugagan obunalar",
+            label: __t("Mahsulotlar"),
+            value: db.products.length,
+            icon: Package,
+          },
+          { label: __t("Faol obunalar"), value: active, icon: CreditCard },
+          {
+            label: __t("Tugagan obunalar"),
             value: db.businesses.length - active,
             icon: CreditCard,
           },
           {
-            label: "Jami tashriflar",
+            label: __t("Jami tashriflar"),
             value: db.events.filter((e) => e.kind === "visit").length,
             icon: Eye,
           },
@@ -103,9 +118,9 @@ function AdminOverview() {
       />
       <div className="panel">
         <div className="between">
-          <h3>So‘nggi ro‘yxatdan o‘tganlar</h3>
+          <h3>{__t("So\u2018nggi ro\u2018yxatdan o\u2018tganlar")}</h3>
           <Link href="/admin/users" className="text-link">
-            Barchasi
+            {__t("Barchasi")}
             <ArrowUpRight size={16} />
           </Link>
         </div>
@@ -113,11 +128,11 @@ function AdminOverview() {
           <table>
             <thead>
               <tr>
-                <th>Foydalanuvchi</th>
-                <th>Email</th>
-                <th>Rol</th>
-                <th>Ro‘yxatdan o‘tgan</th>
-                <th>Holat</th>
+                <th>{__t("Foydalanuvchi")}</th>
+                <th>{__t("Email")}</th>
+                <th>{__t("Rol")}</th>
+                <th>{__t("Ro\u2018yxatdan o\u2018tgan")}</th>
+                <th>{__t("Holat")}</th>
               </tr>
             </thead>
             <tbody>
@@ -131,10 +146,10 @@ function AdminOverview() {
                     </td>
                     <td>{u.email}</td>
                     <td>{u.role}</td>
-                    <td>{date(u.createdAt)}</td>
+                    <td>{date(u.createdAt, __t.language)}</td>
                     <td>
                       <span className={`badge ${u.active ? "green" : "gray"}`}>
-                        {u.active ? "Faol" : "Faolsiz"}
+                        {u.active ? __t("Faol") : __t("Faolsiz")}
                       </span>
                     </td>
                   </tr>
@@ -147,6 +162,7 @@ function AdminOverview() {
   );
 }
 function UserManager() {
+  const __t = useTranslator();
   const { db, update, user, reload } = useApp();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
@@ -164,7 +180,7 @@ function UserManager() {
           }, "");
       })
       .catch((e) => {
-        if (active) setLoadError(e.message);
+        if (active) setLoadError(__t(e.message));
       });
     return () => {
       active = false;
@@ -193,8 +209,8 @@ function UserManager() {
     <>
       <div className="page-title">
         <div>
-          <h1>Foydalanuvchilar</h1>
-          <p>Akkauntlar va ularga tegishli bizneslar.</p>
+          <h1>{__t("Foydalanuvchilar")}</h1>
+          <p>{__t("Akkauntlar va ularga tegishli bizneslar.")}</p>
         </div>
       </div>
       {loadError && (
@@ -206,30 +222,30 @@ function UserManager() {
         <div className="search-input">
           <Search size={17} />
           <input
-            placeholder="Ism, email yoki username…"
+            placeholder={__t("Ism, email yoki username\u2026")}
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
         </div>
         <select
-          aria-label="Foydalanuvchi holati"
+          aria-label={__t("Foydalanuvchi holati")}
           value={status}
           onChange={(e) => setStatus(e.target.value)}
         >
-          <option value="">Barcha holatlar</option>
-          <option value="true">Faol</option>
-          <option value="false">Faolsiz</option>
+          <option value="">{__t("Barcha holatlar")}</option>
+          <option value="true">{__t("Faol")}</option>
+          <option value="false">{__t("Faolsiz")}</option>
         </select>
       </div>
       <div className="panel table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Foydalanuvchi</th>
-              <th>Email</th>
-              <th>Rol</th>
-              <th>Holat</th>
-              <th>Amallar</th>
+              <th>{__t("Foydalanuvchi")}</th>
+              <th>{__t("Email")}</th>
+              <th>{__t("Rol")}</th>
+              <th>{__t("Holat")}</th>
+              <th>{__t("Amallar")}</th>
             </tr>
           </thead>
           <tbody>
@@ -246,7 +262,7 @@ function UserManager() {
                 <td>{u.role}</td>
                 <td>
                   <span className={`badge ${u.active ? "green" : "gray"}`}>
-                    {u.active ? "Faol" : "Faolsiz"}
+                    {u.active ? __t("Faol") : __t("Faolsiz")}
                   </span>
                 </td>
                 <td>
@@ -268,17 +284,19 @@ function UserManager() {
                         } catch (e) {
                           toast.error(
                             e instanceof Error
-                              ? e.message
-                              : "So‘rov bajarilmadi.",
+                              ? __t(e.message)
+                              : __t("So\u2018rov bajarilmadi."),
                           );
                         }
                       }}
                     >
-                      {u.active ? "Faolsizlantirish" : "Faollashtirish"}
+                      {u.active
+                        ? __t("Faolsizlantirish")
+                        : __t("Faollashtirish")}
                     </Button>
                     <button
                       className="icon-btn red"
-                      title="O‘chirish"
+                      title={__t("O\u2018chirish")}
                       disabled={u.id === user?.id}
                       onClick={() => setDel(u)}
                     >
@@ -295,7 +313,7 @@ function UserManager() {
       <Pagination page={current} total={items.length} onChange={setPage} />
       {detail && (
         <Modal
-          title="Foydalanuvchi tafsilotlari"
+          title={__t("Foydalanuvchi tafsilotlari")}
           onClose={() => setDetail(undefined)}
         >
           <h3>
@@ -307,15 +325,18 @@ function UserManager() {
             {detail.phone}
             <br />@{detail.username}
           </p>
-          <h4>Bizneslar</h4>
+          <h4>{__t("Bizneslar")}</h4>
           {db.businesses
             .filter((b) => b.ownerId === detail.id)
             .map((b) => (
               <div className="callout" key={b.id}>
                 <strong>{b.name}</strong>
-                <p>Yaratilgan: {date(b.createdAt)}</p>
+                <p>
+                  {__t("Yaratilgan:")}
+                  {date(b.createdAt, __t.language)}
+                </p>
                 <Link href={`/${b.slug}`} target="_blank" className="text-link">
-                  Saytni ochish
+                  {__t("Saytni ochish")}
                   <ExternalLink size={15} />
                 </Link>
               </div>
@@ -324,16 +345,20 @@ function UserManager() {
       )}
       {del && (
         <Confirm
-          title="Foydalanuvchi va uning barcha biznes ma’lumotlari o‘chirilsinmi?"
+          title={__t(
+            "Foydalanuvchi va uning barcha biznes ma\u2019lumotlari o\u2018chirilsinmi?",
+          )}
           onClose={() => setDel(undefined)}
           onConfirm={async () => {
             try {
               await authApi.deleteUser(del.id);
               await reload();
-              toast.success("Foydalanuvchi o‘chirildi.");
+              toast.success(__t("Foydalanuvchi o\u2018chirildi."));
             } catch (e) {
               toast.error(
-                e instanceof Error ? e.message : "O‘chirish bajarilmadi.",
+                e instanceof Error
+                  ? __t(e.message)
+                  : __t("O\u2018chirish bajarilmadi."),
               );
             }
           }}
@@ -343,6 +368,7 @@ function UserManager() {
   );
 }
 function BusinessManager() {
+  const __t = useTranslator();
   const { db, update } = useApp();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
@@ -359,15 +385,15 @@ function BusinessManager() {
     <>
       <div className="page-title">
         <div>
-          <h1>Bizneslar</h1>
-          <p>Mustaqil biznes saytlari va ularning holati.</p>
+          <h1>{__t("Bizneslar")}</h1>
+          <p>{__t("Mustaqil biznes saytlari va ularning holati.")}</p>
         </div>
       </div>
       <div className="toolbar">
         <div className="search-input">
           <Search size={17} />
           <input
-            placeholder="Biznes qidirish…"
+            placeholder={__t("Biznes qidirish\u2026")}
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
@@ -375,23 +401,23 @@ function BusinessManager() {
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          aria-label="Sayt holati"
+          aria-label={__t("Sayt holati")}
         >
-          <option value="">Barcha holatlar</option>
-          <option value="true">Faol</option>
-          <option value="false">Faolsiz</option>
+          <option value="">{__t("Barcha holatlar")}</option>
+          <option value="true">{__t("Faol")}</option>
+          <option value="false">{__t("Faolsiz")}</option>
         </select>
       </div>
       <div className="panel table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Biznes</th>
-              <th>Egasi</th>
-              <th>Mahsulotlar</th>
-              <th>Yaratilgan</th>
-              <th>Holat</th>
-              <th>Amallar</th>
+              <th>{__t("Biznes")}</th>
+              <th>{__t("Egasi")}</th>
+              <th>{__t("Mahsulotlar")}</th>
+              <th>{__t("Yaratilgan")}</th>
+              <th>{__t("Holat")}</th>
+              <th>{__t("Amallar")}</th>
             </tr>
           </thead>
           <tbody>
@@ -410,10 +436,10 @@ function BusinessManager() {
                 <td>
                   {db.products.filter((p) => p.businessId === b.id).length}
                 </td>
-                <td>{date(b.createdAt)}</td>
+                <td>{date(b.createdAt, __t.language)}</td>
                 <td>
                   <span className={`badge ${b.active ? "green" : "gray"}`}>
-                    {b.active ? "Faol" : "Faolsiz"}
+                    {b.active ? __t("Faol") : __t("Faolsiz")}
                   </span>
                 </td>
                 <td>
@@ -429,12 +455,12 @@ function BusinessManager() {
                         })
                       }
                     >
-                      {b.active ? "To‘xtatish" : "Yoqish"}
+                      {b.active ? __t("To\u2018xtatish") : __t("Yoqish")}
                     </Button>
                     <Link
                       href={`/${b.slug}`}
                       target="_blank"
-                      title="Saytni ko‘rish"
+                      title={__t("Saytni ko\u2018rish")}
                     >
                       <ExternalLink size={16} />
                     </Link>
@@ -454,7 +480,7 @@ function BusinessManager() {
               href={`/admin/subscriptions?q=${accountId(b.ownerId)}`}
               className="btn"
             >
-              Obunani boshqarish
+              {__t("Obunani boshqarish")}
             </Link>
           </p>
           <p>{b.description}</p>
@@ -463,11 +489,12 @@ function BusinessManager() {
           </p>
           <p>{b.address}</p>
           <p>
-            Obuna: {db.plans.find((p) => p.id === b.planId)?.name} ·{" "}
-            {date(b.expires)}
+            {__t("Obuna:")}
+            {db.plans.find((p) => p.id === b.planId)?.name} ·{" "}
+            {date(b.expires, __t.language)}
           </p>
           <Link className="btn" href={`/${b.slug}`} target="_blank">
-            Public sayt
+            {__t("Public sayt")}
             <ArrowUpRight size={16} />
           </Link>
         </Modal>
@@ -476,6 +503,7 @@ function BusinessManager() {
   );
 }
 function Plans() {
+  const __t = useTranslator();
   const { db, update, reviewPlan } = useApp();
   const [edit, setEdit] = useState<Plan | null | undefined>();
   const [del, setDel] = useState<Plan>();
@@ -483,35 +511,40 @@ function Plans() {
     <>
       <div className="page-title">
         <div>
-          <h1>Obunalar va tariflar</h1>
-          <p>Tarif imkoniyatlari va bizneslarning obuna muddatlari.</p>
+          <h1>{__t("Obunalar va tariflar")}</h1>
+          <p>{__t("Tarif imkoniyatlari va bizneslarning obuna muddatlari.")}</p>
         </div>
         <Button onClick={() => setEdit(null)}>
           <Plus size={17} />
-          Tarif yaratish
+          {__t("Tarif yaratish")}
         </Button>
       </div>
       <div className="pricing-grid">
         {db.plans.map((p) => (
           <article className="price-card" key={p.id}>
-            <h3>{p.name}</h3>
-            <div className="price">{money(p.price)}</div>
+            <h3>{__t(p.name)}</h3>
+            <div className="price">{money(p.price, __t.language)}</div>
             <small>
-              {p.duration} kun · {productCapacity(p)} mahsulot
+              {p.duration}
+              {__t("kun \u00B7")}
+              {__t(productCapacity(p))}
+              {__t("mahsulot")}
             </small>
-            <p className="preserve">{p.features}</p>
+            <p className="preserve">{__t(p.features)}</p>
             <div className="actions">
               <Button variant="secondary small" onClick={() => setEdit(p)}>
                 <Pencil size={14} />
-                Tahrirlash
+                {__t("Tahrirlash")}
               </Button>
               <button
                 className="icon-btn red"
-                title="Tarifni o‘chirish"
+                title={__t("Tarifni o\u2018chirish")}
                 onClick={() => {
                   if (db.businesses.some((b) => b.planId === p.id)) {
                     toast.error(
-                      "Bu tarifda bizneslar bor. Avval ularning tarifini almashtiring.",
+                      __t(
+                        "Bu tarifda bizneslar bor. Avval ularning tarifini almashtiring.",
+                      ),
                     );
                     return;
                   }
@@ -529,7 +562,7 @@ function Plans() {
       )}{" "}
       {del && (
         <Confirm
-          title="Tarif o‘chirilsinmi?"
+          title={__t("Tarif o\u2018chirilsinmi?")}
           onClose={() => setDel(undefined)}
           onConfirm={() =>
             update((d) => {
@@ -548,6 +581,7 @@ function PlanEditor({
   plan: Plan | null;
   onClose: () => void;
 }) {
+  const __t = useTranslator();
   const { update } = useApp();
   const [v, setV] = useState<Plan>(
     plan ?? {
@@ -561,7 +595,7 @@ function PlanEditor({
   );
   return (
     <Modal
-      title={plan ? "Tarifni tahrirlash" : "Yangi tarif"}
+      title={plan ? __t("Tarifni tahrirlash") : __t("Yangi tarif")}
       onClose={onClose}
     >
       <form
@@ -576,7 +610,7 @@ function PlanEditor({
             onClose();
         }}
       >
-        <Field label="Tarif nomi">
+        <Field label={__t("Tarif nomi")}>
           <input
             required
             minLength={2}
@@ -587,7 +621,13 @@ function PlanEditor({
         {(["price", "duration"] as const).map((k, i) => (
           <Field
             key={k}
-            label={["Narx (so‘m)", "Davomiyligi (kun)", "Mahsulot limiti"][i]}
+            label={
+              [
+                __t("Narx (so\u2018m)"),
+                __t("Davomiyligi (kun)"),
+                __t("Mahsulot limiti"),
+              ][i]
+            }
           >
             <input
               type="number"
@@ -606,10 +646,10 @@ function PlanEditor({
               setV({ ...v, limit: e.target.checked ? null : 1000 })
             }
           />
-          Cheksiz mahsulotlar
+          {__t("Cheksiz mahsulotlar")}
         </label>
         {v.limit !== null && (
-          <Field label="Mahsulot limiti">
+          <Field label={__t("Mahsulot limiti")}>
             <input
               required
               type="number"
@@ -619,15 +659,15 @@ function PlanEditor({
             />
           </Field>
         )}
-        <Field label="Analitika (kun)">
+        <Field label={__t("Analitika (kun)")}>
           <select
             value={v.analyticsDays ?? 7}
             onChange={(e) =>
               setV({ ...v, analyticsDays: Number(e.target.value) })
             }
           >
-            <option value={7}>7 kun</option>
-            <option value={90}>90 kun</option>
+            <option value={7}>{__t("7 kun")}</option>
+            <option value={90}>{__t("90 kun")}</option>
           </select>
         </Field>
         <label className="check">
@@ -636,9 +676,9 @@ function PlanEditor({
             checked={!!v.csvExport}
             onChange={(e) => setV({ ...v, csvExport: e.target.checked })}
           />
-          CSV eksporti
+          {__t("CSV eksporti")}
         </label>
-        <Field label="Imkoniyatlar (har qatorga bittadan)">
+        <Field label={__t("Imkoniyatlar (har qatorga bittadan)")}>
           <textarea
             required
             rows={5}
@@ -646,20 +686,21 @@ function PlanEditor({
             onChange={(e) => setV({ ...v, features: e.target.value })}
           />
         </Field>
-        <Button>Saqlash</Button>
+        <Button>{__t("Saqlash")}</Button>
       </form>
     </Modal>
   );
 }
 function PlatformSettings() {
+  const __t = useTranslator();
   const { db, update } = useApp();
   const [v, setV] = useState(db.platform);
   return (
     <>
       <div className="page-title">
         <div>
-          <h1>Platforma sozlamalari</h1>
-          <p>Brend va umumiy aloqa ma’lumotlari.</p>
+          <h1>{__t("Platforma sozlamalari")}</h1>
+          <p>{__t("Brend va umumiy aloqa ma\u2019lumotlari.")}</p>
         </div>
       </div>
       <form
@@ -671,7 +712,7 @@ function PlatformSettings() {
           });
         }}
       >
-        <Field label="Platforma nomi">
+        <Field label={__t("Platforma nomi")}>
           <input
             required
             minLength={2}
@@ -679,13 +720,13 @@ function PlatformSettings() {
             onChange={(e) => setV({ ...v, name: e.target.value })}
           />
         </Field>
-        <Field label="Logo">
+        <Field label={__t("Logo")}>
           <UploadImage
             value={v.logo}
             onChange={(logo) => setV({ ...v, logo })}
           />
         </Field>
-        <Field label="Email">
+        <Field label={__t("Email")}>
           <input
             type="email"
             required
@@ -693,7 +734,7 @@ function PlatformSettings() {
             onChange={(e) => setV({ ...v, email: e.target.value })}
           />
         </Field>
-        <Field label="Telefon">
+        <Field label={__t("Telefon")}>
           <input
             type="tel"
             required
@@ -701,7 +742,7 @@ function PlatformSettings() {
             onChange={(e) => setV({ ...v, phone: e.target.value })}
           />
         </Field>
-        <Field label="Obunalar uchun Telegram">
+        <Field label={__t("Obunalar uchun Telegram")}>
           <input
             placeholder="@username"
             maxLength={33}
@@ -712,20 +753,21 @@ function PlatformSettings() {
             }
           />
           <small>
-            Tugma shu akkaunt bilan suhbatni ochadi. Xabarda akkaunt ID, do‘kon,
-            sayt va tarif avtomatik yoziladi.
+            {__t(
+              "Tugma shu akkaunt bilan suhbatni ochadi. Xabarda akkaunt ID, do\u2018kon, sayt va tarif avtomatik yoziladi.",
+            )}
           </small>
         </Field>
-        <Field label="Tavsif">
+        <Field label={__t("Tavsif")}>
           <textarea
             required
             value={v.description}
             onChange={(e) => setV({ ...v, description: e.target.value })}
           />
         </Field>
-        <Button>Saqlash</Button>
+        <Button>{__t("Saqlash")}</Button>
         <Link className="text-link" href="/admin/subscriptions">
-          Tarif narxlarini boshqarish
+          {__t("Tarif narxlarini boshqarish")}
           <ArrowUpRight size={16} />
         </Link>
       </form>

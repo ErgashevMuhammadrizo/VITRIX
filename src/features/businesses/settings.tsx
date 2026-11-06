@@ -1,5 +1,7 @@
 "use client";
+import { useTranslator } from "../../i18n/runtime";
 import { useState, useEffect } from "react";
+import { ContentTranslationsEditor } from "../../components/ui/content-translations";
 import { Check, Save, ExternalLink, Smartphone, Monitor } from "lucide-react";
 import { useApp, recordActivity } from "../../stores/app-store";
 import type { Business } from "../../types";
@@ -12,6 +14,7 @@ import {
 } from "../../components/ui/shared";
 import { BusinessSite } from "../../components/public-website/business-site";
 import { reserved } from "../../lib/utils";
+import { resetDesign } from "./appearance";
 import { AppearanceControls } from "./appearance-controls";
 import { LocationPicker } from "../location/location-picker";
 import { validCoordinates, safeMapUrl } from "../location/location-utils";
@@ -23,8 +26,11 @@ export function BusinessSettings({
   business: Business;
   contacts?: boolean;
 }) {
+  const __t = useTranslator();
   const { db, update } = useApp();
   const [v, setV] = useState(business);
+  // Replace the draft only when the canonical server record changes.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setV(business), [business]);
   const dirty = JSON.stringify(v) !== JSON.stringify(business);
   useDirtyWarning(dirty);
@@ -33,11 +39,17 @@ export function BusinessSettings({
     <>
       <div className="page-title">
         <div>
-          <h1>{contacts ? "Aloqa ma’lumotlari" : "Sayt sozlamalari"}</h1>
-          <p>Saytingizdagi ma’lumotlar shu yerdan yangilanadi.</p>
+          <h1>
+            {contacts
+              ? __t("Aloqa ma\u2019lumotlari")
+              : __t("Sayt sozlamalari")}
+          </h1>
+          <p>{__t("Saytingizdagi ma\u2019lumotlar shu yerdan yangilanadi.")}</p>
         </div>
         <span className={`badge ${dirty ? "amber" : "green"}`}>
-          {dirty ? "Saqlanmagan o‘zgarishlar" : "Barcha o‘zgarishlar saqlangan"}
+          {dirty
+            ? __t("Saqlanmagan o\u2018zgarishlar")
+            : __t("Barcha o\u2018zgarishlar saqlangan")}
         </span>
       </div>
       <form
@@ -49,7 +61,9 @@ export function BusinessSettings({
             db.businesses.some((b) => b.id !== v.id && b.slug === v.slug)
           ) {
             toast.error(
-              "Slug band yoki noto‘g‘ri. Lotin harflari, raqam va tire ishlating.",
+              __t(
+                "Slug band yoki noto\u2018g\u2018ri. Lotin harflari, raqam va tire ishlating.",
+              ),
             );
             return;
           }
@@ -59,34 +73,38 @@ export function BusinessSettings({
               v.telegram,
             )
           ) {
-            toast.error("Telegram username noto‘g‘ri");
+            toast.error(__t("Telegram username noto\u2018g\u2018ri"));
             return;
           }
           if (
             (v.latitude != null || v.longitude != null) &&
             !validCoordinates(v.latitude, v.longitude)
           ) {
-            toast.error("Ikkala koordinatani ham to‘g‘ri kiriting.");
+            toast.error(
+              __t("Ikkala koordinatani ham to\u2018g\u2018ri kiriting."),
+            );
             return;
           }
           if (v.mapUrl && !safeMapUrl(v.mapUrl)) {
-            toast.error("Xarita HTTPS havolasini tekshiring.");
+            toast.error(__t("Xarita HTTPS havolasini tekshiring."));
             return;
           }
           update((d) => {
             d.businesses = d.businesses.map((b) => (b.id === v.id ? v : b));
-            recordActivity(d, v.id, "Sayt ma’lumotlari yangilandi");
+            recordActivity(d, v.id, __t("Sayt ma\u2019lumotlari yangilandi"));
           });
         }}
       >
         <div className="settings-columns">
           <section className="panel">
             <h2>
-              {contacts ? "Mijozlar sizga qanday bog‘lanadi?" : "Biznes haqida"}
+              {contacts
+                ? __t("Mijozlar sizga qanday bog\u2018lanadi?")
+                : __t("Biznes haqida")}
             </h2>
             {!contacts && (
               <>
-                <Field label="Biznes nomi *">
+                <Field label={__t("Biznes nomi *")}>
                   <input
                     required
                     minLength={2}
@@ -95,7 +113,7 @@ export function BusinessSettings({
                     onChange={(e) => set("name", e.target.value)}
                   />
                 </Field>
-                <Field label="Sayt manzili (slug) *">
+                <Field label={__t("Sayt manzili (slug) *")}>
                   <input
                     required
                     maxLength={64}
@@ -104,7 +122,7 @@ export function BusinessSettings({
                   />
                 </Field>
                 <SiteLink slug={v.slug} />
-                <Field label="Biznes tavsifi">
+                <Field label={__t("Biznes tavsifi")}>
                   <textarea
                     required
                     maxLength={600}
@@ -116,7 +134,7 @@ export function BusinessSettings({
               </>
             )}
             <div className="form-grid">
-              <Field label="Telefon *">
+              <Field label={__t("Telefon *")}>
                 <input
                   type="tel"
                   required
@@ -125,7 +143,7 @@ export function BusinessSettings({
                   onChange={(e) => set("phone", e.target.value)}
                 />
               </Field>
-              <Field label="Telegram username">
+              <Field label={__t("Telegram username")}>
                 <input
                   placeholder="@burgerhouse"
                   value={v.telegram}
@@ -133,20 +151,36 @@ export function BusinessSettings({
                 />
               </Field>
             </div>
-            <Field label="Manzil">
+            <Field label={__t("Manzil")}>
               <input
                 value={v.address}
                 onChange={(e) => set("address", e.target.value)}
               />
             </Field>
+            <ContentTranslationsEditor
+              value={v.translations}
+              onChange={(translations) => setV({ ...v, translations })}
+              fields={[
+                { key: "name", label: __t("Biznes nomi"), max: 100 },
+                {
+                  key: "description",
+                  label: __t("Biznes tavsifi"),
+                  max: 2000,
+                  multiline: true,
+                },
+                { key: "address", label: __t("Manzil"), max: 300 },
+                { key: "hours", label: __t("Ish vaqti"), max: 120 },
+                { key: "heroTitle", label: __t("Banner sarlavhasi"), max: 140 },
+              ]}
+            />
             <LocationPicker value={v} onChange={setV} />
-            <Field label="Ish vaqti">
+            <Field label={__t("Ish vaqti")}>
               <input
                 value={v.hours}
                 onChange={(e) => set("hours", e.target.value)}
               />
             </Field>
-            <Field label="Instagram havolasi">
+            <Field label={__t("Instagram havolasi")}>
               <input
                 type="url"
                 value={v.instagram}
@@ -154,7 +188,7 @@ export function BusinessSettings({
               />
             </Field>
             {!contacts && (
-              <Field label="Sayt tili">
+              <Field label={__t("Sayt tili")}>
                 <select
                   value={v.language}
                   onChange={(e) => set("language", e.target.value)}
@@ -168,21 +202,22 @@ export function BusinessSettings({
           </section>
           {!contacts && (
             <section className="panel">
-              <h2>Brend rasmlari</h2>
-              <Field label="Biznes logosi">
+              <h2>{__t("Brend rasmlari")}</h2>
+              <Field label={__t("Biznes logosi")}>
                 <UploadImage value={v.logo} onChange={(s) => set("logo", s)} />
               </Field>
-              <Field label="Banner rasmi">
+              <Field label={__t("Banner rasmi")}>
                 <UploadImage
                   value={v.cover}
                   onChange={(s) => set("cover", s)}
                 />
               </Field>
               <div className="callout">
-                <h3>Mustaqil sayt havolasi</h3>
+                <h3>{__t("Mustaqil sayt havolasi")}</h3>
                 <p>
-                  Mijozlar bu havolani ochganda to‘g‘ridan-to‘g‘ri
-                  katalogingizga kiradi.
+                  {__t(
+                    "Mijozlar bu havolani ochganda to\u2018g\u2018ridan-to\u2018g\u2018ri katalogingizga kiradi.",
+                  )}
                 </p>
                 <SiteLink slug={v.slug} />
               </div>
@@ -192,7 +227,7 @@ export function BusinessSettings({
                   checked={v.active}
                   onChange={(e) => setV({ ...v, active: e.target.checked })}
                 />
-                Saytni e’lon qilish
+                {__t("Saytni e\u2019lon qilish")}
               </label>
             </section>
           )}
@@ -200,12 +235,12 @@ export function BusinessSettings({
         <div className="save-bar">
           <span>
             {dirty
-              ? "O‘zgarishlaringizni saqlang."
-              : "Ma’lumotlar yangilangan."}
+              ? __t("O\u2018zgarishlaringizni saqlang.")
+              : __t("Ma\u2019lumotlar yangilangan.")}
           </span>
           <Button type="submit" disabled={!dirty}>
             <Save size={17} />
-            O‘zgarishlarni saqlash
+            {__t("O\u2018zgarishlarni saqlash")}
           </Button>
         </div>
       </form>
@@ -213,35 +248,110 @@ export function BusinessSettings({
   );
 }
 export function DesignSettings({ business }: { business: Business }) {
+  const __t = useTranslator();
   const { update } = useApp();
   const [v, setV] = useState(business);
-  useEffect(() => setV(business), [business]);
+  const [history, setHistory] = useState<Business[]>([]);
+  const [future, setFuture] = useState<Business[]>([]);
+  useEffect(() => {
+    // A saved server record becomes the new undo baseline.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setV(business);
+    setHistory([]);
+    setFuture([]);
+  }, [business]);
+  const change = (next: Business) => {
+    setHistory((h) => [...h, v].slice(-50));
+    setFuture([]);
+    setV(next);
+  };
+  const undo = () => {
+    const previous = history.at(-1);
+    if (previous) {
+      setFuture((f) => [v, ...f]);
+      setHistory((h) => h.slice(0, -1));
+      setV(previous);
+    }
+  };
+  const redo = () => {
+    const next = future[0];
+    if (next) {
+      setHistory((h) => [...h, v]);
+      setFuture((f) => f.slice(1));
+      setV(next);
+    }
+  };
   const [mobile, setMobile] = useState(false);
   const dirty = JSON.stringify(v) !== JSON.stringify(business);
   useDirtyWarning(dirty);
-  const set = (k: keyof Business, s: string) => setV({ ...v, [k]: s });
+  const set = (k: keyof Business, s: string) => change({ ...v, [k]: s });
   return (
     <>
       <div className="page-title">
         <div>
-          <h1>Dizayn va brending</h1>
-          <p>O‘z uslubingizni yarating. Natijani darhol ko‘ring.</p>
+          <h1>{__t("Dizayn va brending")}</h1>
+          <p>
+            {__t(
+              "O\u2018z uslubingizni yarating. Natijani darhol ko\u2018ring.",
+            )}
+          </p>
         </div>
         <Button
           disabled={!dirty}
           onClick={() =>
             update((d) => {
               d.businesses = d.businesses.map((b) => (b.id === v.id ? v : b));
-            }, "Dizayn saqlandi")
+            }, __t("Dizayn saqlandi"))
           }
         >
           <Save size={17} />
-          Saqlash
+          {__t("Saqlash")}
         </Button>
+      </div>
+      <div className="design-history toolbar">
+        <Button
+          variant="secondary small"
+          disabled={!history.length}
+          onClick={undo}
+        >
+          {__t("Ortga")}
+        </Button>
+        <Button
+          variant="secondary small"
+          disabled={!future.length}
+          onClick={redo}
+        >
+          {__t("Oldinga")}
+        </Button>
+        <Button
+          variant="secondary small"
+          disabled={!dirty}
+          onClick={() => change(business)}
+        >
+          {__t("Saqlangan holatga qaytish")}
+        </Button>
+        <Button
+          variant="secondary small"
+          onClick={() => {
+            if (
+              confirm(
+                __t(
+                  "Dizayn boshlang\u2018ich holatga qaytarilsinmi? Mahsulot va aloqa ma\u2019lumotlari saqlanadi.",
+                ),
+              )
+            )
+              change(resetDesign(v));
+          }}
+        >
+          {__t("Boshlang\u2018ich dizayn")}
+        </Button>
+        <small>
+          {__t("O\u2018zgarishlar Saqlash bosilganda saytda qo\u2018llanadi.")}
+        </small>
       </div>
       <div className="design-layout">
         <aside className="panel design-controls">
-          <h3>Tayyor uslublar</h3>
+          <h3>{__t("Tayyor uslublar")}</h3>
           <div className="theme-choices">
             {(["minimal", "modern", "elegant"] as const).map((theme) => (
               <button
@@ -254,46 +364,46 @@ export function DesignSettings({ business }: { business: Business }) {
                   <b />
                   <em />
                 </span>
-                {theme[0].toUpperCase() + theme.slice(1)}
+                {__t(theme[0].toUpperCase() + theme.slice(1))}
                 {v.theme === theme && <Check size={15} />}
               </button>
             ))}
           </div>
-          <AppearanceControls value={v} onChange={setV} />
+          <AppearanceControls value={v} onChange={change} />
           {(
             [
               [
                 "font",
-                "Shrift",
+                __t("Shrift"),
                 [
-                  ["sans", "Zamonaviy Sans"],
-                  ["serif", "Klassik Serif"],
-                  ["rounded", "Yumshoq"],
-                  ["system", "Tizim shrifti"],
+                  ["sans", __t("Zamonaviy Sans")],
+                  ["serif", __t("Klassik Serif")],
+                  ["rounded", __t("Yumshoq")],
+                  ["system", __t("Tizim shrifti")],
                 ],
               ],
               [
                 "layout",
-                "Katalog joylashuvi",
+                __t("Katalog joylashuvi"),
                 [
-                  ["grid", "Grid"],
-                  ["list", "Ro‘yxat"],
+                  ["grid", __t("Grid")],
+                  ["list", __t("Ro\u2018yxat")],
                 ],
               ],
               [
                 "header",
-                "Header uslubi",
+                __t("Header uslubi"),
                 [
-                  ["center", "Keng"],
-                  ["compact", "Ixcham"],
+                  ["center", __t("Keng")],
+                  ["compact", __t("Ixcham")],
                 ],
               ],
               [
                 "buttons",
-                "Aloqa tugmalari",
+                __t("Aloqa tugmalari"),
                 [
-                  ["solid", "To‘ldirilgan"],
-                  ["outline", "Kontur"],
+                  ["solid", __t("To\u2018ldirilgan")],
+                  ["outline", __t("Kontur")],
                 ],
               ],
             ] as const
@@ -308,28 +418,29 @@ export function DesignSettings({ business }: { business: Business }) {
               </select>
             </Field>
           ))}
-          <Field label="Logo">
+          <Field label={__t("Logo")}>
             <UploadImage value={v.logo} onChange={(s) => set("logo", s)} />
           </Field>
-          <Field label="Banner">
+          <Field label={__t("Banner")}>
             <UploadImage value={v.cover} onChange={(s) => set("cover", s)} />
           </Field>
         </aside>
         <section className="design-preview">
           <div className="between preview-bar">
             <span>
-              <span className="live-dot" /> Jonli ko‘rinish
+              <span className="live-dot" />
+              {__t("Jonli ko\u2018rinish")}
             </span>
             <div className="segmented">
               <button
-                aria-label="Desktop preview"
+                aria-label={__t("Desktop preview")}
                 className={!mobile ? "active" : ""}
                 onClick={() => setMobile(false)}
               >
                 <Monitor size={17} />
               </button>
               <button
-                aria-label="Mobile preview"
+                aria-label={__t("Mobile preview")}
                 className={mobile ? "active" : ""}
                 onClick={() => setMobile(true)}
               >

@@ -1,4 +1,5 @@
 "use client";
+import { useTranslator } from "../../i18n/runtime";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -29,40 +30,22 @@ import { Navbar, Footer, CTA } from "../../components/layout/marketing";
 import { useApp } from "../../stores/app-store";
 import { money } from "../../lib/utils";
 import { Button, Field } from "../../components/ui/shared";
-const capabilities = [
-  {
-    icon: Globe,
-    title: "O‘z saytingiz. O‘z manzilingiz.",
-    text: "Har bir biznes uchun mustaqil sahifa. Faqat sizning brendingiz va mahsulotlaringiz.",
-  },
-  {
-    icon: Palette,
-    title: "Dizayn — didingizga mos",
-    text: "Uchta tayyor uslub, brend ranglari va rasmlaringiz bilan saytingizga o‘ziga xoslik bering.",
-  },
-  {
-    icon: Smartphone,
-    title: "Har bir ekranda mukammal",
-    text: "Telefon, planshet yoki kompyuter — mijozlaringizga hamisha qulay.",
-  },
-  {
-    icon: Package,
-    title: "Katalogni oson boshqaring",
-    text: "Mahsulotlar, narxlar va kategoriyalarni bir joydan yangilang.",
-  },
-  {
-    icon: Send,
-    title: "Mijoz bilan bevosita aloqa",
-    text: "Mijozlar sizga telefon yoki Telegram orqali to‘g‘ridan-to‘g‘ri murojaat qiladi.",
-  },
-  {
-    icon: BarChart3,
-    title: "Natijani kuzatib boring",
-    text: "Saytga tashriflar va aloqa tugmalariga bosilishlarni kuzating.",
-  },
-];
 export function Pricing() {
-  const { db } = useApp();
+  const __t = useTranslator();
+  const { db, user } = useApp();
+  if (!user)
+    return (
+      <div className="panel center">
+        <h2>{__t("Tariflarni kabinetda ko\u2018ring")}</h2>
+        <p>{__t("Ro\u2018yxatdan o\u2018ting yoki hisobingizga kiring.")}</p>
+        <Link href="/register" className="btn">
+          {__t("Ro\u2018yxatdan o\u2018tish")}
+        </Link>
+        <Link href="/login" className="text-link">
+          {__t("Kirish")}
+        </Link>
+      </div>
+    );
   return (
     <div className="pricing-grid">
       {db.plans.map((plan, i) => (
@@ -70,31 +53,35 @@ export function Pricing() {
           className={`price-card ${i === 1 ? "recommended" : ""}`}
           key={plan.id}
         >
-          {i === 1 && <span className="recommended-label">TAVSIYA ETAMIZ</span>}
+          {i === 1 && (
+            <span className="recommended-label">{__t("TAVSIYA ETAMIZ")}</span>
+          )}
           <h3>{plan.name}</h3>
           <p>
             {i === 0
-              ? "Birinchi qadamingiz uchun"
+              ? __t("Birinchi qadamingiz uchun")
               : i === 1
-                ? "O‘sayotgan biznesingiz uchun"
-                : "Hisobot va tahlilni qadrlaydiganlar uchun"}
+                ? __t("O\u2018sayotgan biznesingiz uchun")
+                : __t("Hisobot va tahlilni qadrlaydiganlar uchun")}
           </p>
           <div className="price">
-            {plan.price ? money(plan.price) : "Bepul"}
-            <small>{plan.price > 0 ? " / oy" : " / birinchi 1 oy"}</small>
+            {plan.price ? money(plan.price, __t.language) : __t("Bepul")}
+            <small>
+              {plan.price > 0 ? __t(" / oy") : __t(" / birinchi 1 oy")}
+            </small>
           </div>
           <Link
             href={`/register?plan=${plan.id}`}
             className={`btn ${i !== 1 ? "secondary" : ""}`}
           >
-            {i === 0 ? "1 oy bepul boshlash" : "Tarifni tanlash"}
+            {i === 0 ? __t("1 oy bepul boshlash") : __t("Tarifni tanlash")}
             <ArrowUpRight size={17} />
           </Link>
           <ul>
             {plan.features.split("\n").map((f) => (
-              <li key={f}>
+              <li key={__t(f)}>
                 <Check size={16} />
-                {f}
+                {__t(f)}
               </li>
             ))}
           </ul>
@@ -104,6 +91,7 @@ export function Pricing() {
   );
 }
 function DemoPreview() {
+  const __t = useTranslator();
   return (
     <div className="hero-visual">
       <div className="browser-card">
@@ -120,31 +108,35 @@ function DemoPreview() {
             <span className="mini-burger">B.</span> Burger House
           </b>
           <span>
-            Menyu <i>Biz haqimizda</i>
+            {__t("Menyu")}
+            <i>{__t("Biznes haqida")}</i>
           </span>
-          <a href="/demo">Bog‘lanish ↗</a>
+          <Link href="/demo">{__t("Bog‘lanish")} ↗</Link>
         </div>
         <div className="preview-hero">
           <div>
-            <span className="tiny-label">FRESH. TASTY. YOURS.</span>
+            <span className="tiny-label">
+              {__t("YANGI. MAZALI. SIZ UCHUN.")}
+            </span>
             <h3>
-              Haqiqiy ta’m.
+              {__t("Haqiqiy ta\u2019m.")}
               <br />
-              Har bir luqmada.
+              {__t("Har bir luqmada.")}
             </h3>
             <p>
-              Yangi masalliqlar va mehr bilan
+              {__t("Yangi masalliqlar va mehr bilan")}
               <br />
-              tayyorlangan sevimli burgerlaringiz.
+              {__t("tayyorlangan sevimli burgerlaringiz.")}
             </p>
             <Link href="/demo">
-              Menyuni ko‘rish <ArrowRight size={12} />
+              {__t("Menyuni ko\u2018rish")}
+              <ArrowRight size={12} />
             </Link>
           </div>
-          <img src="/images/burger.jpg" alt="Burger House burgeri" />
+          <img src="/images/burger.jpg" alt={__t("Burger House burgeri")} />
         </div>
         <div className="preview-products">
-          <b>Sevimlingizni tanlang</b>
+          <b>{__t("Sevimlingizni tanlang")}</b>
           <div>
             {[
               ["burger", "Classic Burger", "35 000"],
@@ -152,9 +144,11 @@ function DemoPreview() {
               ["fries", "French Fries", "16 000"],
             ].map(([im, n, p]) => (
               <Link href="/demo" className="mini-product" key={n}>
-                <img src={`/images/${im}.jpg`} alt={n} />
-                <strong>{n}</strong>
-                <small>{p} so‘m</small>
+                <img src={`/images/${im}.jpg`} alt={__t(n)} />
+                <strong>{__t(n)}</strong>
+                <small>
+                  {p} {__t("so\u2018m")}
+                </small>
               </Link>
             ))}
           </div>
@@ -165,9 +159,9 @@ function DemoPreview() {
           <BarChart3 size={18} />
         </span>
         <div>
-          <small>Saytingiz doimo ochiq</small>
+          <small>{__t("Saytingiz doimo ochiq")}</small>
           <strong>
-            24/7 <span>onlayn</span>
+            24/7 <span>{__t("onlayn")}</span>
           </strong>
         </div>
         <svg width="54" height="30" viewBox="0 0 54 30">
@@ -180,16 +174,63 @@ function DemoPreview() {
         </svg>
       </div>
       <div className="float-live">
-        <span className="live-dot" /> Saytingiz tayyor!
+        <span className="live-dot" />
+        {__t("Saytingiz tayyor!")}
         <Check size={13} />
       </div>
       <div className="cursor-note">
-        <MousePointer2 size={20} fill="#315beb" /> Sizning biznesingiz
+        <MousePointer2 size={20} fill="#315beb" />
+        {__t("Sizning biznesingiz")}
       </div>
     </div>
   );
 }
 export function MarketingPage({ page = "" }: { page?: string }) {
+  const __t = useTranslator();
+  const capabilities = [
+    {
+      icon: Globe,
+      title: __t("O\u2018z saytingiz. O\u2018z manzilingiz."),
+      text: __t(
+        "Har bir biznes uchun mustaqil sahifa. Faqat sizning brendingiz va mahsulotlaringiz.",
+      ),
+    },
+    {
+      icon: Palette,
+      title: __t("Dizayn \u2014 didingizga mos"),
+      text: __t(
+        "Uchta tayyor uslub, brend ranglari va rasmlaringiz bilan saytingizga o\u2018ziga xoslik bering.",
+      ),
+    },
+    {
+      icon: Smartphone,
+      title: __t("Har bir ekranda mukammal"),
+      text: __t(
+        "Telefon, planshet yoki kompyuter \u2014 mijozlaringizga hamisha qulay.",
+      ),
+    },
+    {
+      icon: Package,
+      title: __t("Katalogni oson boshqaring"),
+      text: __t(
+        "Mahsulotlar, narxlar va kategoriyalarni bir joydan yangilang.",
+      ),
+    },
+    {
+      icon: Send,
+      title: __t("Mijoz bilan bevosita aloqa"),
+      text: __t(
+        "Mijozlar sizga telefon yoki Telegram orqali to\u2018g\u2018ridan-to\u2018g\u2018ri murojaat qiladi.",
+      ),
+    },
+    {
+      icon: BarChart3,
+      title: __t("Natijani kuzatib boring"),
+      text: __t(
+        "Saytga tashriflar va aloqa tugmalariga bosilishlarni kuzating.",
+      ),
+    },
+  ];
   const { t, db, language } = useApp();
   const [sent, setSent] = useState(false);
   const [draft, setDraft] = useState({ name: "", email: "", message: "" });
@@ -211,11 +252,11 @@ export function MarketingPage({ page = "" }: { page?: string }) {
       </>
     ) : (
       <>
-        Biznesingiz uchun sayt.
+        {__t("Biznesingiz uchun sayt.")}
         <br />
-        Professional.
+        {__t("Professional.")}
         <br />
-        <em>Dasturchisiz.</em>
+        <em>{__t("Dasturchisiz.")}</em>
       </>
     );
   return (
@@ -227,15 +268,18 @@ export function MarketingPage({ page = "" }: { page?: string }) {
             <section className="hero container">
               <div className="hero-copy">
                 <span className="pill">
-                  <span className="live-dot" /> KATTA IMKONIYATLAR. ODDIY
-                  BOSHLANISH.
+                  <span className="live-dot" />
+                  {__t("KATTA IMKONIYATLAR. ODDIY BOSHLANISH.")}
                 </span>
                 <h1>{heroTitle}</h1>
                 <p>
-                  Bir necha daqiqada o‘z biznes saytingizni yarating.
-                  <br className="desktop" /> Mahsulotlaringizni joylang va
-                  mijozlaringizga
-                  <br className="desktop" /> bitta havola bilan ulashing.
+                  {__t(
+                    "Bir necha daqiqada o\u2018z biznes saytingizni yarating.",
+                  )}
+                  <br className="desktop" />
+                  {__t("Mahsulotlaringizni joylang va mijozlaringizga")}
+                  <br className="desktop" />
+                  {__t("bitta havola bilan ulashing.")}
                 </p>
                 <div className="hero-actions">
                   <Link href="/register" className="btn">
@@ -250,27 +294,27 @@ export function MarketingPage({ page = "" }: { page?: string }) {
                 <div className="hero-checks">
                   <span>
                     <Check size={14} />
-                    Bepul boshlang
+                    {__t("Bepul boshlang")}
                   </span>
                   <span>
                     <Check size={14} />
-                    Karta talab qilinmaydi
+                    {__t("Karta talab qilinmaydi")}
                   </span>
                   <span>
                     <Check size={14} />
-                    Bir necha daqiqada
+                    {__t("Bir necha daqiqada")}
                   </span>
                 </div>
               </div>
               <DemoPreview />
             </section>
             <div className="business-types container">
-              <span>HAR QANDAY BIZNES UCHUN</span>
+              <span>{__t("HAR QANDAY BIZNES UCHUN")}</span>
               {[
-                [Utensils, "Kafe va restoran"],
-                [ShoppingBag, "Do‘kon va butik"],
-                [Cake, "Qandolatchilik"],
-                [Flower2, "Gul do‘konlari"],
+                [Utensils, __t("Kafe va restoran")],
+                [ShoppingBag, __t("Do\u2018kon va butik")],
+                [Cake, __t("Qandolatchilik")],
+                [Flower2, __t("Gul do\u2018konlari")],
               ].map(([Icon, label]) => {
                 const I = Icon as typeof Store;
                 return (
@@ -280,42 +324,48 @@ export function MarketingPage({ page = "" }: { page?: string }) {
                   </div>
                 );
               })}
-              <span className="more-types">va yana ko‘plab bizneslar ↗</span>
+              <span className="more-types">
+                {__t("va yana ko\u2018plab bizneslar \u2197")}
+              </span>
             </div>
             <section className="section container">
               <div className="section-heading">
                 <div>
-                  <span className="eyebrow">MURAKKABLIK ORTDA QOLSIN</span>
+                  <span className="eyebrow">
+                    {__t("MURAKKABLIK ORTDA QOLSIN")}
+                  </span>
                   <h2>
-                    G‘oyangizdan saytingizgacha.
+                    {__t("G\u2018oyangizdan saytingizgacha.")}
                     <br />
-                    Atigi uchta qadam.
+                    {__t("Atigi uchta qadam.")}
                   </h2>
                 </div>
                 <p>
-                  Texnik bilim shart emas.
+                  {__t("Texnik bilim shart emas.")}
                   <br />
-                  Biznesingizni sizdan yaxshi kim biladi?
+                  {__t("Biznesingizni sizdan yaxshi kim biladi?")}
                 </p>
               </div>
               <div className="steps">
                 {[
                   [
                     "01",
-                    "Biznesingizni tanishtiring",
-                    "Nom, logo va aloqa ma’lumotlarini kiriting.",
+                    __t("Biznesingizni tanishtiring"),
+                    __t("Nom, logo va aloqa ma\u2019lumotlarini kiriting."),
                     Store,
                   ],
                   [
                     "02",
-                    "Katalogingizni yarating",
-                    "Rasm, narx va tavsif bilan mahsulotlarni qo‘shing.",
+                    __t("Katalogingizni yarating"),
+                    __t(
+                      "Rasm, narx va tavsif bilan mahsulotlarni qo\u2018shing.",
+                    ),
                     Package,
                   ],
                   [
                     "03",
-                    "Havolangizni ulashing",
-                    "Tayyor saytingizni Instagram va Telegramga joylang.",
+                    __t("Havolangizni ulashing"),
+                    __t("Tayyor saytingizni Instagram va Telegramga joylang."),
                     ArrowUpRight,
                   ],
                 ].map(([n, title, text, I]) => {
@@ -335,15 +385,15 @@ export function MarketingPage({ page = "" }: { page?: string }) {
               <div className="container section">
                 <div className="section-heading">
                   <div>
-                    <span className="eyebrow">BARCHASI BIR JOYDA</span>
+                    <span className="eyebrow">{__t("BARCHASI BIR JOYDA")}</span>
                     <h2>
-                      Kichik biznes uchun.
+                      {__t("Kichik biznes uchun.")}
                       <br />
-                      Katta imkoniyatlar bilan.
+                      {__t("Katta imkoniyatlar bilan.")}
                     </h2>
                   </div>
                   <Link href="/features" className="text-link">
-                    Barcha imkoniyatlar
+                    {__t("Barcha imkoniyatlar")}
                     <ArrowUpRight size={18} />
                   </Link>
                 </div>
@@ -360,47 +410,44 @@ export function MarketingPage({ page = "" }: { page?: string }) {
                 </div>
               </div>
             </section>
-            <section className="section container">
-              <div className="section-heading centered">
-                <span className="eyebrow">SIZGA MOS TARIF</span>
-                <h2>Oddiy narxlar. Aniq imkoniyatlar.</h2>
-                <p>
-                  Bepul boshlang. Biznesingiz o‘sganda, imkoniyatlarni
-                  kengaytiring.
-                </p>
-              </div>
-              <Pricing />
-            </section>
             <section className="faq-section container">
               <div>
-                <span className="eyebrow">SAVOLLARINGIZ BORMI?</span>
+                <span className="eyebrow">{__t("SAVOLLARINGIZ BORMI?")}</span>
                 <h2>
-                  Javoblar
+                  {__t("Javoblar")}
                   <br />
-                  shu yerda.
+                  {__t("shu yerda.")}
                 </h2>
                 <Link href="/contact" className="text-link">
-                  Biz bilan bog‘laning
+                  {__t("Biz bilan bog\u2018laning")}
                   <ArrowUpRight size={18} />
                 </Link>
               </div>
               <div className="faqs">
                 {[
                   [
-                    "Sayt yaratish uchun dasturlashni bilishim kerakmi?",
-                    "Yo‘q. Ma’lumotlarni kiriting, mahsulot qo‘shing va tayyor dizayndan birini tanlang.",
+                    __t("Sayt yaratish uchun dasturlashni bilishim kerakmi?"),
+                    __t(
+                      "Yo\u2018q. Ma\u2019lumotlarni kiriting, mahsulot qo\u2018shing va tayyor dizayndan birini tanlang.",
+                    ),
                   ],
                   [
-                    "Mijozlarim ro‘yxatdan o‘tishi kerakmi?",
-                    "Yo‘q. Saytingiz havolasi mijozlarga to‘g‘ridan-to‘g‘ri katalogingizni ochadi.",
+                    __t("Mijozlarim ro\u2018yxatdan o\u2018tishi kerakmi?"),
+                    __t(
+                      "Yo\u2018q. Saytingiz havolasi mijozlarga to\u2018g\u2018ridan-to\u2018g\u2018ri katalogingizni ochadi.",
+                    ),
                   ],
                   [
-                    "Buyurtmalarni qanday qabul qilaman?",
-                    "Mijozlaringiz telefon yoki Telegram tugmasi orqali siz bilan bog‘lanadi. Savatcha va to‘lov tizimi qo‘shilmagan.",
+                    __t("Buyurtmalarni qanday qabul qilaman?"),
+                    __t(
+                      "Mijozlaringiz telefon yoki Telegram tugmasi orqali siz bilan bog\u2018lanadi. Savatcha va to\u2018lov tizimi qo\u2018shilmagan.",
+                    ),
                   ],
                   [
-                    "Ma’lumotlar qayerda saqlanadi?",
-                    "Hisob va katalog ma’lumotlari serverda saqlanadi. Saytingizni boshqa qurilmadan ham ochish mumkin.",
+                    __t("Ma\u2019lumotlar qayerda saqlanadi?"),
+                    __t(
+                      "Hisob va katalog ma\u2019lumotlari serverda saqlanadi. Saytingizni boshqa qurilmadan ham ochish mumkin.",
+                    ),
                   ],
                 ].map(([q, a]) => (
                   <details key={q}>
@@ -419,25 +466,26 @@ export function MarketingPage({ page = "" }: { page?: string }) {
       ) : page === "pricing" ? (
         <main className="container section">
           <div className="section-heading centered">
-            <span className="eyebrow">TARIFLAR</span>
-            <h1>Biznesingizga mos reja.</h1>
-            <p>Barcha tariflarda mustaqil sayt va mobil dizayn.</p>
+            <span className="eyebrow">{__t("TARIFLAR")}</span>
+            <h1>{__t("Biznesingizga mos reja.")}</h1>
+            <p>{__t("Barcha tariflarda mustaqil sayt va mobil dizayn.")}</p>
           </div>
           <Pricing />
           <p className="muted center">
-            Tariflar oylik. Obuna administrator to‘lovni tasdiqlagach
-            faollashadi.
+            {__t(
+              "Tariflar oylik. Obuna administrator to\u2018lovni tasdiqlagach faollashadi.",
+            )}
           </p>
         </main>
       ) : page === "features" ? (
         <>
           <main className="section container">
             <div className="section-heading centered">
-              <span className="eyebrow">IMKONIYATLAR</span>
+              <span className="eyebrow">{__t("IMKONIYATLAR")}</span>
               <h1>
-                Boshqarish oson.
+                {__t("Boshqarish oson.")}
                 <br />
-                Natijasi professional.
+                {__t("Natijasi professional.")}
               </h1>
             </div>
             <div className="feature-grid">
@@ -454,44 +502,46 @@ export function MarketingPage({ page = "" }: { page?: string }) {
         </>
       ) : page === "about" ? (
         <main className="container prose section">
-          <span className="eyebrow">BIZ HAQIMIZDA</span>
+          <span className="eyebrow">{__t("BIZ HAQIMIZDA")}</span>
           <h1>
-            Har bir biznesning
+            {__t("Har bir biznesning")}
             <br />
-            o‘z manzili bo‘lsin.
+            {__t("o\u2018z manzili bo\u2018lsin.")}
           </h1>
           <p className="lead">
-            VITRIX — kichik va o‘rta bizneslar o‘z mahsulotlarini internetda
-            sodda va chiroyli namoyish etishi uchun yaratilgan platforma.
+            {__t(
+              "VITRIX \u2014 kichik va o\u2018rta bizneslar o\u2018z mahsulotlarini internetda sodda va chiroyli namoyish etishi uchun yaratilgan platforma.",
+            )}
           </p>
           <p>
-            Biznes egasi uchun eng muhim ish — mijozlariga xizmat ko‘rsatish.
-            Biz saytni boshqarishni qulay qilamiz: mahsulotlar, dizayn va aloqa
-            ma’lumotlari bir kabinetda.
+            {__t(
+              "Biznes egasi uchun eng muhim ish \u2014 mijozlariga xizmat ko\u2018rsatish. Biz saytni boshqarishni qulay qilamiz: mahsulotlar, dizayn va aloqa ma\u2019lumotlari bir kabinetda.",
+            )}
           </p>
           <div className="callout">
             <Globe />
-            <h3>Mustaqil sahifa, bevosita aloqa.</h3>
+            <h3>{__t("Mustaqil sahifa, bevosita aloqa.")}</h3>
             <p>
-              Har bir biznes o‘z katalogiga ega. Mijozlar telefon va Telegram
-              orqali bevosita sizga murojaat qiladi.
+              {__t(
+                "Har bir biznes o\u2018z katalogiga ega. Mijozlar telefon va Telegram orqali bevosita sizga murojaat qiladi.",
+              )}
             </p>
           </div>
           <Link className="btn" href="/register">
-            Boshlash
+            {__t("Boshlash")}
             <ArrowRight size={18} />
           </Link>
         </main>
       ) : page === "contact" ? (
         <main className="container section contact-grid">
           <div>
-            <span className="eyebrow">BOG‘LANISH</span>
+            <span className="eyebrow">{__t("BOG\u2018LANISH")}</span>
             <h1>
-              Birgalikda
+              {__t("Birgalikda")}
               <br />
-              boshlaymiz.
+              {__t("boshlaymiz.")}
             </h1>
-            <p>Savollaringiz va takliflaringiz uchun ochiqmiz.</p>
+            <p>{__t("Savollaringiz va takliflaringiz uchun ochiqmiz.")}</p>
             <a href={`mailto:${db.platform.email}`} className="contact-line">
               <Mail />
               {db.platform.email}
@@ -501,7 +551,9 @@ export function MarketingPage({ page = "" }: { page?: string }) {
               {db.platform.phone}
             </a>
             <small className="muted">
-              Aloqa ma’lumotlarini platforma administratori yangilaydi.
+              {__t(
+                "Aloqa ma\u2019lumotlarini platforma administratori yangilaydi.",
+              )}
             </small>
           </div>
           <form
@@ -514,58 +566,59 @@ export function MarketingPage({ page = "" }: { page?: string }) {
             {sent ? (
               <>
                 <Check size={32} />
-                <h2>Xabaringiz tayyor</h2>
+                <h2>{__t("Xabaringiz tayyor")}</h2>
                 <p>
-                  Xabaringizni email ilovangiz orqali jo‘natish uchun quyidagi
-                  havoladan foydalaning.
+                  {__t(
+                    "Xabaringizni email ilovangiz orqali jo\u2018natish uchun quyidagi havoladan foydalaning.",
+                  )}
                 </p>
                 <a
                   className="btn"
-                  href={`mailto:${db.platform.email}?subject=${encodeURIComponent("VITRIX: " + draft.name)}&body=${encodeURIComponent(draft.message + "\n\n" + draft.name + "\n" + draft.email)}`}
+                  href={`mailto:${db.platform.email}?subject=${encodeURIComponent(__t("VITRIX: ") + draft.name)}&body=${encodeURIComponent(__t(draft.message) + "\n\n" + draft.name + "\n" + draft.email)}`}
                 >
-                  Email ochish
+                  {__t("Email ochish")}
                   <ArrowUpRight size={16} />
                 </a>
               </>
             ) : (
               <>
-                <h2>Bizga yozing</h2>
-                <Field label="Ismingiz">
+                <h2>{__t("Bizga yozing")}</h2>
+                <Field label={__t("Ismingiz")}>
                   <input
                     required
                     minLength={2}
-                    placeholder="Ismingiz"
+                    placeholder={__t("Ismingiz")}
                     value={draft.name}
                     onChange={(e) =>
                       setDraft({ ...draft, name: e.target.value })
                     }
                   />
                 </Field>
-                <Field label="Email">
+                <Field label={__t("Email")}>
                   <input
                     type="email"
                     required
-                    placeholder="siz@example.uz"
+                    placeholder={__t("siz@example.uz")}
                     value={draft.email}
                     onChange={(e) =>
                       setDraft({ ...draft, email: e.target.value })
                     }
                   />
                 </Field>
-                <Field label="Xabar">
+                <Field label={__t("Xabar")}>
                   <textarea
                     required
                     minLength={10}
-                    placeholder="Qanday yordam bera olamiz?"
+                    placeholder={__t("Qanday yordam bera olamiz?")}
                     rows={4}
-                    value={draft.message}
+                    value={__t(draft.message)}
                     onChange={(e) =>
                       setDraft({ ...draft, message: e.target.value })
                     }
                   />
                 </Field>
                 <Button type="submit">
-                  Davom etish
+                  {__t("Davom etish")}
                   <ArrowRight size={16} />
                 </Button>
               </>
@@ -577,28 +630,26 @@ export function MarketingPage({ page = "" }: { page?: string }) {
           <span className="eyebrow">VITRIX</span>
           <h1>
             {page === "privacy"
-              ? "Maxfiylik siyosati"
-              : "Foydalanish shartlari"}
+              ? __t("Maxfiylik siyosati")
+              : __t("Foydalanish shartlari")}
           </h1>
           <p>
-            VITRIX hisobingiz email orqali tasdiqlanadi. Hisob, mahsulotlar,
-            rasmlar va sayt sozlamalari platforma serverida saqlanadi.
+            {__t(
+              "VITRIX hisobingiz email orqali tasdiqlanadi. Hisob, mahsulotlar, rasmlar va sayt sozlamalari platforma serverida saqlanadi.",
+            )}
           </p>
           <p>
-            Birinchi 30 kunlik sinov bepul: 1 000 tagacha mahsulot. Keyin Pro —
-            20 000 so‘m/oy yoki VIP — 39 000 so‘m/oy. Pullik tariflarda
-            mahsulotlar soni cheklanmaydi. To‘lov administrator tasdig‘i bilan
-            faollashtiriladi.
+            {__t(
+              "Birinchi 30 kunlik sinov bepul: 1 000 tagacha mahsulot. Tariflar va narxlar ro\u2018yxatdan o\u2018tgandan keyin kabinetda ko\u2018rsatiladi. Pullik tariflarda mahsulotlar soni cheklanmaydi. To\u2018lov administrator tasdig\u2018i bilan faollashtiriladi.",
+            )}
           </p>
           <p>
-            Hisobingiz paroli va tasdiqlash kodini boshqalarga bermang.
-            Joylangan mahsulotlar, rasmlar va aloqa ma’lumotlarining
-            to‘g‘riligiga biznes egasi javob beradi. Shaxsiy ma’lumotlarni
-            tuzatish yoki hisobni o‘chirish uchun platforma administratoriga
-            murojaat qiling.
+            {__t(
+              "Hisobingiz paroli va tasdiqlash kodini boshqalarga bermang. Joylangan mahsulotlar, rasmlar va aloqa ma\u2019lumotlarining to\u2018g\u2018riligiga biznes egasi javob beradi. Shaxsiy ma\u2019lumotlarni tuzatish yoki hisobni o\u2018chirish uchun platforma administratoriga murojaat qiling.",
+            )}
           </p>
           <Link href="/register" className="btn">
-            Ro‘yxatdan o‘tish
+            {__t("Ro\u2018yxatdan o\u2018tish")}
           </Link>
         </main>
       )}
