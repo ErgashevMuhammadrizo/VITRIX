@@ -1,0 +1,12 @@
+node_modules
+.next
+dist
+.git
+.sites-runtime
+.wrangler
+backend
+.env
+.env.local
+outputs
+work
+*.zip

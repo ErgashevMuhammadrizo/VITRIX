@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: vitrix
+      POSTGRES_USER: vitrix
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run node scripts/setup-env.mjs first}
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vitrix -d vitrix"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+  backend:
+    build: ./backend
+    env_file: ./backend/.env
+    environment:
+      DJANGO_DEBUG: "0"
+      DJANGO_SECURE_COOKIES: ${DJANGO_SECURE_COOKIES:-0} # Local HTTP only; set 1 behind production HTTPS.
+      FRONTEND_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+      DATABASE_URL: postgresql://vitrix:${POSTGRES_PASSWORD}@db:5432/vitrix
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health/')"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    volumes:
+      - media:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+  frontend:
+    build: .
+    environment:
+      DJANGO_API_URL: http://backend:8000
+      SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  database:
+  media:
