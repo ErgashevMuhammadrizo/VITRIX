@@ -1,22 +1,23 @@
 "use client";
+import NextImage from "next/image";
+import { CategorySelect } from "../../components/ui/category-select";
 import { useTranslator } from "../../i18n/runtime";
 import { ContentTranslationsEditor } from "../../components/ui/content-translations";
 import type { ContentTranslations } from "../../types";
+import { useCollection } from "../../hooks/use-collection";
 import { useState } from "react";
 import {
   Plus,
   Search,
   LayoutGrid,
   List,
-  MoreHorizontal,
   Pencil,
   Trash2,
   Archive,
   Eye,
   EyeOff,
-  Package,
 } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { schema } from "./schema";
@@ -53,27 +54,21 @@ export function ProductManager({
   const [page, setPage] = useState(1);
   const [edit, setEdit] = useState<Product | null | undefined>();
   const [del, setDel] = useState<Product>();
-  const products = db.products
-    .filter(
-      (p) =>
-        (!businessId || p.businessId === businessId) &&
-        p.name.toLowerCase().includes(q.toLowerCase()) &&
-        (!cat || p.categoryId === cat) &&
-        (!status || p.status === status) &&
-        (!owner || p.businessId === owner),
-    )
-    .sort((a, b) =>
-      sort === "price"
-        ? a.price - b.price
-        : sort === "name"
-          ? a.name.localeCompare(b.name)
-          : a.order - b.order,
-    );
+  const query = useCollection<Product>("products", {
+    businessId: businessId || owner,
+    q,
+    categoryId: cat,
+    status,
+    sort,
+    page,
+    pageSize: 8,
+  });
+  const products = query.items;
   const categories = db.categories.filter(
     (c) => !businessId || c.businessId === businessId,
   );
-  const current = Math.min(page, Math.max(1, Math.ceil(products.length / 8)));
-  const items = products.slice((current - 1) * 8, current * 8);
+  const current = page;
+  const items = products;
   function change(p: Product, status: Product["status"]) {
     update((d) => {
       const target = d.products.find((i) => i.id === p.id);
@@ -187,13 +182,18 @@ export function ProductManager({
           </button>
         </div>
       </div>
+      {query.loading && <p role="status">{__t("Yuklanmoqda…")}</p>}
+      {query.error && <p role="alert">{__t(query.error)}</p>}
       {products.length ? (
         grid ? (
           <div className="product-grid admin-products">
             {items.map((p) => (
               <article key={p.id} className="product-card">
                 <div className="product-image">
-                  <img
+                  <NextImage
+                    unoptimized
+                    width={800}
+                    height={800}
                     src={p.image || "/images/burger.jpg"}
                     alt={p.name}
                     loading="lazy"
@@ -292,7 +292,13 @@ export function ProductManager({
                   <tr key={p.id}>
                     <td>
                       <div className="table-product">
-                        <img src={p.image || "/images/burger.jpg"} alt="" />
+                        <NextImage
+                          unoptimized
+                          width={800}
+                          height={800}
+                          src={p.image || "/images/burger.jpg"}
+                          alt=""
+                        />
                         {p.name}
                       </div>
                     </td>
@@ -351,7 +357,7 @@ export function ProductManager({
       ) : (
         <Empty title={__t("Mahsulot topilmadi")} />
       )}
-      <Pagination page={current} total={products.length} onChange={setPage} />
+      <Pagination page={current} total={query.total} onChange={setPage} />
       {edit !== undefined && businessId && (
         <ProductEditor
           businessId={businessId}
@@ -410,6 +416,7 @@ function ProductEditor({
       status: "published",
     },
   });
+  const categoryValue = useWatch({ control: form.control, name: "categoryId" });
   const dirty =
     JSON.stringify(translations) !==
       JSON.stringify(product?.translations || {}) ||
@@ -457,13 +464,15 @@ function ProductEditor({
             !product &&
             !canAddProduct(
               plan,
-              db.products.filter((p) => p.businessId === businessId).length,
+              db.counts?.[businessId]?.products ??
+                db.products.filter((p) => p.businessId === businessId).length,
             )
           ) {
             toast.error(__t("Tarifdagi mahsulotlar limiti tugadi"));
             return;
           }
           const p: Product = {
+            revision: product?.revision,
             ...values,
             translations,
             id: product?.id ?? uid(),
@@ -521,16 +530,13 @@ function ProductEditor({
             <input {...form.register("slug")} />
           </Field>
           <Field label={__t("Kategoriya")}>
-            <select {...form.register("categoryId")}>
-              <option value="">{__t("Kategoriyasiz")}</option>
-              {db.categories
-                .filter((c) => c.businessId === businessId)
-                .map((c) => (
-                  <option value={c.id} key={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-            </select>
+            <CategorySelect
+              businessId={businessId}
+              value={categoryValue}
+              onChange={(value) =>
+                form.setValue("categoryId", value, { shouldDirty: true })
+              }
+            />
           </Field>
           <Field label={__t("Holat")}>
             <select {...form.register("status")}>

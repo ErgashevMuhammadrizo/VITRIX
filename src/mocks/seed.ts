@@ -259,23 +259,139 @@ export const seed: Database = {
     logo: "",
   },
 };
-
-const sampleNames:Record<string,[string,string]>={c1:['Бургеры','Burgers'],c2:['Напитки','Drinks'],c3:['Фастфуд','Fast food'],c4:['Десерты','Desserts']};
-for(const category of seed.categories){category.translations={ru:{name:sampleNames[category.id][0],description:'Свежие продукты каждый день'},en:{name:sampleNames[category.id][1],description:'Freshly prepared every day'}};}
-const sampleProducts:[string,string,string,string][]=[
- ['Классический бургер','Classic Burger','Говядина, чеддер, салат и фирменный соус.','Beef, cheddar, lettuce and our signature sauce.'],
- ['Двойной чизбургер','Double Cheese','Две котлеты и двойная порция чеддера.','Double beef and double cheddar.'],
- ['Бургер с курицей','Chicken Burger','Хрустящее куриное филе и свежие овощи.','Crispy chicken fillet and fresh vegetables.'],
- ['Бургер BBQ','BBQ Burger','Мясо на гриле и дымный соус BBQ.','Grilled beef and smoky BBQ sauce.'],
- ['Свежий лимонад','Fresh Lemonade','Освежающий напиток с лимоном, мятой и льдом.','Refreshing lemon, mint and ice.'],
- ['Айс-кофе','Iced Coffee','Свежий эспрессо и нежное молоко.','Fresh espresso and smooth milk.'],
- ['Апельсиновый фреш','Orange Fresh','Свежевыжатый апельсиновый сок.','Freshly squeezed orange juice.'],
- ['Картофель фри','French Fries','Золотистый хрустящий картофель фри.','Golden crispy fries.'],
- ['Куриные стрипсы','Chicken Strips','Нежные кусочки курицы, 5 штук.','Five tender chicken strips.'],
- ['Хот-дог','Hot Dog','Мягкая булочка и фирменный соус.','A soft bun and signature sauce.'],
- ['Семейное комбо','Family Combo','Два бургера, картофель фри и два напитка.','Two burgers, fries and two drinks.'],
- ['Острый бургер','Spicy Burger','Острый соус, халапеньо и чеддер.','Spicy sauce, jalapeño and cheddar.'],
- ['Ягодный чизкейк','Berry Cheesecake','Нежный чизкейк со свежими ягодами.','Creamy cheesecake with fresh berries.']
+const sampleNames: Record<string, [string, string]> = {
+  c1: ["Бургеры", "Burgers"],
+  c2: ["Напитки", "Drinks"],
+  c3: ["Фастфуд", "Fast food"],
+  c4: ["Десерты", "Desserts"],
+};
+for (const category of seed.categories) {
+  category.translations = {
+    ru: {
+      name: sampleNames[category.id][0],
+      description: "Свежие продукты каждый день",
+    },
+    en: {
+      name: sampleNames[category.id][1],
+      description: "Freshly prepared every day",
+    },
+  };
+}
+const sampleProducts: [string, string, string, string][] = [
+  [
+    "Классический бургер",
+    "Classic Burger",
+    "Говядина, чеддер, салат и фирменный соус.",
+    "Beef, cheddar, lettuce and our signature sauce.",
+  ],
+  [
+    "Двойной чизбургер",
+    "Double Cheese",
+    "Две котлеты и двойная порция чеддера.",
+    "Double beef and double cheddar.",
+  ],
+  [
+    "Бургер с курицей",
+    "Chicken Burger",
+    "Хрустящее куриное филе и свежие овощи.",
+    "Crispy chicken fillet and fresh vegetables.",
+  ],
+  [
+    "Бургер BBQ",
+    "BBQ Burger",
+    "Мясо на гриле и дымный соус BBQ.",
+    "Grilled beef and smoky BBQ sauce.",
+  ],
+  [
+    "Свежий лимонад",
+    "Fresh Lemonade",
+    "Освежающий напиток с лимоном, мятой и льдом.",
+    "Refreshing lemon, mint and ice.",
+  ],
+  [
+    "Айс-кофе",
+    "Iced Coffee",
+    "Свежий эспрессо и нежное молоко.",
+    "Fresh espresso and smooth milk.",
+  ],
+  [
+    "Апельсиновый фреш",
+    "Orange Fresh",
+    "Свежевыжатый апельсиновый сок.",
+    "Freshly squeezed orange juice.",
+  ],
+  [
+    "Картофель фри",
+    "French Fries",
+    "Золотистый хрустящий картофель фри.",
+    "Golden crispy fries.",
+  ],
+  [
+    "Куриные стрипсы",
+    "Chicken Strips",
+    "Нежные кусочки курицы, 5 штук.",
+    "Five tender chicken strips.",
+  ],
+  [
+    "Хот-дог",
+    "Hot Dog",
+    "Мягкая булочка и фирменный соус.",
+    "A soft bun and signature sauce.",
+  ],
+  [
+    "Семейное комбо",
+    "Family Combo",
+    "Два бургера, картофель фри и два напитка.",
+    "Two burgers, fries and two drinks.",
+  ],
+  [
+    "Острый бургер",
+    "Spicy Burger",
+    "Острый соус, халапеньо и чеддер.",
+    "Spicy sauce, jalapeño and cheddar.",
+  ],
+  [
+    "Ягодный чизкейк",
+    "Berry Cheesecake",
+    "Нежный чизкейк со свежими ягодами.",
+    "Creamy cheesecake with fresh berries.",
+  ],
 ];
-seed.products.forEach((product,index)=>{const row=sampleProducts[index];product.translations={ru:{name:row[0],shortDescription:row[2],description:row[2]+' Уточняйте наличие по телефону или в Telegram.'},en:{name:row[1],shortDescription:row[3],description:row[3]+' Contact us by phone or Telegram for availability.'}};});
-for(const business of seed.businesses){business.translations={ru:{name:business.name,description:business.id==='b1'?'Свежие ингредиенты. Настоящий вкус. Любимые бургеры и блюда каждый день.':'Десерты, приготовленные с любовью для каждого праздника.',address:'Ташкент, улица Амира Темура, 24',hours:'Ежедневно 10:00 – 23:00'},en:{name:business.name,description:business.id==='b1'?'Fresh ingredients. Real flavor. Your favorite burgers and meals, prepared daily.':'Desserts made with care for every celebration.',address:'24 Amir Temur Street, Tashkent',hours:'Daily 10:00 – 23:00'}};}
+seed.products.forEach((product, index) => {
+  const row = sampleProducts[index];
+  product.translations = {
+    ru: {
+      name: row[0],
+      shortDescription: row[2],
+      description: row[2] + " Уточняйте наличие по телефону или в Telegram.",
+    },
+    en: {
+      name: row[1],
+      shortDescription: row[3],
+      description:
+        row[3] + " Contact us by phone or Telegram for availability.",
+    },
+  };
+});
+for (const business of seed.businesses) {
+  business.translations = {
+    ru: {
+      name: business.name,
+      description:
+        business.id === "b1"
+          ? "Свежие ингредиенты. Настоящий вкус. Любимые бургеры и блюда каждый день."
+          : "Десерты, приготовленные с любовью для каждого праздника.",
+      address: "Ташкент, улица Амира Темура, 24",
+      hours: "Ежедневно 10:00 – 23:00",
+    },
+    en: {
+      name: business.name,
+      description:
+        business.id === "b1"
+          ? "Fresh ingredients. Real flavor. Your favorite burgers and meals, prepared daily."
+          : "Desserts made with care for every celebration.",
+      address: "24 Amir Temur Street, Tashkent",
+      hours: "Daily 10:00 – 23:00",
+    },
+  };
+}

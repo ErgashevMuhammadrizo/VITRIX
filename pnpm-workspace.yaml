@@ -18,4 +18,26 @@ packageImportMethod: auto
 verifyDepsBeforeRun: false
 optimisticRepeatInstall: false
 overrides:
-  miniflare>sharp: 0.35.4
+  sharp: 0.35.5
+  "@babel/core": 7.29.6
+  browserslist: 4.28.7
+  baseline-browser-mapping: 2.11.0
+  fast-uri: 3.1.9
+  source-map-js: 1.2.2
+
+# Explicit security release exception, pinned to the tested patch.
+minimumReleaseAgeExclude:
+  - next@16.4.5
+  - eslint-config-next@16.4.5
+  - "@next/env@16.4.5"
+  - "@next/swc-darwin-arm64@16.4.5"
+  - "@next/swc-darwin-x64@16.4.5"
+  - "@next/swc-linux-arm64-gnu@16.4.5"
+  - "@next/swc-linux-arm64-musl@16.4.5"
+  - "@next/swc-linux-x64-gnu@16.4.5"
+  - "@next/swc-linux-x64-musl@16.4.5"
+  - "@next/swc-win32-arm64-msvc@16.4.5"
+  - "@next/swc-win32-x64-msvc@16.4.5"
+  - zod@4.6.7
+
+  - "@next/eslint-plugin-next@16.4.5"

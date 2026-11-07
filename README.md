@@ -1,10 +1,14 @@
-# VITRIX — biznes saytlari platformasi
+# VITRIX — kichik biznes uchun onlayn katalog
 
 Next.js frontend va Python Django backend bir paketda. Demo loginlar yo‘q. Ma’lumotlar bazasi, email kodi bilan ro‘yxatdan o‘tish, server tekshiradigan rollar va tenant izolyatsiyasi mavjud.
 
 Railway’dagi mavjud loyihani yangilash uchun avval **[START_HERE_UZ.md](START_HERE_UZ.md)** faylini o‘qing.
 
-## Yangi imkoniyatlar
+## Digital Clarity va xavfsizlik yangilanishi
+
+Mahsulotlaringiz. Bitta havola. Oq-ko‘k platforma dizayni, serverdagi login/OTP limiter, revision konfliktlari, sahifalangan katalog, agregat analitika, saqlangan dizaynlar tarixi va backup buyruqlari. Auditning 20 bandi: [docs/AUDIT_CLOSURE.md](docs/AUDIT_CLOSURE.md).
+
+## Imkoniyatlar
 
 - To‘liq ekran kengligi: noutbukda ortiqcha yon bo‘shliqlar qisqartirilgan. Merchant ixcham/keng/to‘liq ekran variantini tanlaydi.
 - Oq, qora, oq-qora va 6 palitra; mustaqil ranglar, shrift, banner, ustunlar, oraliq, burchak va bo‘limlar ko‘rinishi.

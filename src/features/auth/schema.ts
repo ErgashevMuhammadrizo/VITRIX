@@ -15,7 +15,7 @@ export const registration = z
     password: z.string().min(8, "Kamida 8 belgi"),
     confirm: z.string(),
     terms: z.literal(true, {
-      errorMap: () => ({ message: "Shartlarga rozilik kerak" }),
+      error: "Shartlarga rozilik kerak",
     }),
   })
   .refine((v) => v.password === v.confirm, {

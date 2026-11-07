@@ -1,4 +1,8 @@
-export const money = (n: number,language: "uz"|"ru"|"en"="uz") => new Intl.NumberFormat(language==='ru'?'ru-RU':language==='en'?'en-US':'uz-UZ').format(n) + (language==='ru'?' сум':language==='en'?' UZS':' so‘m');
+export const money = (n: number, language: "uz" | "ru" | "en" = "uz") =>
+  new Intl.NumberFormat(
+    language === "ru" ? "ru-RU" : language === "en" ? "en-US" : "uz-UZ",
+  ).format(n) +
+  (language === "ru" ? " сум" : language === "en" ? " UZS" : " so‘m");
 export const slugify = (s: string) =>
   s
     .toLowerCase()
@@ -8,7 +12,10 @@ export const slugify = (s: string) =>
     .replace(/^-|-$/g, "");
 export const uid = () =>
   globalThis.crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2);
-export const date = (s: string,language: "uz"|"ru"|"en"="uz") => new Date(s).toLocaleDateString(language==='ru'?'ru-RU':language==='en'?'en-GB':'uz-UZ');
+export const date = (s: string, language: "uz" | "ru" | "en" = "uz") =>
+  new Date(s).toLocaleDateString(
+    language === "ru" ? "ru-RU" : language === "en" ? "en-GB" : "uz-UZ",
+  );
 export const reserved = [
   "dashboard",
   "admin",

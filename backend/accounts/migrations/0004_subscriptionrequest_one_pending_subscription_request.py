@@ -7,13 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0003_initial_plans'),
+        ("accounts", "0003_initial_plans"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddConstraint(
-            model_name='subscriptionrequest',
-            constraint=models.UniqueConstraint(condition=models.Q(('status', 'pending')), fields=('business',), name='one_pending_subscription_request'),
+            model_name="subscriptionrequest",
+            constraint=models.UniqueConstraint(
+                condition=models.Q(("status", "pending")),
+                fields=("business",),
+                name="one_pending_subscription_request",
+            ),
         ),
     ]

@@ -33,3 +33,13 @@ urlpatterns += [
         "admin/businesses/<str:business_id>/subscription/", data.activate_subscription
     ),
 ]
+
+from . import endpoints
+
+urlpatterns += [
+    path("collections/<str:entity>/", endpoints.collection),
+    path("businesses/<str:business_id>/analytics/", endpoints.statistics),
+    path("businesses/<str:business_id>/events.csv", endpoints.export_events),
+    path("businesses/<str:business_id>/designs/", endpoints.designs),
+    path("public/sitemap/", endpoints.sitemap_data),
+]

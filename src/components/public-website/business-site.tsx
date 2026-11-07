@@ -1,4 +1,5 @@
 "use client";
+import NextImage from "next/image";
 import { useTranslator } from "../../i18n/runtime";
 import { useState, useEffect, type CSSProperties } from "react";
 import {
@@ -8,14 +9,12 @@ import {
   MapPin,
   Clock,
   Search,
-  ChevronRight,
   Globe,
-  Check,
   ImageIcon,
 } from "lucide-react";
 import { I18nProvider } from "../../i18n/runtime";
 import { localizedContent, isLanguage } from "../../i18n/content";
-import { useApp } from "../../stores/app-store";
+import { emptyWorkspace } from "../../services/workspace";
 import { Modal, Empty } from "../ui/shared";
 import { money, telegram } from "../../lib/utils";
 import { publicDictionaries, type Language } from "../../i18n";
@@ -34,6 +33,7 @@ import type { Business, Product } from "../../types";
 function BusinessSiteContent({
   business: originalBusiness,
   preview = false,
+  compactPreview = false,
   data,
   language,
   onLanguageChange,
@@ -42,13 +42,18 @@ function BusinessSiteContent({
   onLanguageChange: (l: Language) => void;
   business: Business;
   preview?: boolean;
+  compactPreview?: boolean;
   data?: import("../../services/workspace").PublicCatalog;
 }) {
   const __t = useTranslator();
-  const { db: baseStore } = useApp();
+  const baseStore = emptyWorkspace();
   const business = localizedContent(originalBusiness, language);
-  const sourceProducts = data?.products || baseStore.products;
-  const sourceCategories = data?.categories || baseStore.categories;
+  const [catalog, setCatalog] = useState(data);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [loadError, setLoadError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const sourceProducts = catalog?.products || baseStore.products;
+  const sourceCategories = catalog?.categories || baseStore.categories;
   const storeDb = {
     ...baseStore,
     products: sourceProducts.map((p) => localizedContent(p, language)),
@@ -60,10 +65,44 @@ function BusinessSiteContent({
   const copy = publicDictionaries[language] ?? publicDictionaries.uz;
   const [cat, setCat] = useState("");
   const [q, setQ] = useState("");
-  const [selectedItem, setSelected] = useState<Product>();
-  const [image, setImage] = useState("");
+  const [selectedItem, setSelected] = useState<Product | undefined>(() =>
+    data?.focusProduct ? data.products[0] : undefined,
+  );
+  const [image, setImage] = useState(
+    data?.focusProduct ? data.products[0]?.image || "" : "",
+  );
+  useEffect(() => {
+    if (preview || !data) return;
+    let active = true;
+    const timer = setTimeout(() => {
+      setLoading(true);
+      setLoadError("");
+      publicApi
+        .catalog(business.slug, {
+          q,
+          category: cat,
+          page: pageNumber,
+          lang: language,
+          ...(data.focusProduct ? { product: data.focusProduct } : {}),
+        })
+        .then((result) => {
+          if (active) setCatalog(result);
+        })
+        .catch((e) => {
+          if (active) setLoadError(e.message);
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+    }, 180);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [business.slug, cat, q, pageNumber, language, preview, data]);
   const categories = tenantCategories(db, business.id);
-  const allProducts = tenantProducts(db, business.id);
+  const allProducts =
+    data && !preview ? db.products : tenantProducts(db, business.id);
   const selected = selectedItem
     ? allProducts.find((p) => p.id === selectedItem.id)
     : undefined;
@@ -76,9 +115,7 @@ function BusinessSiteContent({
     if (preview) return;
     void publicApi.track(business.slug, "visit").catch(() => {});
     // Browser metadata is intentionally synchronized after render.
-    // eslint-disable-next-line react-hooks/immutability
     document.title = business.name;
-    // eslint-disable-next-line react-hooks/immutability
     document.documentElement.lang = language;
   }, [business.slug, business.name, language, preview]);
   const track = (kind: "phone" | "telegram") => {
@@ -116,7 +153,7 @@ function BusinessSiteContent({
     );
   return (
     <div
-      className={`business-site custom-appearance mode-${a.colorMode} hero-${a.heroStyle} width-${a.contentWidth} corners-${a.cornerStyle} density-${a.density} ${!a.showPrices ? "hide-prices" : ""} ${!a.showContacts ? "hide-contacts" : ""} theme-${business.theme} layout-${business.layout} card-${business.card} header-${business.header} buttons-${business.buttons} ${preview ? "site-preview" : ""}`}
+      className={`business-site custom-appearance mode-${a.colorMode} hero-${a.heroStyle} width-${a.contentWidth} corners-${a.cornerStyle} density-${a.density} ${!a.showPrices ? "hide-prices" : ""} ${!a.showContacts ? "hide-contacts" : ""} theme-${business.theme} layout-${business.layout} card-${business.card} header-${business.header} buttons-${business.buttons} ${compactPreview ? "site-preview" : ""}`}
       style={
         {
           "--business-primary": business.primary,
@@ -147,7 +184,13 @@ function BusinessSiteContent({
         </label>
         <a href="#business-top" className="business-logo">
           {business.logo ? (
-            <img src={business.logo} alt="" />
+            <NextImage
+              unoptimized
+              width={800}
+              height={800}
+              src={business.logo}
+              alt=""
+            />
           ) : (
             <span>{business.name.slice(0, 1)}.</span>
           )}
@@ -159,14 +202,16 @@ function BusinessSiteContent({
         <a href="#business-contact" className="desktop">
           {copy.about}
         </a>
-        <a
-          className="business-top-contact"
-          href={`tel:${business.phone}`}
-          onClick={() => track("phone")}
-        >
-          {copy.contact}
-          <ArrowUpRight size={16} />
-        </a>
+        {a.showContacts && business.phone && (
+          <a
+            className="business-top-contact"
+            href={`tel:${business.phone}`}
+            onClick={() => track("phone")}
+          >
+            {copy.contact}
+            <ArrowUpRight size={16} />
+          </a>
+        )}
       </header>
       <main id="business-top">
         {a.showHero && (
@@ -182,7 +227,10 @@ function BusinessSiteContent({
               </span>
             </div>
             {business.cover ? (
-              <img
+              <NextImage
+                unoptimized
+                width={800}
+                height={800}
                 src={business.cover}
                 alt={business.name}
                 className="business-cover"
@@ -208,7 +256,10 @@ function BusinessSiteContent({
                   aria-label={__t("Katalogdan qidirish")}
                   placeholder={copy.search}
                   value={q}
-                  onChange={(e) => setQ(e.target.value)}
+                  onChange={(e) => {
+                    setQ(e.target.value);
+                    setPageNumber(1);
+                  }}
                 />
               </div>
             )}
@@ -217,15 +268,22 @@ function BusinessSiteContent({
             <div className="category-tabs">
               <button
                 className={!cat ? "selected" : ""}
-                onClick={() => setCat("")}
+                onClick={() => {
+                  setCat("");
+                  setPageNumber(1);
+                }}
               >
-                {copy.all} <span>{allProducts.length}</span>
+                {copy.all}{" "}
+                <span>{data?.pagination?.total ?? allProducts.length}</span>
               </button>
               {categories.map((c) => (
                 <button
                   key={c.id}
                   className={cat === c.id ? "selected" : ""}
-                  onClick={() => setCat(c.id)}
+                  onClick={() => {
+                    setCat(c.id);
+                    setPageNumber(1);
+                  }}
                 >
                   {c.name}
                 </button>
@@ -245,7 +303,14 @@ function BusinessSiteContent({
                     aria-label={p.name + __t(" batafsil")}
                   >
                     {p.image ? (
-                      <img src={p.image} alt={p.name} loading="lazy" />
+                      <NextImage
+                        unoptimized
+                        width={800}
+                        height={800}
+                        src={p.image}
+                        alt={p.name}
+                        loading="lazy"
+                      />
                     ) : (
                       <div className="no-product-image">
                         <ImageIcon size={32} />
@@ -274,8 +339,8 @@ function BusinessSiteContent({
                     </h3>
                     <p>{p.shortDescription}</p>
                     <div className="between">
-                      <strong className="public-price">
-                        {money(p.price, __t.language)}
+                      <strong className="public-price" hidden={!a.showPrices}>
+                        {money(p.price ?? 0, __t.language)}
                       </strong>
                       {p.oldPrice > 0 && (
                         <del>{money(p.oldPrice, __t.language)}</del>
@@ -291,12 +356,84 @@ function BusinessSiteContent({
                       {copy.detail}
                       <ArrowUpRight size={17} />
                     </button>
+                    {!preview && (
+                      <a
+                        className="product-permalink"
+                        href={
+                          "/" +
+                          business.slug +
+                          "/p/" +
+                          p.slug +
+                          "?lang=" +
+                          language
+                        }
+                      >
+                        {__t("Mahsulot havolasi")} ↗
+                      </a>
+                    )}
                   </div>
                 </article>
               ))}
             </div>
           ) : (
             <Empty title={copy.empty}>{copy.emptyHint}</Empty>
+          )}
+          {!preview && catalog?.pagination && (
+            <div className="catalog-pagination">
+              {loading && <p role="status">{__t("Yuklanmoqda…")}</p>}
+              {loadError && <p role="alert">{__t(loadError)}</p>}
+              <button
+                className="btn secondary"
+                disabled={pageNumber <= 1 || loading}
+                onClick={() => setPageNumber((n) => n - 1)}
+              >
+                {__t("Ortga")}
+              </button>
+              <span>
+                {pageNumber} /{" "}
+                {Math.max(
+                  1,
+                  Math.ceil(
+                    catalog.pagination.total / catalog.pagination.pageSize,
+                  ),
+                )}
+              </span>
+              <button
+                className="btn secondary"
+                disabled={!catalog.pagination.hasMore || loading}
+                onClick={() => setPageNumber((n) => n + 1)}
+              >
+                {__t("Oldinga")}
+              </button>
+            </div>
+          )}
+          {!preview && catalog?.categoryPagination?.hasMore && (
+            <button
+              className="btn secondary"
+              onClick={async () => {
+                try {
+                  const next = await publicApi.catalog(business.slug, {
+                    categoryPage: (catalog.categoryPagination?.page || 1) + 1,
+                  });
+                  setCatalog((current) =>
+                    current
+                      ? {
+                          ...current,
+                          categories: [
+                            ...current.categories,
+                            ...next.categories,
+                          ],
+                          categoryPagination: next.categoryPagination,
+                        }
+                      : current,
+                  );
+                } catch (e) {
+                  setLoadError((e as Error).message);
+                }
+              }}
+            >
+              {__t("Yana kategoriyalar")}
+            </button>
           )}
         </section>
         <section
@@ -359,10 +496,12 @@ function BusinessSiteContent({
         <span>
           © {new Date().getFullYear()} {copy.copyright}
         </span>
-        <a href={`tel:${business.phone}`} onClick={() => track("phone")}>
-          {business.phone}
-        </a>
-        {business.telegram && (
+        {a.showContacts && business.phone && (
+          <a href={`tel:${business.phone}`} onClick={() => track("phone")}>
+            {business.phone}
+          </a>
+        )}
+        {a.showContacts && business.telegram && (
           <a
             href={telegram(business.telegram)}
             target="_blank"
@@ -382,7 +521,10 @@ function BusinessSiteContent({
           <div className="product-detail">
             <div>
               {image && (
-                <img
+                <NextImage
+                  unoptimized
+                  width={800}
+                  height={800}
                   className="detail-main-image"
                   src={image}
                   alt={selected.name}
@@ -397,7 +539,13 @@ function BusinessSiteContent({
                       key={i}
                       aria-label={`Rasm ${i + 1}`}
                     >
-                      <img src={im} alt="" />
+                      <NextImage
+                        unoptimized
+                        width={800}
+                        height={800}
+                        src={im}
+                        alt=""
+                      />
                     </button>
                   ))}
               </div>
@@ -411,8 +559,8 @@ function BusinessSiteContent({
                   : copy.unavailable}
               </span>
               <h2>{selected.name}</h2>
-              <h3 className="public-price">
-                {money(selected.price, __t.language)}
+              <h3 className="public-price" hidden={!a.showPrices}>
+                {money(selected.price ?? 0, __t.language)}
               </h3>
               {selected.oldPrice > 0 && (
                 <del>{money(selected.oldPrice, __t.language)}</del>
@@ -429,6 +577,7 @@ function BusinessSiteContent({
 export function BusinessSite(props: {
   business: Business;
   preview?: boolean;
+  compactPreview?: boolean;
   data?: import("../../services/workspace").PublicCatalog;
 }) {
   const [language, setLanguage] = useState<Language>(
@@ -470,7 +619,7 @@ export function BusinessSite(props: {
       } catch {}
   };
   return (
-    <I18nProvider language={language}>
+    <I18nProvider language={language} documentLanguage={!props.preview}>
       <BusinessSiteContent
         {...props}
         language={language}

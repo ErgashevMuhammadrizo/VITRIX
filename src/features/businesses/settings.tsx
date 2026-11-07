@@ -2,7 +2,7 @@
 import { useTranslator } from "../../i18n/runtime";
 import { useState, useEffect } from "react";
 import { ContentTranslationsEditor } from "../../components/ui/content-translations";
-import { Check, Save, ExternalLink, Smartphone, Monitor } from "lucide-react";
+import { Check, Save, Smartphone, Monitor } from "lucide-react";
 import { useApp, recordActivity } from "../../stores/app-store";
 import type { Business } from "../../types";
 import {
@@ -14,6 +14,7 @@ import {
 } from "../../components/ui/shared";
 import { BusinessSite } from "../../components/public-website/business-site";
 import { reserved } from "../../lib/utils";
+import { DesignVersions } from "./design-versions";
 import { resetDesign } from "./appearance";
 import { AppearanceControls } from "./appearance-controls";
 import { LocationPicker } from "../location/location-picker";
@@ -249,7 +250,7 @@ export function BusinessSettings({
 }
 export function DesignSettings({ business }: { business: Business }) {
   const __t = useTranslator();
-  const { update } = useApp();
+  const { db, update } = useApp();
   const [v, setV] = useState(business);
   const [history, setHistory] = useState<Business[]>([]);
   const [future, setFuture] = useState<Business[]>([]);
@@ -349,6 +350,7 @@ export function DesignSettings({ business }: { business: Business }) {
           {__t("O\u2018zgarishlar Saqlash bosilganda saytda qo\u2018llanadi.")}
         </small>
       </div>
+      <DesignVersions business={business} />
       <div className="design-layout">
         <aside className="panel design-controls">
           <h3>{__t("Tayyor uslublar")}</h3>
@@ -449,7 +451,16 @@ export function DesignSettings({ business }: { business: Business }) {
             </div>
           </div>
           <div className={mobile ? "preview-mobile" : "preview-desktop"}>
-            <BusinessSite business={v} preview />
+            <BusinessSite
+              business={v}
+              data={{
+                business: v,
+                products: db.products,
+                categories: db.categories,
+              }}
+              compactPreview
+              preview
+            />
           </div>
         </section>
       </div>

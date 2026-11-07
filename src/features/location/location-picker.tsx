@@ -21,7 +21,9 @@ export function LocationPicker({
   const map = useRef<Leaflet.Map | null>(null);
   const marker = useRef<Leaflet.Marker | null>(null);
   const latest = useRef({ value, onChange });
-  useEffect(() => { latest.current = { value, onChange }; }, [value, onChange]);
+  useEffect(() => {
+    latest.current = { value, onChange };
+  }, [value, onChange]);
   const [error, setError] = useState("");
   const [locating, setLocating] = useState(false);
   useEffect(() => {
@@ -77,7 +79,7 @@ export function LocationPicker({
       map.current = null;
       marker.current = null;
     };
-  }, []);
+  }, [__t]);
   useEffect(() => {
     if (map.current && marker.current) {
       if (validCoordinates(value.latitude, value.longitude)) {

@@ -29,12 +29,30 @@ class WorkspaceTests(TestCase):
         self.client.force_login(self.owner)
 
     def change(self, entity, record=None, op="upsert", key=None):
+        model = {
+            "products": Product,
+            "categories": Category,
+            "businesses": Business,
+            "plans": Plan,
+        }.get(entity)
+        obj = (
+            model.objects.filter(pk=(record or {}).get("id") or key).first()
+            if model
+            else None
+        )
+        revision = obj.revision if obj else None
         return self.client.patch(
             "/api/v1/workspace/",
             json.dumps(
                 {
                     "changes": [
-                        {"entity": entity, "op": op, "record": record or {}, "id": key}
+                        {
+                            "entity": entity,
+                            "op": op,
+                            "record": record or {},
+                            "id": key,
+                            "revision": revision,
+                        }
                     ]
                 }
             ),
@@ -257,7 +275,12 @@ class WorkspaceTests(TestCase):
         self.assertEqual(self.client.get("/api/v1/workspace/").json()["events"], [])
         self.b.plan = Plan.objects.get(pk="vip")
         self.b.save()
-        self.assertEqual(len(self.client.get("/api/v1/workspace/").json()["events"]), 1)
+        self.assertEqual(
+            self.client.get("/api/v1/workspace/").json()["analytics"][str(self.b.pk)][
+                "totals"
+            ]["visit"],
+            1,
+        )
 
     def test_owner_cannot_edit_platform_or_plans(self):
         self.assertEqual(

@@ -1,0 +1,1 @@
+{"shared_rate_limit": "50/80 across two processes", "otp_consumed_once": true, "concurrent_quota_enforced": true, "activation_idempotent": true, "backup_restored_health": 200}

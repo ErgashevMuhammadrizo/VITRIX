@@ -21,7 +21,10 @@ export const appearanceDefaults = {
   showLocation: true,
 } as const;
 export const appearanceOf = (b: Business) => ({ ...appearanceDefaults, ...b });
-export const palettes: { name: string; colors: Partial<Business> }[] = [
+export const palettes: {
+  name: string;
+  colors: Partial<Business>;
+}[] = [
   {
     name: "Yorug‘",
     colors: {
@@ -107,7 +110,6 @@ export const businessFonts: Record<string, string> = {
   rounded: '"Trebuchet MS", sans-serif',
   system: "system-ui, sans-serif",
 };
-
 export const factoryDesign = {
   ...appearanceDefaults,
   theme: "modern",

@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0005_business_backgroundcolor_business_colormode_and_more'),
+        ("accounts", "0005_business_backgroundcolor_business_colormode_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='business',
-            name='translations',
+            model_name="business",
+            name="translations",
             field=models.JSONField(blank=True, default=dict),
         ),
         migrations.AddField(
-            model_name='category',
-            name='translations',
+            model_name="category",
+            name="translations",
             field=models.JSONField(blank=True, default=dict),
         ),
         migrations.AddField(
-            model_name='product',
-            name='translations',
+            model_name="product",
+            name="translations",
             field=models.JSONField(blank=True, default=dict),
         ),
     ]

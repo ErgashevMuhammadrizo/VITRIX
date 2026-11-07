@@ -1,0 +1,2 @@
+PASS: live Next -> Django health, language, CSRF, OTP email/register, plans, revisions, catalogue pagination, public DTO, analytics, product URL and sitemap
+PASS: public/auth pages, connected Django health, subscription price access control

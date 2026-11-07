@@ -12,8 +12,13 @@ export type User = {
   active: boolean;
   createdAt: string;
 };
-export type ContentTranslations = Partial<Record<"uz"|"ru"|"en", Record<string,string>>>;
+export type ContentTranslations = Partial<
+  Record<"uz" | "ru" | "en", Record<string, string>>
+>;
 export type Business = {
+  ownerEmail?: string;
+  pendingPlanId?: string;
+  revision?: number;
   translations?: ContentTranslations;
   id: string;
   ownerId: string;
@@ -66,6 +71,8 @@ export type Business = {
   createdAt: string;
 };
 export type Category = {
+  productCount?: number;
+  revision?: number;
   translations?: ContentTranslations;
   id: string;
   businessId: string;
@@ -76,6 +83,7 @@ export type Category = {
   active: boolean;
 };
 export type Product = {
+  revision?: number;
   translations?: ContentTranslations;
   id: string;
   businessId: string;
@@ -94,6 +102,7 @@ export type Product = {
   status: "published" | "draft" | "archived";
 };
 export type Plan = {
+  revision?: number;
   id: string;
   name: string;
   price: number;
@@ -114,7 +123,29 @@ export type Event = {
   kind: "visit" | "phone" | "telegram";
   at: string;
 };
+export type AnalyticsSummary = {
+  days: number;
+  timezone: string;
+  since: string;
+  today: string;
+  daily: {
+    day: string;
+    kind: string;
+    count: number;
+  }[];
+  totals: Record<string, number>;
+};
 export type Database = {
+  analytics?: Record<string, AnalyticsSummary>;
+  counts?: Record<
+    string,
+    {
+      products: number;
+      published: number;
+      categories: number;
+    }
+  >;
+  collections?: Record<string, number>;
   version: 1;
   pricingVersion?: 2;
   users: User[];
@@ -144,6 +175,7 @@ export type Database = {
   activities: Activity[];
   events: Event[];
   platform: {
+    revision?: number;
     subscriptionTelegram?: string;
     name: string;
     email: string;

@@ -4,7 +4,19 @@ from PIL import Image, UnidentifiedImageError
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.exceptions import ValidationError
-from django.db import transaction, IntegrityError
+from django.db import transaction, IntegrityError, connection
+from django.db.models import F, Count, Q
+from .security import allow, client_ip
+from .uploads import staged, staged_uploads
+from .catalogue import (
+    analytics,
+    page,
+    public_business_record,
+    published_products,
+    product_public,
+    DESIGN_FIELDS,
+)
+from .models import DesignVersion, SlugRedirect
 from django.db.models.deletion import ProtectedError
 from django.http import JsonResponse
 from django.utils import timezone
@@ -107,7 +119,10 @@ PLAN_FIELDS = [
 
 
 def record(obj, fields):
-    return {field: getattr(obj, field) for field in fields}
+    return {
+        "revision": obj.revision,
+        **{field: getattr(obj, field) for field in fields},
+    }
 
 
 def business_record(b):
@@ -115,6 +130,10 @@ def business_record(b):
         "id": str(b.pk),
         "ownerId": str(b.owner_id),
         "accountId": account_ref(b.owner_id),
+        "ownerEmail": b.owner.email,
+        "pendingPlanId": b.subscriptionrequest_set.filter(status="pending")
+        .values_list("plan_id", flat=True)
+        .first(),
         **record(b, BUSINESS_FIELDS),
         "latitude": float(b.latitude) if b.latitude is not None else None,
         "longitude": float(b.longitude) if b.longitude is not None else None,
@@ -129,6 +148,7 @@ def category_record(c):
     return {
         "id": str(c.pk),
         "businessId": str(c.business_id),
+        "productCount": getattr(c, "productCount", 0),
         **record(c, CATEGORY_FIELDS),
     }
 
@@ -156,43 +176,85 @@ def platform_record(platform):
     return value
 
 
-def snapshot(user):
+def snapshot(user, metadata=False):
     businesses = (
-        Business.objects.select_related("plan").all()
+        Business.objects.select_related("plan", "owner").order_by("id")[:50]
         if user.is_superuser
-        else Business.objects.select_related("plan").filter(owner=user)
+        else Business.objects.select_related("plan", "owner").filter(owner=user)
     )
-    ids = list(businesses.values_list("id", flat=True))
-    events = Event.objects.filter(
-        business_id__in=ids, at__gte=timezone.now() - timedelta(days=90)
-    ).order_by("at")
-    if not user.is_superuser:
-        b = businesses.first()
-        events = events.filter(
-            at__gte=timezone.now() - timedelta(days=b.plan.analyticsDays if b else 7)
+    businesses = list(businesses)
+    ids = [b.pk for b in businesses]
+    product_counts = {
+        str(r["business_id"]): r
+        for r in Product.objects.filter(business_id__in=ids)
+        .values("business_id")
+        .annotate(
+            total=Count("id"), published=Count("id", filter=Q(status="published"))
         )
+    }
+    category_counts = {
+        str(r["business_id"]): r["total"]
+        for r in Category.objects.filter(business_id__in=ids)
+        .values("business_id")
+        .annotate(total=Count("id"))
+    }
+    meta = {
+        "analytics": (
+            {} if user.is_superuser else {str(b.pk): analytics(b) for b in businesses}
+        ),
+        "counts": {
+            str(b.pk): {
+                "products": product_counts.get(str(b.pk), {}).get("total", 0),
+                "published": product_counts.get(str(b.pk), {}).get("published", 0),
+                "categories": category_counts.get(str(b.pk), 0),
+            }
+            for b in businesses
+        },
+        "collections": {
+            "products": Product.objects.filter(business_id__in=ids).count(),
+            "categories": Category.objects.filter(business_id__in=ids).count(),
+            "businesses": (
+                Business.objects.count() if user.is_superuser else len(businesses)
+            ),
+            "users": User.objects.count() if user.is_superuser else 1,
+            "activeBusinesses": (
+                Business.objects.filter(
+                    active=True, owner__is_active=True, expires__gt=timezone.now()
+                ).count()
+                if user.is_superuser
+                else sum(b.active and b.expires > timezone.now() for b in businesses)
+            ),
+        },
+    }
+    if metadata:
+        return meta
     platform, _ = PlatformSettings.objects.get_or_create(pk=1)
     return {
         "version": 1,
         "pricingVersion": 2,
         "users": [
-            identity(u) for u in (User.objects.all() if user.is_superuser else [user])
+            identity(u)
+            for u in (User.objects.order_by("pk")[:50] if user.is_superuser else [user])
         ],
         "businesses": [business_record(b) for b in businesses],
         "categories": [
-            category_record(c) for c in Category.objects.filter(business_id__in=ids)
+            category_record(c)
+            for c in Category.objects.filter(business_id__in=ids)
+            .annotate(productCount=Count("product"))
+            .order_by("order", "id")[:50]
         ],
         "products": [
-            product_record(p) for p in Product.objects.filter(business_id__in=ids)
+            product_record(p)
+            for p in Product.objects.filter(business_id__in=ids).order_by(
+                "order", "id"
+            )[:50]
         ],
         "plans": [
             {"id": p.pk, **record(p, PLAN_FIELDS)}
             for p in Plan.objects.order_by("price")
         ],
-        "events": [
-            {"businessId": e.business_id, "kind": e.kind, "at": e.at.isoformat()}
-            for e in events[:20000]
-        ],
+        "events": [],
+        **meta,
         "activities": [
             {
                 "id": str(a.pk),
@@ -263,18 +325,34 @@ def image_url(value):
         raw = base64.b64decode(data, validate=True)
         if len(raw) > 2 * 1024 * 1024:
             raise ValueError()
-        image = Image.open(io.BytesIO(raw))
+        image = Image.open(io.BytesIO(raw), formats=["JPEG", "PNG", "WEBP"])
         image.verify()
         if image.format not in ["JPEG", "PNG", "WEBP"]:
             raise ValueError()
         if image.width * image.height > 25000000:
             raise ValueError()
-        extension = {"JPEG": "jpg", "PNG": "png", "WEBP": "webp"}[image.format]
+        from PIL import ImageOps
+
+        source = ImageOps.exif_transpose(
+            Image.open(io.BytesIO(raw), formats=["JPEG", "PNG", "WEBP"])
+        )
+        image = Image.new("RGB", source.size, "white")
+        if source.mode in ["RGBA", "LA"]:
+            image.paste(source.convert("RGB"), mask=source.getchannel("A"))
+        else:
+            image.paste(source.convert("RGB"))
+        image.thumbnail((1600, 1600))
+        output = io.BytesIO()
+        image.save(output, format="WEBP", quality=85, method=4)
+        raw = output.getvalue()
+        extension = "webp"
     except (ValueError, UnidentifiedImageError, OSError, Image.DecompressionBombError):
         raise ValidationError("JPG, PNG yoki WebP rasm 2 MB dan oshmasin.")
     path = default_storage.save(
         "uploads/" + uuid.uuid4().hex + "." + extension, ContentFile(raw)
     )
+    if staged.get() is not None:
+        staged.get().append(path)
     return "/media/" + path
 
 
@@ -284,8 +362,28 @@ def assign(obj, data, fields):
             continue
         value = data[field]
         if field == "translations":
-            allowed = {Business: {"name":100,"description":2000,"address":300,"hours":120,"heroTitle":140}, Product:{"name":100,"description":4000,"shortDescription":180}, Category:{"name":80,"description":500}}.get(type(obj),{})
-            if not isinstance(value,dict) or any(lang not in ["uz","ru","en"] or not isinstance(content,dict) or any(key not in allowed or not isinstance(text,str) or len(text)>allowed[key] for key,text in content.items()) for lang,content in value.items()):
+            allowed = {
+                Business: {
+                    "name": 100,
+                    "description": 2000,
+                    "address": 300,
+                    "hours": 120,
+                    "heroTitle": 140,
+                },
+                Product: {"name": 100, "description": 4000, "shortDescription": 180},
+                Category: {"name": 80, "description": 500},
+            }.get(type(obj), {})
+            if not isinstance(value, dict) or any(
+                lang not in ["uz", "ru", "en"]
+                or not isinstance(content, dict)
+                or any(
+                    key not in allowed
+                    or not isinstance(text, str)
+                    or len(text) > allowed[key]
+                    for key, text in content.items()
+                )
+                for lang, content in value.items()
+            ):
                 raise ValidationError("Tarjima maydonlarini tekshiring.")
         if field in ["logo", "cover", "image"]:
             value = image_url(value)
@@ -310,16 +408,17 @@ def assign(obj, data, fields):
             value = value.strip().removeprefix("@")
         setattr(obj, field, value)
     obj.full_clean()
+    obj.revision += 1 if not obj._state.adding else 0
     obj.save()
 
 
 def check_business(user, business_id, write=True):
-    b = (
+    query = (
         Business.objects.select_for_update()
-        .select_related("plan")
-        .filter(pk=business_id)
-        .first()
+        if connection.in_atomic_block
+        else Business.objects
     )
+    b = query.select_related("plan").filter(pk=business_id).first()
     if not b or (not user.is_superuser and b.owner_id != user.pk):
         raise PermissionError("Bu biznesga ruxsat yo‘q.")
     if write and not user.is_superuser and b.expires <= timezone.now():
@@ -327,17 +426,33 @@ def check_business(user, business_id, write=True):
     return b
 
 
+class RevisionConflict(Exception):
+    pass
+
+
+def check_revision(obj, change):
+    if obj and (
+        type(change.get("revision")) is not int or change["revision"] != obj.revision
+    ):
+        raise RevisionConflict()
+
+
 @require_http_methods(["GET", "PATCH"])
 @protected()
+@staged_uploads
 def workspace(request):
     ensure_business(request.user)
     if request.method == "GET":
-        return JsonResponse(snapshot(request.user))
+        return JsonResponse(
+            snapshot(request.user, metadata=request.GET.get("view") == "summary")
+        )
     try:
         v = payload(request)
         changes = v.get("changes")
         if not isinstance(changes, list) or len(changes) > 100:
             raise ValidationError("O‘zgarishlar formati noto‘g‘ri.")
+        acknowledged = []
+        deleted = []
         with transaction.atomic():
             for change in changes:
                 if not isinstance(change, dict):
@@ -352,10 +467,14 @@ def workspace(request):
                     raise ValidationError("Amal yoki ID noto‘g‘ri.")
                 if entity == "businesses":
                     b = check_business(request.user, key, write=False)
+                    check_revision(b, change)
+                    old_slug = b.slug
+                    old_design = {k: getattr(b, k) for k in DESIGN_FIELDS}
                     if operation == "delete":
                         if not request.user.is_superuser:
                             raise PermissionError("Biznesni faqat admin o‘chiradi.")
                         b.delete()
+                        deleted.append({"entity": entity, "id": key})
                         continue
                     if not request.user.is_superuser:
                         if any(
@@ -374,16 +493,34 @@ def workspace(request):
                             "Obunani maxsus faollashtirish tugmasi orqali o‘zgartiring."
                         )
                     assign(b, data, BUSINESS_FIELDS)
+                    if old_slug != b.slug:
+                        SlugRedirect.objects.get_or_create(
+                            slug=old_slug, defaults={"business": b}
+                        )
+                    new_design = {k: getattr(b, k) for k in DESIGN_FIELDS}
+                    if old_design != new_design:
+                        if not b.design_versions.exists():
+                            DesignVersion.objects.create(
+                                business=b, design=old_design, actor=request.user
+                            )
+                        DesignVersion.objects.create(
+                            business=b, design=new_design, actor=request.user
+                        )
+                    acknowledged.append(
+                        {"entity": entity, "record": business_record(b)}
+                    )
                 elif entity in ["products", "categories"]:
                     model = Product if entity == "products" else Category
-                    obj = model.objects.filter(pk=key).first()
+                    obj = model.objects.select_for_update().filter(pk=key).first()
                     business_id = obj.business_id if obj else data.get("businessId")
                     b = check_business(request.user, business_id)
+                    check_revision(obj, change)
                     if obj and data.get("businessId", business_id) != business_id:
                         raise PermissionError("Biznesni almashtirib bo‘lmaydi.")
                     if operation == "delete":
                         if obj:
                             obj.delete()
+                            deleted.append({"entity": entity, "id": key})
                     else:
                         if not obj:
                             if (
@@ -395,12 +532,22 @@ def workspace(request):
                                     "Tarifdagi mahsulotlar limiti tugadi."
                                 )
                             obj = model(id=key, business=b)
-                        if entity == "products":
+                        if entity == "products" and "categoryId" in data:
                             obj.category_id = data.get("categoryId") or None
                         assign(
                             obj,
                             data,
                             PRODUCT_FIELDS if entity == "products" else CATEGORY_FIELDS,
+                        )
+                        acknowledged.append(
+                            {
+                                "entity": entity,
+                                "record": (
+                                    product_record(obj)
+                                    if entity == "products"
+                                    else category_record(obj)
+                                ),
+                            }
                         )
                     Activity.objects.create(
                         business=b,
@@ -413,7 +560,8 @@ def workspace(request):
                 elif entity == "plans":
                     if not request.user.is_superuser:
                         raise PermissionError("Tariflarni faqat admin boshqaradi.")
-                    obj = Plan.objects.filter(pk=key).first()
+                    obj = Plan.objects.select_for_update().filter(pk=key).first()
+                    check_revision(obj, change)
                     if operation == "delete":
                         if key in ["starter", "pro", "vip"]:
                             raise ValidationError(
@@ -422,17 +570,28 @@ def workspace(request):
                         if obj:
                             obj.delete()
                     else:
-                        assign(obj or Plan(id=key), data, PLAN_FIELDS)
+                        obj = obj or Plan(id=key)
+                        assign(obj, data, PLAN_FIELDS)
+                        acknowledged.append(
+                            {
+                                "entity": entity,
+                                "record": {"id": obj.pk, **record(obj, PLAN_FIELDS)},
+                            }
+                        )
                 elif entity == "platform":
                     if not request.user.is_superuser:
                         raise PermissionError(
                             "Platforma sozlamalarini faqat admin boshqaradi."
                         )
                     platform, _ = PlatformSettings.objects.get_or_create(pk=1)
+                    check_revision(platform, change)
                     assign(
                         platform,
                         data,
                         PLATFORM_FIELDS,
+                    )
+                    acknowledged.append(
+                        {"entity": entity, "record": platform_record(platform)}
                     )
                 else:
                     raise ValidationError(
@@ -441,6 +600,10 @@ def workspace(request):
                 AuditLog.objects.create(
                     actor=request.user, action=entity + ":" + operation, target=key
                 )
+    except RevisionConflict:
+        return error(
+            "Bu yozuv boshqa oynada o‘zgargan. Yangilang va qayta saqlang.", 409
+        )
     except PermissionError as exc:
         return error(str(exc), 403)
     except (
@@ -455,7 +618,7 @@ def workspace(request):
             if isinstance(exc, ValidationError)
             else "Ma’lumotlarni tekshiring. Bu yozuv band yoki boshqa yozuvlarga bog‘langan."
         )
-    return JsonResponse(snapshot(request.user))
+    return JsonResponse({"acknowledged": acknowledged, "deleted": deleted})
 
 
 @require_http_methods(["GET"])
@@ -479,24 +642,56 @@ def public_business(request, slug):
         .first()
     )
     if not b:
+        old = SlugRedirect.objects.select_related("business").filter(slug=slug).first()
+        if old:
+            return JsonResponse({"redirect": old.business.slug})
         return error("Sayt topilmadi.", 404)
     if b.expires <= timezone.now():
         return error("Sayt obunasi vaqtincha faol emas.", 410)
-    categories = b.categories.filter(active=True).order_by("order")
-    from django.db.models import Q
-
-    products = (
-        b.products.filter(status="published")
-        .filter(Q(category__isnull=True) | Q(category__active=True))
-        .order_by("order")
-    )
-    return JsonResponse(
-        {
-            "business": business_record(b),
-            "categories": [category_record(c) for c in categories],
-            "products": [product_record(p) for p in products],
-        }
-    )
+    try:
+        query = published_products(b)
+        if request.GET.get("q"):
+            query = query.filter(
+                Q(name__icontains=request.GET["q"][:100])
+                | Q(translations__icontains=request.GET["q"][:100])
+            )
+        if request.GET.get("category"):
+            query = query.filter(category_id=request.GET["category"])
+        if request.GET.get("product"):
+            query = query.filter(slug=request.GET["product"])
+        result = page(query, request, lambda p: product_public(p, b), key="products")
+        cats = b.categories.filter(active=True).order_by("order", "id")
+        try:
+            category_page = max(1, int(request.GET.get("categoryPage", 1)))
+            if category_page > 1000000:
+                raise ValueError()
+        except ValueError:
+            raise ValueError()
+        result.update(
+            {
+                "business": public_business_record(b),
+                "categories": [
+                    {
+                        k: v
+                        for k, v in category_record(c).items()
+                        if k not in ["revision", "productCount"]
+                    }
+                    for c in (
+                        cats[(category_page - 1) * 100 : category_page * 100]
+                        if (category_page - 1) * 100 < cats.count()
+                        else []
+                    )
+                ],
+                "categoryPagination": {
+                    "page": category_page,
+                    "hasMore": category_page * 100 < cats.count(),
+                    "total": cats.count(),
+                },
+            }
+        )
+        return JsonResponse(result)
+    except ValueError:
+        return error("Sahifa raqamini tekshiring.")
 
 
 @require_http_methods(["POST"])
@@ -512,6 +707,10 @@ def track_event(request, slug):
         return error("So‘rov noto‘g‘ri.")
     if v.get("kind") not in ["visit", "phone", "telegram"]:
         return error("Hodisa turi noto‘g‘ri.")
+    if not allow("events:ip", client_ip(request), 120, 60) or not allow(
+        "events:business", b.pk, 3000, 60
+    ):
+        return error("Ko‘p urinish. Keyinroq qayta urining.", 429)
     # Keep duplicate browser visits/clicks in a 10-second window from inflating analytics.
     key = "event:" + str(b.pk) + ":" + v["kind"]
     now = timezone.now().timestamp()
@@ -564,7 +763,8 @@ def review_subscription(request, request_id):
             b = r.business
             b.plan = r.plan
             b.expires = max(b.expires, timezone.now()) + timedelta(days=r.plan.duration)
-            b.save(update_fields=["plan", "expires"])
+            b.revision += 1
+            b.save(update_fields=["plan", "expires", "revision"])
             r.status = "approved"
         elif v.get("approve") is False:
             r.status = "rejected"
@@ -618,10 +818,51 @@ def telegram_subscription(request):
             else:
                 SubscriptionRequest.objects.create(business=b, plan=plan)
         from django.utils.translation import get_language
+
         lang = (get_language() or "uz").split("-")[0]
-        wording = {"uz":["Salom, men saytimga obuna aktivlashtirmoqchi edim.","Akkaunt ID","Do‘kon","Sayt","Tarif","Muddat: 1 oy (30 kun)","Narx","so‘m"],"ru":["Здравствуйте! Хочу активировать подписку для своего сайта.","ID аккаунта","Магазин","Сайт","Тариф","Срок: 1 месяц (30 дней)","Цена","сум"],"en":["Hello! I would like to activate a subscription for my website.","Account ID","Shop","Website","Plan","Period: 1 month (30 days)","Price","UZS"]}.get(lang)
+        wording = {
+            "uz": [
+                "Salom, men saytimga obuna aktivlashtirmoqchi edim.",
+                "Akkaunt ID",
+                "Do‘kon",
+                "Sayt",
+                "Tarif",
+                "Muddat: 1 oy (30 kun)",
+                "Narx",
+                "so‘m",
+            ],
+            "ru": [
+                "Здравствуйте! Хочу активировать подписку для своего сайта.",
+                "ID аккаунта",
+                "Магазин",
+                "Сайт",
+                "Тариф",
+                "Срок: 1 месяц (30 дней)",
+                "Цена",
+                "сум",
+            ],
+            "en": [
+                "Hello! I would like to activate a subscription for my website.",
+                "Account ID",
+                "Shop",
+                "Website",
+                "Plan",
+                "Period: 1 month (30 days)",
+                "Price",
+                "UZS",
+            ],
+        }.get(lang)
         if not wording:
-            wording = ["Salom, men saytimga obuna aktivlashtirmoqchi edim.","Akkaunt ID","Do‘kon","Sayt","Tarif","Muddat: 1 oy (30 kun)","Narx","so‘m"]
+            wording = [
+                "Salom, men saytimga obuna aktivlashtirmoqchi edim.",
+                "Akkaunt ID",
+                "Do‘kon",
+                "Sayt",
+                "Tarif",
+                "Muddat: 1 oy (30 kun)",
+                "Narx",
+                "so‘m",
+            ]
         url = settings.FRONTEND_URL.rstrip("/") + "/" + b.slug
         price = f"{plan.price:,}".replace(",", " ")
         message = f"{wording[0]}\n\n{wording[1]}: {account_ref(request.user.pk)}\n{wording[2]}: {b.name}\n{wording[3]}: {url}\n{wording[4]}: {plan.name}\n{wording[5]}\n{wording[6]}: {price} {wording[7]}"
@@ -672,7 +913,8 @@ def activate_subscription(request, business_id):
             b.expires = (
                 max(old, timezone.now()) if mode == "extend" else timezone.now()
             ) + timedelta(days=30 * months)
-            b.save(update_fields=["plan", "expires"])
+            b.revision += 1
+            b.save(update_fields=["plan", "expires", "revision"])
             SubscriptionActivation.objects.create(
                 business=b,
                 plan=plan,

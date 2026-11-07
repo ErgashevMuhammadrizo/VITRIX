@@ -14,6 +14,7 @@ from django.middleware.csrf import get_token
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from .models import EmailCode, AccountProfile, ensure_business
+from .security import throttle
 
 User = get_user_model()
 
@@ -89,6 +90,8 @@ def sign_in(request):
         return error(str(exc))
     if not isinstance(v.get("username"), str) or not isinstance(v.get("password"), str):
         return error("Login va parolni kiriting.")
+    if "remember" in v and not isinstance(v["remember"], bool):
+        return error("Login va parolni kiriting.")
     identifier = str(v.get("username", "")).strip()
     matches = (
         User.objects.filter(email__iexact=identifier)
@@ -97,21 +100,15 @@ def sign_in(request):
     )
     existing = matches.first()
     username = existing.username if existing else identifier
-    # Persistent per-session attempt counter; do not expose account existence.
-    if (
-        request.session.get("login_attempts", 0) >= 10
-        and request.session.get("login_retry_after", 0) > timezone.now().timestamp()
-    ):
+    if len(identifier) > 254 or len(v["password"]) > 1024:
+        return error("Login va parolni kiriting.")
+    account_key = str(existing.pk) if existing else identifier.casefold()
+    if not throttle(request, "login", account_key, 10, 600):
         return error("Ko‘p urinish. 10 daqiqadan keyin qayta urining.", 429)
     user = authenticate(request, username=username, password=v.get("password", ""))
     if not user or not user.is_active:
-        request.session["login_attempts"] = request.session.get("login_attempts", 0) + 1
-        request.session["login_retry_after"] = (
-            timezone.now() + timedelta(minutes=10)
-        ).timestamp()
         return error("Login yoki parol noto‘g‘ri.", 401)
     login(request, user)
-    request.session["login_attempts"] = 0
     request.session.set_expiry(30 * 86400 if v.get("remember") else 0)
     return JsonResponse({"user": identity(user)})
 
@@ -126,13 +123,17 @@ def sign_out(request):
 def request_code(request):
     try:
         v = payload(request)
-        email = str(v.get("email", "")).strip().lower()
+        if not isinstance(v.get("email"), str) or len(v["email"]) > 254:
+            raise ValueError()
+        email = v["email"].strip().lower()
         validate_email(email)
     except (ValueError, ValidationError):
         return error("Email manzilini to‘g‘ri kiriting.")
     purpose = v.get("purpose", "register")
     if purpose not in ["register", "reset"]:
         return error("So‘rov turi noto‘g‘ri.")
+    if not throttle(request, "otp-send", email, 6, 3600):
+        return error("Ko‘p urinish. Keyinroq qayta urining.", 429)
     exists = User.objects.filter(email__iexact=email).exists()
     if purpose == "register" and exists:
         return error("Bu email bilan hisob mavjud. Kirish sahifasidan foydalaning.")
@@ -141,6 +142,8 @@ def request_code(request):
             {"detail": "Hisob mavjud bo‘lsa, kod yuboriladi.", "expiresIn": 600}
         )
     now = timezone.now()
+    value = f"{secrets.randbelow(1000000):06d}"
+    digest = make_password(value)
     # Atomic per-email lock prevents rapid consecutive sends and OTP brute force reset.
     with transaction.atomic():
         code = (
@@ -152,12 +155,11 @@ def request_code(request):
             return error("Qayta yuborish uchun 60 soniya kuting.", 429)
         if code and code.attempts >= 5 and code.expires_at > now:
             return error("Urinishlar tugadi. 10 daqiqadan keyin qayta urining.", 429)
-        value = f"{secrets.randbelow(1000000):06d}"
         EmailCode.objects.update_or_create(
             email=email,
             purpose=purpose,
             defaults={
-                "digest": make_password(value),
+                "digest": digest,
                 "expires_at": now + timedelta(minutes=10),
                 "sent_at": now,
                 "attempts": 0,
@@ -170,19 +172,22 @@ def request_code(request):
             raise RuntimeError("SMTP not configured")
         from .localization import translate
         from django.utils.translation import get_language
-        lang = (get_language() or 'uz').split('-')[0]
-        body = {'uz':f"Tasdiqlash kodingiz: {value}\nKod 10 daqiqa amal qiladi. Kodni hech kimga bermang.\nVITRIX — DEALS loyihasi",'ru':f"Ваш код подтверждения: {value}\nКод действует 10 минут. Никому его не сообщайте.\nVITRIX — проект DEALS",'en':f"Your verification code: {value}\nThe code is valid for 10 minutes. Do not share it.\nVITRIX — a DEALS project"}
+
+        lang = (get_language() or "uz").split("-")[0]
+        body = {
+            "uz": f"Tasdiqlash kodingiz: {value}\nKod 10 daqiqa amal qiladi. Kodni hech kimga bermang.\nVITRIX — DEALS loyihasi",
+            "ru": f"Ваш код подтверждения: {value}\nКод действует 10 минут. Никому его не сообщайте.\nVITRIX — проект DEALS",
+            "en": f"Your verification code: {value}\nThe code is valid for 10 minutes. Do not share it.\nVITRIX — a DEALS project",
+        }
         send_mail(
             translate("VITRIX — tasdiqlash kodi"),
-            body.get(lang,body["uz"]),
+            body.get(lang, body["uz"]),
             settings.DEFAULT_FROM_EMAIL,
             [email],
             fail_silently=False,
         )
     except Exception:
-        EmailCode.objects.filter(
-            email=email, purpose=purpose, digest__isnull=False
-        ).delete()
+        EmailCode.objects.filter(email=email, purpose=purpose, digest=digest).delete()
         return error(
             "Xat yuborilmadi. Email xizmatini sozlash yoki keyinroq qayta urinish kerak.",
             503,
@@ -222,7 +227,20 @@ def register(request):
         for field in ["firstName", "lastName", "email", "username", "phone", "password"]
     ):
         return error("Ro‘yxatdan o‘tish ma’lumotlarini tekshiring.")
+    if any(
+        len(v[field]) > limit
+        for field, limit in {
+            "firstName": 150,
+            "lastName": 150,
+            "email": 254,
+            "password": 1024,
+            "phone": 25,
+        }.items()
+    ):
+        return error("Ro‘yxatdan o‘tish ma’lumotlarini tekshiring.")
     email = str(v.get("email", "")).strip().lower()
+    if not throttle(request, "otp-verify", email, 20, 600):
+        return error("Ko‘p urinish. Keyinroq qayta urining.", 429)
     username = str(v.get("username", "")).strip()
     password = v.get("password", "")
     try:
@@ -275,6 +293,14 @@ def reset_password(request):
         v = payload(request)
     except ValueError as exc:
         return error(str(exc))
+    if (
+        any(not isinstance(v.get(k), str) for k in ["email", "password", "code"])
+        or len(v.get("password", "")) > 1024
+        or len(v.get("email", "")) > 254
+    ):
+        return error("Parolni tiklash ma’lumotlarini tekshiring.")
+    if not throttle(request, "otp-verify", v["email"].strip().lower(), 20, 600):
+        return error("Ko‘p urinish. Keyinroq qayta urining.", 429)
     email = str(v.get("email", "")).strip().lower()
     user = User.objects.filter(email__iexact=email).first()
     if not user:
@@ -302,6 +328,11 @@ def profile(request):
         v = payload(request)
     except ValueError as exc:
         return error(str(exc))
+    if any(
+        k in v and (not isinstance(v[k], str) or len(v[k]) > limit)
+        for k, limit in {"firstName": 150, "lastName": 150, "phone": 25}.items()
+    ):
+        return error("Profil ma’lumotlarini tekshiring.")
     user = request.user
     # Email changes must go through a verification flow, so this endpoint does not change email.
     user.first_name = str(v.get("firstName", user.first_name)).strip()
@@ -317,7 +348,10 @@ def profile(request):
 @protected(admin=True)
 def users(request):
     return JsonResponse(
-        {"users": [identity(u) for u in User.objects.order_by("-date_joined")]}
+        {
+            "users": [identity(u) for u in User.objects.order_by("-date_joined")[:50]],
+            "hasMore": User.objects.count() > 50,
+        }
     )
 
 

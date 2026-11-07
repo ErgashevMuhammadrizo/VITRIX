@@ -1,5 +1,7 @@
 "use client";
 import { useNow } from "../../hooks/use-now";
+import { useCollection } from "../../hooks/use-collection";
+import { ActivationHistory } from "./activation-history";
 import { useTranslator } from "../../i18n/runtime";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -12,7 +14,7 @@ import {
   Empty,
   Pagination,
 } from "../../components/ui/shared";
-import { AccountId, accountId } from "../../components/ui/account-id";
+import { AccountId } from "../../components/ui/account-id";
 import { workspaceApi } from "../../services/workspace";
 import { date, money } from "../../lib/utils";
 import type { Business } from "../../types";
@@ -29,22 +31,14 @@ export function AdminSubscriptions() {
     db.subscriptionRequests?.some(
       (r) => r.businessId === id && r.status === "pending",
     );
-  const items = db.businesses.filter((b) => {
-    const u = db.users.find((u) => u.id === b.ownerId);
-    return (
-      [b.name, b.slug, accountId(b.ownerId), u?.email, u?.username, u?.phone]
-        .join(" ")
-        .toLowerCase()
-        .includes(q.toLowerCase()) &&
-      (!filter ||
-        (filter === "pending"
-          ? pending(b.id)
-          : filter === "active"
-            ? new Date(b.expires) > new Date()
-            : new Date(b.expires) <= new Date()))
-    );
+  const query = useCollection<Business>("businesses", {
+    q,
+    subscription: filter,
+    page,
+    pageSize: 10,
   });
-  const current = Math.min(page, Math.max(1, Math.ceil(items.length / 10)));
+  const items = query.items;
+  const current = page;
   return (
     <>
       <div className="page-title">
@@ -95,7 +89,7 @@ export function AdminSubscriptions() {
             </tr>
           </thead>
           <tbody>
-            {items.slice((current - 1) * 10, current * 10).map((b) => (
+            {items.map((b) => (
               <tr key={b.id}>
                 <td>
                   <AccountId id={b.accountId || b.ownerId} />
@@ -131,7 +125,7 @@ export function AdminSubscriptions() {
       </div>
       <Pagination
         page={current}
-        total={items.length}
+        total={query.total}
         size={10}
         onChange={setPage}
       />
@@ -165,46 +159,7 @@ export function AdminSubscriptions() {
             </div>
           </div>
         ))}
-      <details className="panel subscription-history">
-        <summary>{__t("Faollashtirish tarixi")}</summary>
-        {(db.subscriptionActivations || []).length ? (
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>{__t("Do\u2018kon")}</th>
-                  <th>{__t("Tarif / muddat")}</th>
-                  <th>{__t("Yangi tugash sanasi")}</th>
-                  <th>{__t("Admin va izoh")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {db.subscriptionActivations!.map((a) => (
-                  <tr key={a.id}>
-                    <td>
-                      {db.businesses.find((b) => b.id === a.businessId)?.name}
-                    </td>
-                    <td>
-                      {db.plans.find((p) => p.id === a.planId)?.name} ·{" "}
-                      {a.months}
-                      {__t("oy")}
-                    </td>
-                    <td>{date(a.newExpiry, __t.language)}</td>
-                    <td>
-                      {a.actor}
-                      <small className="block muted">
-                        {date(a.createdAt, __t.language)} · {a.note}
-                      </small>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="muted">{__t("Hali faollashtirishlar yo\u2018q.")}</p>
-        )}
-      </details>
+      <ActivationHistory />
       {selected && (
         <Activation
           business={selected}
@@ -229,6 +184,7 @@ function Activation({
   const paid = db.plans.filter((p) => p.price > 0);
   const [planId, setPlan] = useState(
     pending?.planId ||
+      b.pendingPlanId ||
       (paid.some((p) => p.id === b.planId) ? b.planId : paid[0]?.id || ""),
   );
   const [months, setMonths] = useState(1);
@@ -240,9 +196,7 @@ function Activation({
   const plan = paid.find((p) => p.id === planId);
   const now = useNow();
   const expiry = new Date(
-    (mode === "extend"
-      ? Math.max(now, new Date(b.expires).getTime())
-      : now) +
+    (mode === "extend" ? Math.max(now, new Date(b.expires).getTime()) : now) +
       months * 30 * 86400000,
   ).toISOString();
   const changed = () => {

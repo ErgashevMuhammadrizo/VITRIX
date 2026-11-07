@@ -39,6 +39,7 @@ export function Navbar() {
           <button
             className="icon-btn mobile-menu"
             aria-label={__t("Menyu")}
+            aria-expanded={open}
             onClick={() => setOpen(!open)}
           >
             {open ? <X /> : <Menu />}
@@ -55,7 +56,7 @@ export function Footer() {
     <footer className="footer container">
       <div>
         <Logo />
-        <p>{__t("Biznesingizning yangi manzili.")}</p>
+        <p>{__t("Mahsulotlaringiz. Bitta havola.")}</p>
         <small>{__t("VITRIX \u2014 DEALS loyihasi")}</small>
         <small>
           © {new Date().getFullYear()} {db.platform.name}

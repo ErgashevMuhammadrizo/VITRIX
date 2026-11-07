@@ -12,22 +12,67 @@ async function proxy(request: NextRequest) {
   const url = new URL(request.url);
   const upstream = new URL(url.pathname + url.search, origin);
   const headers = new Headers();
-  for (const name of ["content-type", "cookie", "x-csrftoken", "origin"]) {
+  for (const name of [
+    "content-type",
+    "cookie",
+    "x-csrftoken",
+    "origin",
+    "accept-language",
+  ]) {
     const value = request.headers.get(name);
     if (value) headers.set(name, value);
   }
+  // X-Forwarded-For is trusted only when ingress overwrites it. Disabled by default.
+  if (process.env.TRUST_PROXY_IP === "1") {
+    const forwarded = request.headers.get("x-forwarded-for");
+    if (forwarded) headers.set("x-forwarded-for", forwarded);
+  }
   try {
+    let body: string | undefined;
+    if (!["GET", "HEAD"].includes(request.method)) {
+      const max = 12 * 1024 * 1024;
+      if (Number(request.headers.get("content-length") || 0) > max)
+        return Response.json({ detail: "Request too large" }, { status: 413 });
+      const reader = request.body?.getReader();
+      const chunks: Uint8Array[] = [];
+      let size = 0;
+      if (reader)
+        while (true) {
+          const item = await reader.read();
+          if (item.done) break;
+          size += item.value.byteLength;
+          if (size > max) {
+            await reader.cancel();
+            return Response.json(
+              { detail: "Request too large" },
+              { status: 413 },
+            );
+          }
+          chunks.push(item.value);
+        }
+      const joined = new Uint8Array(size);
+      let offset = 0;
+      for (const chunk of chunks) {
+        joined.set(chunk, offset);
+        offset += chunk.byteLength;
+      }
+      body = new TextDecoder().decode(joined);
+    }
     const response = await fetch(upstream, {
       method: request.method,
       headers,
-      body: ["GET", "HEAD"].includes(request.method)
-        ? undefined
-        : await request.text(),
+      body,
       redirect: "manual",
       signal: AbortSignal.timeout(20000),
     });
     const result = new Headers();
-    for (const name of ["content-type", "cache-control"]) {
+    for (const name of [
+      "content-type",
+      "cache-control",
+      "content-disposition",
+      "retry-after",
+      "x-request-id",
+    ]) {
       const value = response.headers.get(name);
       if (value) result.set(name, value);
     }

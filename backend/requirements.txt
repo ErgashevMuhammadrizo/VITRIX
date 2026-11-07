@@ -1,7 +1,2 @@
-Django>=5.2.19,<5.3
-python-dotenv>=1.0,<2
-Pillow>=12.2,<13
-dj-database-url>=2.3,<4
-psycopg[binary]>=3.2,<4
-gunicorn>=23,<24
-whitenoise>=6.9,<7
+# Reproducible set tested for this release.
+-r requirements.lock

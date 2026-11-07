@@ -3,7 +3,6 @@ import { useTranslator } from "../i18n/runtime";
 import { DemoDesigner } from "../features/businesses/demo-designer";
 import Link from "next/link";
 import { lazy, Suspense, useEffect } from "react";
-import { useApp } from "../stores/app-store";
 const MarketingPage = lazy(() =>
   import("../features/marketing/pages").then((m) => ({
     default: m.MarketingPage,
@@ -17,7 +16,6 @@ const Workspace = lazy(() =>
     default: m.Workspace,
   })),
 );
-import { seed } from "../mocks/seed";
 import type { PublicCatalog } from "../services/workspace";
 import { BusinessSite } from "./public-website/business-site";
 import { Button, Loading } from "./ui/shared";
@@ -39,11 +37,10 @@ function RouterContent({
   publicError?: string;
 }) {
   const __t = useTranslator();
-  const { db, ready, error, reset } = useApp();
   const [root, section] = path;
   useEffect(() => {
-    if (publicData) document.title = publicData.business.name + " | VITRIX";
-    else document.title = "VITRIX — " + __t("Biznesingizning yangi manzili.");
+    if (!publicData)
+      document.title = "VITRIX — " + __t("Mahsulotlaringiz. Bitta havola.");
   }, [__t, publicData]);
   if (!root) return <MarketingPage />;
   if (marketing.includes(root) && path.length === 1)

@@ -1,3 +1,4 @@
+import re
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -41,6 +42,7 @@ slug_validator = RegexValidator(
 
 
 class Plan(models.Model):
+    revision = models.PositiveIntegerField(default=1)
     id = models.CharField(primary_key=True, max_length=64)
     name = models.CharField(max_length=60)
     price = models.PositiveIntegerField(default=0)
@@ -56,6 +58,7 @@ class Plan(models.Model):
 
 
 class Business(models.Model):
+    revision = models.PositiveIntegerField(default=1)
     translations = models.JSONField(default=dict, blank=True)
     id = models.CharField(primary_key=True, max_length=64, default=uuid.uuid4)
     owner = models.OneToOneField(
@@ -230,6 +233,12 @@ class Business(models.Model):
                 )
             ):
                 raise ValidationError("Ishonchli xarita HTTPS havolasini kiriting.")
+        if (
+            SlugRedirect.objects.filter(slug=self.slug)
+            .exclude(business_id=self.pk)
+            .exists()
+        ):
+            raise ValidationError({"slug": "Bu manzil band."})
         if self.slug in [
             "dashboard",
             "admin",
@@ -249,11 +258,14 @@ class Business(models.Model):
             "demo",
             "500",
             "_next",
+            "sitemap.xml",
+            "robots.txt",
         ]:
             raise ValidationError({"slug": "Bu manzil band."})
 
 
 class Category(models.Model):
+    revision = models.PositiveIntegerField(default=1)
     translations = models.JSONField(default=dict, blank=True)
     id = models.CharField(primary_key=True, max_length=64, default=uuid.uuid4)
     business = models.ForeignKey(
@@ -267,6 +279,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    revision = models.PositiveIntegerField(default=1)
     translations = models.JSONField(default=dict, blank=True)
     id = models.CharField(primary_key=True, max_length=64, default=uuid.uuid4)
     business = models.ForeignKey(
@@ -328,6 +341,13 @@ class Event(models.Model):
     )
     at = models.DateTimeField(default=timezone.now, db_index=True)
 
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=["business", "at", "kind"], name="event_business_at_kind"
+            )
+        ]
+
 
 class Activity(models.Model):
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
@@ -336,6 +356,7 @@ class Activity(models.Model):
 
 
 class PlatformSettings(models.Model):
+    revision = models.PositiveIntegerField(default=1)
     subscriptionTelegram = models.CharField(
         max_length=32,
         blank=True,
@@ -395,15 +416,26 @@ def ensure_business(user):
     if existing:
         return existing
     plan = Plan.objects.get(pk="starter")
-    return Business.objects.create(
+    business, _ = Business.objects.get_or_create(
         owner=user,
-        name=(user.first_name or user.username) + " biznesi",
-        slug=(slugify(user.username)[:40] or "business") + "-" + str(user.pk),
-        phone=profile.phone,
-        plan=plan,
-        trialStartedAt=profile.trial_started_at,
-        expires=profile.trial_started_at + __import__("datetime").timedelta(days=30),
+        defaults=dict(
+            name=((user.first_name or user.username) + " biznesi")[:100],
+            slug=(
+                re.sub(r"[^a-z0-9]+", "-", slugify(user.username))
+                .strip("-")[:40]
+                .rstrip("-")
+                or "business"
+            )
+            + "-"
+            + str(user.pk),
+            phone=profile.phone,
+            plan=plan,
+            trialStartedAt=profile.trial_started_at,
+            expires=profile.trial_started_at
+            + __import__("datetime").timedelta(days=30),
+        ),
     )
+    return business
 
 
 class SubscriptionActivation(models.Model):
@@ -420,3 +452,27 @@ class SubscriptionActivation(models.Model):
     )
     idempotencyKey = models.UUIDField(unique=True)
     createdAt = models.DateTimeField(auto_now_add=True)
+
+
+class RateBucket(models.Model):
+    key = models.CharField(primary_key=True, max_length=64)
+    count = models.PositiveIntegerField(default=0)
+    expires_at = models.DateTimeField(db_index=True)
+
+
+class DesignVersion(models.Model):
+    business = models.ForeignKey(
+        Business, on_delete=models.CASCADE, related_name="design_versions"
+    )
+    design = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    actor = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL
+    )
+
+
+class SlugRedirect(models.Model):
+    slug = models.CharField(max_length=64, unique=True)
+    business = models.ForeignKey(
+        Business, on_delete=models.CASCADE, related_name="old_slugs"
+    )

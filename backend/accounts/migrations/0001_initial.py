@@ -16,27 +16,57 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='AccountProfile',
+            name="AccountProfile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('phone', models.CharField(blank=True, max_length=25)),
-                ('trial_started_at', models.DateTimeField(default=django.utils.timezone.now)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='vitrix_profile', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("phone", models.CharField(blank=True, max_length=25)),
+                (
+                    "trial_started_at",
+                    models.DateTimeField(default=django.utils.timezone.now),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="vitrix_profile",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='EmailCode',
+            name="EmailCode",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email', models.EmailField(max_length=254)),
-                ('purpose', models.CharField(default='register', max_length=12)),
-                ('digest', models.CharField(max_length=128)),
-                ('expires_at', models.DateTimeField()),
-                ('sent_at', models.DateTimeField(default=django.utils.timezone.now)),
-                ('attempts', models.PositiveSmallIntegerField(default=0)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("email", models.EmailField(max_length=254)),
+                ("purpose", models.CharField(default="register", max_length=12)),
+                ("digest", models.CharField(max_length=128)),
+                ("expires_at", models.DateTimeField()),
+                ("sent_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ("attempts", models.PositiveSmallIntegerField(default=0)),
             ],
             options={
-                'constraints': [models.UniqueConstraint(fields=('email', 'purpose'), name='one_email_code_per_purpose')],
+                "constraints": [
+                    models.UniqueConstraint(
+                        fields=("email", "purpose"), name="one_email_code_per_purpose"
+                    )
+                ],
             },
         ),
     ]

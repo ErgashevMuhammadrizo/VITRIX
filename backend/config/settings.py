@@ -7,7 +7,7 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY", "development-only-change-before-deployment"
 )
-DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+DEBUG = os.environ.get("DJANGO_DEBUG", "0") == "1"
 if not DEBUG and SECRET_KEY == "development-only-change-before-deployment":
     raise RuntimeError("Set DJANGO_SECRET_KEY before production")
 ALLOWED_HOSTS = [
@@ -40,6 +40,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "accounts.localization.JsonLocalizationMiddleware",
+    "accounts.security.RequestGuardMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -122,3 +123,28 @@ FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
 SUBSCRIPTION_TELEGRAM = os.environ.get("SUBSCRIPTION_TELEGRAM", "")
 
 LANGUAGES = [("uz", "O‘zbekcha"), ("ru", "Русский"), ("en", "English")]
+
+# SQLite acquires its write lock before transaction reads. This serializes short
+# OTP/CAS/activation transactions across processes instead of relying on row locks.
+if DATABASES["default"]["ENGINE"] == "django.db.backends.sqlite3":
+    DATABASES["default"]["OPTIONS"] = {"timeout": 20, "transaction_mode": "IMMEDIATE"}
+TRUST_PROXY_IP = os.environ.get("TRUST_PROXY_IP", "0") == "1"
+TRUSTED_PROXY_CIDRS = os.environ.get(
+    "TRUSTED_PROXY_CIDRS", "127.0.0.1/32,::1/128"
+).split(",")
+SESSION_COOKIE_AGE = 30 * 86400
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "loggers": {
+        "vitrix.requests": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        }
+    },
+}
+
+EMAIL_FILE_PATH = os.environ.get("EMAIL_FILE_PATH", str(BASE_DIR / "test-outbox"))
