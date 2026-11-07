@@ -1,5 +1,4 @@
 "use client";
-import NextImage from "next/image";
 import { useTranslator } from "../../i18n/runtime";
 import {
   useEffect,
@@ -11,7 +10,10 @@ import {
 } from "react";
 import {
   X,
+  Upload,
   ImagePlus,
+  ArrowUpRight,
+  Check,
   Globe,
   Sun,
   Moon,
@@ -57,14 +59,12 @@ export function Logo({ light = false }: { light?: boolean }) {
       aria-label={__t("Bosh sahifa")}
     >
       {db.platform.logo ? (
-        <NextImage
-          unoptimized
-          width={800}
-          height={800}
-          src={db.platform.logo}
-          alt=""
-        />
-      ) : null}
+        <img src={db.platform.logo} alt="" />
+      ) : (
+        <span className="brand-icon">
+          v<span />
+        </span>
+      )}
       <span>{db.platform.name}</span>
     </Link>
   );
@@ -133,9 +133,7 @@ export function Modal({
   const __t = useTranslator();
   const ref = useRef<HTMLDivElement>(null);
   const closeRef = useRef(onClose);
-  useEffect(() => {
-    closeRef.current = onClose;
-  }, [onClose]);
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
   useEffect(() => {
     const previous = document.activeElement as HTMLElement;
     ref.current?.focus();
@@ -285,13 +283,7 @@ export function UploadImage({
       />
       {value ? (
         <>
-          <NextImage
-            unoptimized
-            width={800}
-            height={800}
-            src={value}
-            alt={__t("Yuklangan rasm")}
-          />
+          <img src={value} alt={__t("Yuklangan rasm")} />
           <button
             type="button"
             className="remove-image"
@@ -448,5 +440,5 @@ export function useDirtyWarning(dirty: boolean) {
       window.removeEventListener("beforeunload", h);
       document.removeEventListener("click", click, true);
     };
-  }, [dirty, __t]);
+  }, [dirty]);
 }

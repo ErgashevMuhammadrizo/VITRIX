@@ -40,8 +40,8 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "accounts.localization.JsonLocalizationMiddleware",
-    "accounts.security.RequestGuardMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "accounts.security.ApiSafetyMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -124,27 +124,25 @@ SUBSCRIPTION_TELEGRAM = os.environ.get("SUBSCRIPTION_TELEGRAM", "")
 
 LANGUAGES = [("uz", "O‘zbekcha"), ("ru", "Русский"), ("en", "English")]
 
-# SQLite acquires its write lock before transaction reads. This serializes short
-# OTP/CAS/activation transactions across processes instead of relying on row locks.
-if DATABASES["default"]["ENGINE"] == "django.db.backends.sqlite3":
-    DATABASES["default"]["OPTIONS"] = {"timeout": 20, "transaction_mode": "IMMEDIATE"}
-TRUST_PROXY_IP = os.environ.get("TRUST_PROXY_IP", "0") == "1"
-TRUSTED_PROXY_CIDRS = os.environ.get(
-    "TRUSTED_PROXY_CIDRS", "127.0.0.1/32,::1/128"
-).split(",")
-SESSION_COOKIE_AGE = 30 * 86400
+# Production defaults; HTTPS redirects are performed at the public edge (the backend is loopback).
+INTERNAL_PROXY_TOKEN = os.environ.get("INTERNAL_PROXY_TOKEN", "")
+if not DEBUG:
+    if len(SECRET_KEY) < 50 or SECRET_KEY == "GENERATE_A_NEW_SECRET":
+        raise RuntimeError("Use a random DJANGO_SECRET_KEY of at least 50 characters")
+    if "*" in ALLOWED_HOSTS:
+        raise RuntimeError("Wildcard ALLOWED_HOSTS is forbidden in production")
+    if len(INTERNAL_PROXY_TOKEN) < 32:
+        raise RuntimeError("Set the same random INTERNAL_PROXY_TOKEN (32+ characters) in Next and Django")
+SECURE_HSTS_SECONDS = 0 if DEBUG else 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+SESSION_COOKIE_AGE = 14 * 86400
+SESSION_SAVE_EVERY_REQUEST = False
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+DATABASES["default"].setdefault("OPTIONS", {})
+if DATABASES["default"]["ENGINE"].endswith("sqlite3"):
+    DATABASES["default"]["OPTIONS"].update(timeout=20, transaction_mode="IMMEDIATE")
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {"console": {"class": "logging.StreamHandler"}},
-    "loggers": {
-        "vitrix.requests": {
-            "handlers": ["console"],
-            "level": "INFO",
-            "propagate": False,
-        }
-    },
-}
-
-EMAIL_FILE_PATH = os.environ.get("EMAIL_FILE_PATH", str(BASE_DIR / "test-outbox"))
+if not DEBUG and not SESSION_COOKIE_SECURE:
+    raise RuntimeError("Secure cookies are mandatory in production")

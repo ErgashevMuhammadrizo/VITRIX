@@ -1,8 +1,4 @@
 import type { User } from "../types";
-let apiLanguage = "uz";
-export const setApiLanguage = (language: string) => {
-  apiLanguage = language;
-};
 const base = process.env.NEXT_PUBLIC_API_BASE_URL || "/api/v1";
 export async function request<T>(
   path: string,
@@ -11,17 +7,15 @@ export async function request<T>(
 ): Promise<T> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    "Accept-Language": apiLanguage,
+    "Accept-Language":
+      typeof document !== "undefined" ? document.documentElement.lang : "uz",
   };
   if (method !== "GET") {
     const csrf = await fetch(base + "/auth/csrf/", {
       credentials: "include",
       cache: "no-store",
     });
-    let token: {
-      csrfToken?: string;
-      detail?: string;
-    };
+    let token: { csrfToken?: string; detail?: string };
     try {
       token = await csrf.json();
     } catch {
@@ -43,60 +37,51 @@ export async function request<T>(
   } catch {
     throw new Error("Serverga ulanib bo‘lmadi. Qayta urinib ko‘ring.");
   }
-  let result: T & {
-    detail?: string;
-  };
+  let result: T & { detail?: string };
   try {
     result = await response.json();
   } catch {
     throw new Error("Server javobi noto‘g‘ri.");
   }
-  if (!response.ok) throw new Error(result.detail || "So‘rov bajarilmadi.");
+  if (!response.ok) {
+    const failure = new Error(result.detail || "So‘rov bajarilmadi.") as Error & { status: number };
+    failure.status = response.status;
+    throw failure;
+  }
   return result;
 }
 export const authApi = {
-  me: () =>
-    request<{
-      user: User;
-    }>("/auth/me/"),
+  me: () => request<{ user: User }>("/auth/me/"),
   login: (username: string, password: string, remember: boolean) =>
-    request<{
-      user: User;
-    }>("/auth/login/", "POST", {
+    request<{ user: User }>("/auth/login/", "POST", {
       username,
       password,
       remember,
     }),
   logout: () => request("/auth/logout/", "POST"),
   requestCode: (email: string, purpose: "register" | "reset" = "register") =>
-    request<{
-      detail: string;
-      expiresIn: number;
-    }>("/auth/request-code/", "POST", { email, purpose }),
+    request<{ detail: string; expiresIn: number }>(
+      "/auth/request-code/",
+      "POST",
+      { email, purpose },
+    ),
   register: (data: Record<string, unknown>) =>
-    request<{
-      user: User;
-    }>("/auth/register/", "POST", data),
+    request<{ user: User }>("/auth/register/", "POST", data),
   resetPassword: (email: string, code: string, password: string) =>
-    request<{
-      detail: string;
-    }>("/auth/reset-password/", "POST", {
+    request<{ detail: string }>("/auth/reset-password/", "POST", {
       email,
       code,
       password,
     }),
   profile: (data: { firstName: string; lastName: string; phone: string }) =>
-    request<{
-      user: User;
-    }>("/auth/profile/", "PATCH", data),
-  users: () =>
-    request<{
-      users: User[];
-    }>("/admin/users/"),
+    request<{ user: User }>("/auth/profile/", "PATCH", data),
+  users: () => request<{ users: User[] }>("/admin/users/"),
   setActive: (id: string, active: boolean) =>
-    request<{
-      user: User;
-    }>(`/admin/users/${encodeURIComponent(id)}/`, "PATCH", { active }),
+    request<{ user: User }>(
+      `/admin/users/${encodeURIComponent(id)}/`,
+      "PATCH",
+      { active },
+    ),
   deleteUser: (id: string) =>
     request(`/admin/users/${encodeURIComponent(id)}/`, "DELETE"),
 };

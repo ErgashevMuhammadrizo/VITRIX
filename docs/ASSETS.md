@@ -15,6 +15,3 @@ Local copies retrieved from images.unsplash.com, resized to 900–1100 px for th
 | cake.jpg | photo-1535141192574-5d4897c12636 |
 
 Replace demo images with actual business/product media before release.
-
-## Digital Clarity
-`public/images/shirt.svg`, `bag.svg`, `jacket.svg` — ushbu yangilanish uchun chizilgan namuna illustratsiyalar. Real mijoz fotosi yoki production skrinshoti sifatida ko‘rsatilmagan.

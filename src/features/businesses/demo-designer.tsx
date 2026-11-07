@@ -1,15 +1,14 @@
 "use client";
 import { useTranslator } from "../../i18n/runtime";
-import type { Business } from "../../types";
 import { useState } from "react";
 import Link from "next/link";
-import { fashion } from "../../mocks/fashion";
+import { seed } from "../../mocks/seed";
 import { BusinessSite } from "../../components/public-website/business-site";
 import { AppearanceControls } from "./appearance-controls";
 import { Button } from "../../components/ui/shared";
 export function DemoDesigner() {
   const __t = useTranslator();
-  const [b, setB] = useState<Business>(fashion.business);
+  const [b, setB] = useState(seed.businesses[0]);
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -39,8 +38,8 @@ export function DemoDesigner() {
         preview
         data={{
           business: b,
-          products: fashion.products,
-          categories: fashion.categories,
+          products: seed.products,
+          categories: seed.categories,
         }}
       />
     </>

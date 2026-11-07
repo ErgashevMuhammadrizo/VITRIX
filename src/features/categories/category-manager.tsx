@@ -1,8 +1,6 @@
 "use client";
-import NextImage from "next/image";
 import { useTranslator } from "../../i18n/runtime";
 import { ContentTranslationsEditor } from "../../components/ui/content-translations";
-import { useCollection } from "../../hooks/use-collection";
 import { useState } from "react";
 import { Plus, Search, Pencil, Trash2, FolderOpen } from "lucide-react";
 import { useApp, recordActivity } from "../../stores/app-store";
@@ -14,7 +12,6 @@ import {
   UploadImage,
   Empty,
   useDirtyWarning,
-  Pagination,
 } from "../../components/ui/shared";
 import { uid } from "../../lib/utils";
 import { toast } from "sonner";
@@ -25,14 +22,13 @@ export function CategoryManager({ businessId }: { businessId: string }) {
   const [q, setQ] = useState("");
   const [edit, setEdit] = useState<Category | null | undefined>();
   const [del, setDel] = useState<Category>();
-  const [page, setPage] = useState(1);
-  const query = useCollection<Category>("categories", {
-    businessId,
-    q,
-    page,
-    pageSize: 8,
-  });
-  const items = query.items;
+  const items = db.categories
+    .filter(
+      (c) =>
+        c.businessId === businessId &&
+        c.name.toLowerCase().includes(q.toLowerCase()),
+    )
+    .sort((a, b) => a.order - b.order);
   return (
     <>
       <div className="page-title">
@@ -55,31 +51,20 @@ export function CategoryManager({ businessId }: { businessId: string }) {
           <input
             placeholder={__t("Kategoriya qidirish\u2026")}
             value={q}
-            onChange={(e) => {
-              setQ(e.target.value);
-              setPage(1);
-            }}
+            onChange={(e) => setQ(e.target.value)}
           />
         </div>
         <span className="muted">
-          {query.total}
+          {items.length}
           {__t("ta kategoriya")}
         </span>
       </div>
-      {query.loading && <p role="status">{__t("Yuklanmoqda…")}</p>}
-      {query.error && <p role="alert">{__t(query.error)}</p>}
       {items.length ? (
         <div className="category-grid">
           {items.map((c) => (
             <article className="panel category-card" key={c.id}>
               {c.image ? (
-                <NextImage
-                  unoptimized
-                  width={800}
-                  height={800}
-                  src={c.image}
-                  alt={c.name}
-                />
+                <img src={c.image} alt={c.name} />
               ) : (
                 <div className="category-placeholder">
                   <FolderOpen />
@@ -93,8 +78,7 @@ export function CategoryManager({ businessId }: { businessId: string }) {
                 <p>{c.description}</p>
                 <div className="between">
                   <small>
-                    {c.productCount ??
-                      db.products.filter((p) => p.categoryId === c.id).length}
+                    {db.products.filter((p) => p.categoryId === c.id).length}
                     {__t("ta mahsulot \u00B7 Tartib:")}
                     {c.order}
                   </small>
@@ -122,7 +106,6 @@ export function CategoryManager({ businessId }: { businessId: string }) {
       ) : (
         <Empty />
       )}
-      <Pagination page={page} total={query.total} onChange={setPage} />
       {edit !== undefined && (
         <CategoryEditor
           category={edit}

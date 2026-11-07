@@ -1,16 +1,18 @@
 "use client";
-import NextImage from "next/image";
 import { useNow } from "../../hooks/use-now";
-import { useAnalytics } from "../../hooks/use-analytics";
 import { useTranslator } from "../../i18n/runtime";
 import { CurrentPlan } from "../subscriptions/current-plan";
 import { AccountId } from "../../components/ui/account-id";
 import { SubscriptionPage } from "../subscriptions/subscription-page";
 import { useState } from "react";
 import { authApi } from "../../services/auth";
-import { productCapacity, analyticsDays } from "../../services/plans";
+import {
+  productCapacity,
+  analyticsDays,
+  activatePlan,
+} from "../../services/plans";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Globe,
@@ -35,6 +37,7 @@ import {
   Store,
   Users,
   ShieldCheck,
+  Search,
   Activity,
 } from "lucide-react";
 import {
@@ -102,7 +105,7 @@ export function Workspace({
     return (
       <div className="center section">
         <h1>{__t("Ma\u2019lumotlarni ochib bo\u2018lmadi")}</h1>
-        <p>{__t(error)}</p>
+        <p>{error}</p>
         <Button onClick={reset}>{__t("Qayta yuklash")}</Button>
       </div>
     );
@@ -299,16 +302,7 @@ export function Workspace({
                   </div>
                   <SiteLink slug={business.slug} />
                   <div className="website-preview-full">
-                    <BusinessSite
-                      business={business}
-                      data={{
-                        business,
-                        products: db.products,
-                        categories: db.categories,
-                      }}
-                      compactPreview
-                      preview
-                    />
+                    <BusinessSite business={business} preview />
                   </div>
                 </>
               ) : section === "subscription" ? (
@@ -365,29 +359,19 @@ export function TrafficChart({
   days?: number;
 }) {
   const __t = useTranslator();
-  const summary = useAnalytics(businessId, days);
-  const now = useNow();
+  const { db } = useApp();
   const chart = Array.from({ length: days }, (_, i) => {
-    const d = new Date(now - (days - 1 - i) * 86400000);
-    const key = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Asia/Tashkent",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).format(d);
+    const d = new Date();
+    d.setDate(d.getDate() - days + 1 + i);
+    const key = d.toISOString().slice(0, 10);
     return {
-      day: d.toLocaleDateString(
-        __t.language === "ru"
-          ? "ru-RU"
-          : __t.language === "en"
-            ? "en-US"
-            : "uz-UZ",
-        { weekday: "short", timeZone: "Asia/Tashkent" },
-      ),
-      visits:
-        summary?.daily
-          .filter((r) => r.day === key && r.kind === "visit")
-          .reduce((n, r) => n + r.count, 0) || 0,
+      day: d.toLocaleDateString("uz-UZ", { weekday: "short" }),
+      visits: db.events.filter(
+        (e) =>
+          e.businessId === businessId &&
+          e.kind === "visit" &&
+          e.at.startsWith(key),
+      ).reduce((sum, event) => sum + (event.count ?? 1), 0),
     };
   });
   return (
@@ -457,12 +441,8 @@ function Overview({ business }: { business: Business }) {
   const __t = useTranslator();
   const { db, user } = useApp();
   const products = db.products.filter((p) => p.businessId === business.id);
-  const summary = useAnalytics(business.id);
-  const counts = db.counts?.[business.id];
-  const total = summary?.totals.visit || 0;
-  const now = useNow();
-  const available =
-    business.active && new Date(business.expires).getTime() > now;
+  const events = db.events.filter((e) => e.businessId === business.id);
+  const total = events.filter((e) => e.kind === "visit").reduce((sum, event) => sum + (event.count ?? 1), 0);
   return (
     <>
       <CurrentPlan business={business} />
@@ -487,9 +467,9 @@ function Overview({ business }: { business: Business }) {
         <div>
           <strong>
             {__t("Saytingiz")}
-            {available ? __t("internetda") : __t("yashirilgan")}
-            <span className={`badge ${available ? "green" : "gray"}`}>
-              {available ? __t("Faol") : __t("Faolsiz")}
+            {business.active ? "internetda" : "yashirilgan"}
+            <span className={`badge ${business.active ? "green" : "gray"}`}>
+              {business.active ? __t("Faol") : __t("Faolsiz")}
             </span>
           </strong>
           <p>
@@ -503,34 +483,33 @@ function Overview({ business }: { business: Business }) {
       <Stats
         items={[
           {
-            label: __t("Davrdagi tashriflar"),
+            label: __t("Umumiy tashriflar"),
             value: total,
             icon: Eye,
-            note: __t("Oxirgi {0} kun", { "0": summary?.days || 7 }),
+            note: __t("Jami sayt tashriflari"),
           },
           {
             label: __t("Bugungi tashriflar"),
-            value:
-              summary?.daily
-                .filter((r) => r.kind === "visit" && r.day === summary.today)
-                .reduce((n, r) => n + r.count, 0) || 0,
+            value: events.filter(
+              (e) =>
+                e.kind === "visit" &&
+                e.at.slice(0, 10) === new Date().toISOString().slice(0, 10),
+            ).reduce((sum, event) => sum + (event.count ?? 1), 0),
             icon: BarChart3,
             note: __t("Bugungi sayt tashriflari"),
           },
           {
             label: __t("Mahsulotlar"),
-            value: counts?.products ?? products.length,
+            value: products.length,
             icon: Package,
             note:
-              (counts?.published ??
-                products.filter((p) => p.status === "published").length) +
+              products.filter((p) => p.status === "published").length +
               __t(" tasi e\u2019lon qilingan"),
           },
           {
             label: __t("Kategoriyalar"),
-            value:
-              counts?.categories ??
-              db.categories.filter((c) => c.businessId === business.id).length,
+            value: db.categories.filter((c) => c.businessId === business.id)
+              .length,
             icon: FolderOpen,
             note: __t("Katalog bo\u2018limlari"),
           },
@@ -549,7 +528,7 @@ function Overview({ business }: { business: Business }) {
               {__t("Telefon")}
               <small>{__t("Qo\u2018ng\u2018iroq tugmasi")}</small>
             </span>
-            <strong>{summary?.totals.phone || 0}</strong>
+            <strong>{events.filter((e) => e.kind === "phone").reduce((sum, event) => sum + (event.count ?? 1), 0)}</strong>
           </div>
           <div>
             <span className="contact-stat-icon telegram">
@@ -558,7 +537,9 @@ function Overview({ business }: { business: Business }) {
             <span>
               Telegram<small>{__t("Xabar tugmasi")}</small>
             </span>
-            <strong>{summary?.totals.telegram || 0}</strong>
+            <strong>
+              {events.filter((e) => e.kind === "telegram").reduce((sum, event) => sum + (event.count ?? 1), 0)}
+            </strong>
           </div>
           <div className="callout">
             <span className="live-dot" />
@@ -652,13 +633,7 @@ function Overview({ business }: { business: Business }) {
         <div className="overview-product-strip">
           {products.slice(0, 4).map((p) => (
             <div key={p.id}>
-              <NextImage
-                unoptimized
-                width={800}
-                height={800}
-                src={p.image || "/images/burger.jpg"}
-                alt={p.name}
-              />
+              <img src={p.image || "/images/burger.jpg"} alt={p.name} />
               <span>
                 {p.name}
                 <strong>{money(p.price, __t.language)}</strong>
@@ -676,9 +651,13 @@ function Analytics({ business }: { business: Business }) {
   const plan = db.plans.find((p) => p.id === business.planId);
   const [days, setDays] = useState(7);
   const range = Math.min(days, analyticsDays(plan));
-  const summary = useAnalytics(business.id, range);
-  const visits = summary?.totals.visit || 0;
-  const clicks = (summary?.totals.phone || 0) + (summary?.totals.telegram || 0);
+  const now = useNow();
+  const since = Date.parse(new Date(now).toISOString().slice(0, 10)) - (range - 1) * 86400000;
+  const e = db.events.filter(
+    (e) => e.businessId === business.id && new Date(e.at).getTime() >= since,
+  );
+  const visits = e.filter((e) => e.kind === "visit").reduce((sum, event) => sum + (event.count ?? 1), 0);
+  const clicks = e.filter((e) => e.kind !== "visit").reduce((sum, event) => sum + (event.count ?? 1), 0);
   return (
     <>
       <div className="page-title">
@@ -709,14 +688,16 @@ function Analytics({ business }: { business: Business }) {
             <Button
               variant="secondary"
               onClick={() => {
+                const csv =
+                  __t("Hodisa,Sana\n").trimEnd() + ",Count\n" +
+                  e.map((v) => `${v.kind},${v.at},${v.count ?? 1}`).join("\n");
                 const a = document.createElement("a");
-                a.href =
-                  "/api/v1/businesses/" +
-                  encodeURIComponent(business.id) +
-                  "/events.csv?days=" +
-                  range;
+                a.href = URL.createObjectURL(
+                  new Blob([csv], { type: "text/csv" }),
+                );
                 a.download = "vitrix-analytics.csv";
                 a.click();
+                URL.revokeObjectURL(a.href);
               }}
             >
               {__t("CSV yuklash")}
@@ -738,12 +719,12 @@ function Analytics({ business }: { business: Business }) {
           { label: __t("Tashriflar"), value: visits, icon: Eye },
           {
             label: __t("Telefon"),
-            value: summary?.totals.phone || 0,
+            value: e.filter((e) => e.kind === "phone").reduce((sum, event) => sum + (event.count ?? 1), 0),
             icon: Phone,
           },
           {
             label: "Telegram",
-            value: summary?.totals.telegram || 0,
+            value: e.filter((e) => e.kind === "telegram").reduce((sum, event) => sum + (event.count ?? 1), 0),
             icon: Send,
           },
           {
@@ -812,7 +793,7 @@ function Profile() {
           <input value={user?.email} readOnly />
         </Field>
         <Button disabled={busy}>
-          {busy ? __t("Saqlanmoqda…") : __t("Saqlash")}
+          {busy ? "Saqlanmoqda…" : __t("Saqlash")}
         </Button>
         <Link className="text-link" href="/forgot-password">
           {__t("Parolni email kodi orqali yangilash")}

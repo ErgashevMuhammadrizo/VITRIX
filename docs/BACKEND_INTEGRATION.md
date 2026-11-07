@@ -73,15 +73,3 @@ Activation JSON: `{"planId":"pro","months":1,"mode":"extend","note":"Payment che
 ## Uch til
 
 Frontend `Accept-Language: uz/ru/en` yuboradi; JSON detail va tasdiqlash emaili shu tilda chiqadi. Business/Product/Category `translations` JSON maydoni `{ "ru": { "name": "..." }, "en": { "name": "..." } }` ko‘rinishida; faqat ruxsat etilgan matn maydonlari qabul qilinadi. Public katalog til tanlovini do‘kon bo‘yicha eslab qoladi; matnlar tanlangan tilga mos fallback bilan chiqariladi.
-
-## Hardening kontrakti
-
-Mavjud yozuvni o‘zgartirish yoki o‘chirishda `change.revision` majburiy. U GET qaytargan revision bilan teng bo‘lsin; aks holda 409. Yangi yozuvda revision kerak emas. PATCH faqat o‘zgargan maydonlar bilan yuboriladi va `acknowledged` / `deleted` qaytaradi. Admin orqali activation business revision’ni ham oshiradi.
-
-- `/workspace/` bounded boshlang‘ich dataset; `/workspace/?view=summary` faqat counts/analytics/collections.
-- `/collections/products|categories|businesses|users/`: page, pageSize (max 100), q va tegishli filtrlar; items + pagination.
-- `/collections/activations/`: admin-only, sahifalangan activation tarixi.
-- `/businesses/:id/analytics/?days=7`: tenant-scoped aggregate, Asia/Tashkent.
-- `/businesses/:id/events.csv?days=90`: VIP/admin to‘liq stream.
-- `/businesses/:id/designs/`: GET oxirgi versiyalar; POST versionId/revision bilan tiklash.
-- Public katalog page/pageSize/q/category/product/categoryPage qabul qiladi; private account/plan maydonlari chiqarilmaydi.

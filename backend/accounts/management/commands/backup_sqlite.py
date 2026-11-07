@@ -1,54 +1,33 @@
-import hashlib, json, shutil, sqlite3
+"""Consistent SQLite online backup; deliberately never overwrites an existing file."""
+import os
+import sqlite3
 from pathlib import Path
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connection
-
 
 class Command(BaseCommand):
-    help = "Consistent SQLite online backup plus media and SHA256 manifest. Does not include environment secrets."
-
+    help = 'Create a verified SQLite database backup outside the public media directory.'
     def add_arguments(self, parser):
-        parser.add_argument("destination")
-
-    def handle(self, destination, **options):
-        if connection.vendor != "sqlite":
-            raise CommandError("Use pg_dump for PostgreSQL.")
-        target = Path(destination).resolve()
-        if target.exists():
-            raise CommandError("Destination must be new.")
-        source = Path(settings.DATABASES["default"]["NAME"]).resolve()
+        parser.add_argument('destination')
+    def handle(self, *args, **options):
+        config=settings.DATABASES['default']
+        if not config['ENGINE'].endswith('sqlite3'):
+            raise CommandError('For PostgreSQL use pg_dump with a protected destination.')
+        target=Path(options['destination']).resolve()
+        source=Path(config['NAME']).resolve()
+        media=Path(settings.MEDIA_ROOT).resolve()
+        if target == source or target.is_relative_to(media):
+            raise CommandError('Destination must be outside the database and public media paths.')
         if not source.is_file():
-            raise CommandError("SQLite source not found.")
-        if (
-            target == Path(settings.MEDIA_ROOT).resolve()
-            or Path(settings.MEDIA_ROOT).resolve() in target.parents
-        ):
-            raise CommandError("Backup must be outside media.")
-        target.mkdir(parents=True)
+            raise CommandError('Source database does not exist.')
+        descriptor=os.open(target,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
+        os.close(descriptor)
         try:
-            with sqlite3.connect(source) as src, sqlite3.connect(
-                target / "db.sqlite3"
-            ) as dest:
-                src.backup(dest)
-            media = Path(settings.MEDIA_ROOT)
-            if media.exists():
-                shutil.copytree(media, target / "media")
-            else:
-                (target / "media").mkdir()
-            files = {
-                str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in target.rglob("*")
-                if p.is_file()
-            }
-            (target / "manifest.json").write_text(
-                json.dumps({"format": 1, "files": files}, indent=2)
-            )
-            self.stdout.write(
-                self.style.SUCCESS(
-                    "Backup completed. Run verify_backup before relying on it."
-                )
-            )
+            with sqlite3.connect(source.as_uri()+'?mode=ro',uri=True) as original,sqlite3.connect(target) as backup:
+                original.backup(backup)
+                if backup.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
+                    raise CommandError('Backup integrity verification failed.')
         except Exception:
-            shutil.rmtree(target)
+            target.unlink(missing_ok=True)
             raise
+        self.stdout.write('Verified SQLite backup created. Keep it private and copy it off-host.')

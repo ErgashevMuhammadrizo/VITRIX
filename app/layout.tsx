@@ -3,11 +3,11 @@ import { AppProvider } from "../src/stores/app-store";
 import "./globals.css";
 export const metadata: Metadata = {
   title: {
-    default: "VITRIX — Mahsulotlaringiz. Bitta havola.",
+    default: "VITRIX — Biznesingizning yangi manzili",
     template: "%s | VITRIX",
   },
   description:
-    "Kichik biznes uchun onlayn katalog. Mahsulotlar, narxlar va aloqa ma’lumotlari bitta havolada.",
+    "Dasturchisiz professional biznes saytingizni yarating. Mahsulotlar, dizayn va aloqalar bir joyda.",
   icons: { icon: "/favicon.svg" },
 };
 export default function RootLayout({

@@ -1,0 +1,63 @@
+$ eslint . --ignore-pattern dist --ignore-pattern .next
+
+/workspace/scratch/17b3bcc5ff98/work/VITRIX-main/src/components/app-router.tsx
+  20:10  warning  'seed' is defined but never used            @typescript-eslint/no-unused-vars
+  42:11  warning  'db' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  42:15  warning  'ready' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  42:22  warning  'error' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  42:29  warning  'reset' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/workspace/scratch/17b3bcc5ff98/work/VITRIX-main/src/components/public-website/business-site.tsx
+   11:3   warning  'ChevronRight' is defined but never used                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   13:3   warning  'Check' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  184:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  219:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  282:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  425:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  440:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/workspace/scratch/17b3bcc5ff98/work/VITRIX-main/src/components/ui/shared.tsx
+   13:3   warning  'Upload' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   15:3   warning  'ArrowUpRight' is defined but never used                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   16:3   warning  'Check' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   62:9   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  286:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  443:6   warning  React Hook useEffect has a missing dependency: '__t'. Either include it or remove the dependency array                                                                                                                                                                                   react-hooks/exhaustive-deps
+
+/workspace/scratch/17b3bcc5ff98/work/VITRIX-main/src/features/admin/admin.tsx
+   22:3   warning  'Check' is defined but never used                                                                                      @typescript-eslint/no-unused-vars
+  188:6   warning  React Hook useEffect has missing dependencies: '__t' and 'update'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  507:23  warning  'reviewPlan' is assigned a value but never used                                                                        @typescript-eslint/no-unused-vars
+
+/workspace/scratch/17b3bcc5ff98/work/VITRIX-main/src/features/businesses/settings.tsx
+  5:23  warning  'ExternalLink' is defined but never used  @typescript-eslint/no-unused-vars
+
+/workspace/scratch/17b3bcc5ff98/work/VITRIX-main/src/features/categories/category-manager.tsx
+  67:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/workspace/scratch/17b3bcc5ff98/work/VITRIX-main/src/features/dashboard/dashboard.tsx
+   12:3   warning  'activatePlan' is defined but never used                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   15:10  warning  'usePathname' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+   40:3   warning  'Search' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  636:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/workspace/scratch/17b3bcc5ff98/work/VITRIX-main/src/features/location/location-picker.tsx
+  80:6  warning  React Hook useEffect has a missing dependency: '__t'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/workspace/scratch/17b3bcc5ff98/work/VITRIX-main/src/features/marketing/pages.tsx
+    9:3   warning  'ChevronDown' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+   15:3   warning  'Zap' is defined but never used                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  136:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  147:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/workspace/scratch/17b3bcc5ff98/work/VITRIX-main/src/features/products/product-manager.tsx
+   11:3   warning  'MoreHorizontal' is defined but never used                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+   17:3   warning  'Package' is defined but never used                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  196:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  295:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/workspace/scratch/17b3bcc5ff98/work/VITRIX-main/src/stores/app-store.tsx
+  109:6  warning  React Hook useEffect has a missing dependency: '__t'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 37 problems (0 errors, 37 warnings)
+

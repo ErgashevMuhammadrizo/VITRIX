@@ -1,7 +1,6 @@
 "use client";
-import NextImage from "next/image";
 import { useTranslator } from "../../i18n/runtime";
-import { useState, useEffect, type CSSProperties } from "react";
+import { useState, useEffect, useRef, type CSSProperties } from "react";
 import {
   Phone,
   Send,
@@ -9,12 +8,14 @@ import {
   MapPin,
   Clock,
   Search,
+  ChevronRight,
   Globe,
+  Check,
   ImageIcon,
 } from "lucide-react";
 import { I18nProvider } from "../../i18n/runtime";
 import { localizedContent, isLanguage } from "../../i18n/content";
-import { emptyWorkspace } from "../../services/workspace";
+import { useApp } from "../../stores/app-store";
 import { Modal, Empty } from "../ui/shared";
 import { money, telegram } from "../../lib/utils";
 import { publicDictionaries, type Language } from "../../i18n";
@@ -33,7 +34,6 @@ import type { Business, Product } from "../../types";
 function BusinessSiteContent({
   business: originalBusiness,
   preview = false,
-  compactPreview = false,
   data,
   language,
   onLanguageChange,
@@ -42,16 +42,15 @@ function BusinessSiteContent({
   onLanguageChange: (l: Language) => void;
   business: Business;
   preview?: boolean;
-  compactPreview?: boolean;
   data?: import("../../services/workspace").PublicCatalog;
 }) {
   const __t = useTranslator();
-  const baseStore = emptyWorkspace();
+  const { db: baseStore } = useApp();
   const business = localizedContent(originalBusiness, language);
   const [catalog, setCatalog] = useState(data);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [loadError, setLoadError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const generation = useRef(0);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [pageError, setPageError] = useState("");
   const sourceProducts = catalog?.products || baseStore.products;
   const sourceCategories = catalog?.categories || baseStore.categories;
   const storeDb = {
@@ -65,51 +64,49 @@ function BusinessSiteContent({
   const copy = publicDictionaries[language] ?? publicDictionaries.uz;
   const [cat, setCat] = useState("");
   const [q, setQ] = useState("");
-  const [selectedItem, setSelected] = useState<Product | undefined>(() =>
-    data?.focusProduct ? data.products[0] : undefined,
-  );
-  const [image, setImage] = useState(
-    data?.focusProduct ? data.products[0]?.image || "" : "",
-  );
+  const [selectedItem, setSelected] = useState<Product>();
+  const [image, setImage] = useState("");
   useEffect(() => {
     if (preview || !data) return;
     let active = true;
+    generation.current += 1;
     const timer = setTimeout(() => {
-      setLoading(true);
-      setLoadError("");
-      publicApi
-        .catalog(business.slug, {
-          q,
-          category: cat,
-          page: pageNumber,
-          lang: language,
-          ...(data.focusProduct ? { product: data.focusProduct } : {}),
-        })
-        .then((result) => {
-          if (active) setCatalog(result);
-        })
-        .catch((e) => {
-          if (active) setLoadError(e.message);
-        })
-        .finally(() => {
-          if (active) setLoading(false);
-        });
-    }, 180);
-    return () => {
-      active = false;
-      clearTimeout(timer);
-    };
-  }, [business.slug, cat, q, pageNumber, language, preview, data]);
+      setLoadingMore(true);
+      void publicApi.catalog(business.slug, 0, q, cat).then((next) => {
+        if (active) { setCatalog(next); setPageError(""); }
+      }).catch((error: unknown) => {
+        if (active) setPageError(error instanceof Error ? error.message : "Error");
+      }).finally(() => { if (active) setLoadingMore(false); });
+    }, 250);
+    return () => { active = false; clearTimeout(timer); };
+  }, [business.slug, q, cat, preview, data]);
+  async function loadMore() {
+    const offset = catalog?.pageInfo?.nextOffset;
+    if (offset == null || loadingMore) return;
+    const started = generation.current;
+    setLoadingMore(true);
+    try {
+      const next = await publicApi.catalog(business.slug, offset, q, cat);
+      if (started !== generation.current) return;
+      setCatalog((current) => current ? { ...next,
+        products: [...new Map([...current.products, ...next.products].map((p) => [p.id, p])).values()],
+        categories: [...new Map([...current.categories, ...next.categories].map((c) => [c.id, c])).values()],
+      } : next);
+      setPageError("");
+    } catch (error) {
+      if (started === generation.current) setPageError(error instanceof Error ? error.message : "Error");
+    }
+    finally { if (started === generation.current) setLoadingMore(false); }
+  }
   const categories = tenantCategories(db, business.id);
-  const allProducts =
-    data && !preview ? db.products : tenantProducts(db, business.id);
+  const allProducts = tenantProducts(db, business.id);
   const selected = selectedItem
     ? allProducts.find((p) => p.id === selectedItem.id)
     : undefined;
   const products = allProducts.filter(
     (p) =>
       (!a.showCategories || !cat || p.categoryId === cat) &&
-      (!a.showSearch || p.name.toLowerCase().includes(q.toLowerCase())),
+      (!a.showSearch || !preview || p.name.toLowerCase().includes(q.toLowerCase())),
   );
   useEffect(() => {
     if (preview) return;
@@ -153,7 +150,7 @@ function BusinessSiteContent({
     );
   return (
     <div
-      className={`business-site custom-appearance mode-${a.colorMode} hero-${a.heroStyle} width-${a.contentWidth} corners-${a.cornerStyle} density-${a.density} ${!a.showPrices ? "hide-prices" : ""} ${!a.showContacts ? "hide-contacts" : ""} theme-${business.theme} layout-${business.layout} card-${business.card} header-${business.header} buttons-${business.buttons} ${compactPreview ? "site-preview" : ""}`}
+      className={`business-site custom-appearance mode-${a.colorMode} hero-${a.heroStyle} width-${a.contentWidth} corners-${a.cornerStyle} density-${a.density} ${!a.showPrices ? "hide-prices" : ""} ${!a.showContacts ? "hide-contacts" : ""} theme-${business.theme} layout-${business.layout} card-${business.card} header-${business.header} buttons-${business.buttons} ${preview ? "site-preview" : ""}`}
       style={
         {
           "--business-primary": business.primary,
@@ -184,13 +181,7 @@ function BusinessSiteContent({
         </label>
         <a href="#business-top" className="business-logo">
           {business.logo ? (
-            <NextImage
-              unoptimized
-              width={800}
-              height={800}
-              src={business.logo}
-              alt=""
-            />
+            <img src={business.logo} alt="" />
           ) : (
             <span>{business.name.slice(0, 1)}.</span>
           )}
@@ -202,16 +193,14 @@ function BusinessSiteContent({
         <a href="#business-contact" className="desktop">
           {copy.about}
         </a>
-        {a.showContacts && business.phone && (
-          <a
-            className="business-top-contact"
-            href={`tel:${business.phone}`}
-            onClick={() => track("phone")}
-          >
-            {copy.contact}
-            <ArrowUpRight size={16} />
-          </a>
-        )}
+        <a
+          className="business-top-contact"
+          href={`tel:${business.phone}`}
+          onClick={() => track("phone")}
+        >
+          {copy.contact}
+          <ArrowUpRight size={16} />
+        </a>
       </header>
       <main id="business-top">
         {a.showHero && (
@@ -227,10 +216,7 @@ function BusinessSiteContent({
               </span>
             </div>
             {business.cover ? (
-              <NextImage
-                unoptimized
-                width={800}
-                height={800}
+              <img
                 src={business.cover}
                 alt={business.name}
                 className="business-cover"
@@ -256,10 +242,7 @@ function BusinessSiteContent({
                   aria-label={__t("Katalogdan qidirish")}
                   placeholder={copy.search}
                   value={q}
-                  onChange={(e) => {
-                    setQ(e.target.value);
-                    setPageNumber(1);
-                  }}
+                  onChange={(e) => setQ(e.target.value)}
                 />
               </div>
             )}
@@ -268,22 +251,15 @@ function BusinessSiteContent({
             <div className="category-tabs">
               <button
                 className={!cat ? "selected" : ""}
-                onClick={() => {
-                  setCat("");
-                  setPageNumber(1);
-                }}
+                onClick={() => setCat("")}
               >
-                {copy.all}{" "}
-                <span>{data?.pagination?.total ?? allProducts.length}</span>
+                {copy.all} <span>{allProducts.length}</span>
               </button>
               {categories.map((c) => (
                 <button
                   key={c.id}
                   className={cat === c.id ? "selected" : ""}
-                  onClick={() => {
-                    setCat(c.id);
-                    setPageNumber(1);
-                  }}
+                  onClick={() => setCat(c.id)}
                 >
                   {c.name}
                 </button>
@@ -303,14 +279,7 @@ function BusinessSiteContent({
                     aria-label={p.name + __t(" batafsil")}
                   >
                     {p.image ? (
-                      <NextImage
-                        unoptimized
-                        width={800}
-                        height={800}
-                        src={p.image}
-                        alt={p.name}
-                        loading="lazy"
-                      />
+                      <img src={p.image} alt={p.name} loading="lazy" />
                     ) : (
                       <div className="no-product-image">
                         <ImageIcon size={32} />
@@ -339,8 +308,8 @@ function BusinessSiteContent({
                     </h3>
                     <p>{p.shortDescription}</p>
                     <div className="between">
-                      <strong className="public-price" hidden={!a.showPrices}>
-                        {money(p.price ?? 0, __t.language)}
+                      <strong className="public-price">
+                        {money(p.price, __t.language)}
                       </strong>
                       {p.oldPrice > 0 && (
                         <del>{money(p.oldPrice, __t.language)}</del>
@@ -356,21 +325,6 @@ function BusinessSiteContent({
                       {copy.detail}
                       <ArrowUpRight size={17} />
                     </button>
-                    {!preview && (
-                      <a
-                        className="product-permalink"
-                        href={
-                          "/" +
-                          business.slug +
-                          "/p/" +
-                          p.slug +
-                          "?lang=" +
-                          language
-                        }
-                      >
-                        {__t("Mahsulot havolasi")} ↗
-                      </a>
-                    )}
                   </div>
                 </article>
               ))}
@@ -378,61 +332,10 @@ function BusinessSiteContent({
           ) : (
             <Empty title={copy.empty}>{copy.emptyHint}</Empty>
           )}
-          {!preview && catalog?.pagination && (
-            <div className="catalog-pagination">
-              {loading && <p role="status">{__t("Yuklanmoqda…")}</p>}
-              {loadError && <p role="alert">{__t(loadError)}</p>}
-              <button
-                className="btn secondary"
-                disabled={pageNumber <= 1 || loading}
-                onClick={() => setPageNumber((n) => n - 1)}
-              >
-                {__t("Ortga")}
-              </button>
-              <span>
-                {pageNumber} /{" "}
-                {Math.max(
-                  1,
-                  Math.ceil(
-                    catalog.pagination.total / catalog.pagination.pageSize,
-                  ),
-                )}
-              </span>
-              <button
-                className="btn secondary"
-                disabled={!catalog.pagination.hasMore || loading}
-                onClick={() => setPageNumber((n) => n + 1)}
-              >
-                {__t("Oldinga")}
-              </button>
-            </div>
-          )}
-          {!preview && catalog?.categoryPagination?.hasMore && (
-            <button
-              className="btn secondary"
-              onClick={async () => {
-                try {
-                  const next = await publicApi.catalog(business.slug, {
-                    categoryPage: (catalog.categoryPagination?.page || 1) + 1,
-                  });
-                  setCatalog((current) =>
-                    current
-                      ? {
-                          ...current,
-                          categories: [
-                            ...current.categories,
-                            ...next.categories,
-                          ],
-                          categoryPagination: next.categoryPagination,
-                        }
-                      : current,
-                  );
-                } catch (e) {
-                  setLoadError((e as Error).message);
-                }
-              }}
-            >
-              {__t("Yana kategoriyalar")}
+          {pageError && <p role="alert">{pageError}</p>}
+          {!preview && catalog?.pageInfo?.nextOffset != null && (
+            <button className="btn" disabled={loadingMore} onClick={() => void loadMore()}>
+              {language === "ru" ? "Загрузить ещё" : language === "en" ? "Load more" : "Yana yuklash"}
             </button>
           )}
         </section>
@@ -496,12 +399,10 @@ function BusinessSiteContent({
         <span>
           © {new Date().getFullYear()} {copy.copyright}
         </span>
-        {a.showContacts && business.phone && (
-          <a href={`tel:${business.phone}`} onClick={() => track("phone")}>
-            {business.phone}
-          </a>
-        )}
-        {a.showContacts && business.telegram && (
+        <a href={`tel:${business.phone}`} onClick={() => track("phone")}>
+          {business.phone}
+        </a>
+        {business.telegram && (
           <a
             href={telegram(business.telegram)}
             target="_blank"
@@ -521,10 +422,7 @@ function BusinessSiteContent({
           <div className="product-detail">
             <div>
               {image && (
-                <NextImage
-                  unoptimized
-                  width={800}
-                  height={800}
+                <img
                   className="detail-main-image"
                   src={image}
                   alt={selected.name}
@@ -539,13 +437,7 @@ function BusinessSiteContent({
                       key={i}
                       aria-label={`Rasm ${i + 1}`}
                     >
-                      <NextImage
-                        unoptimized
-                        width={800}
-                        height={800}
-                        src={im}
-                        alt=""
-                      />
+                      <img src={im} alt="" />
                     </button>
                   ))}
               </div>
@@ -559,8 +451,8 @@ function BusinessSiteContent({
                   : copy.unavailable}
               </span>
               <h2>{selected.name}</h2>
-              <h3 className="public-price" hidden={!a.showPrices}>
-                {money(selected.price ?? 0, __t.language)}
+              <h3 className="public-price">
+                {money(selected.price, __t.language)}
               </h3>
               {selected.oldPrice > 0 && (
                 <del>{money(selected.oldPrice, __t.language)}</del>
@@ -577,7 +469,6 @@ function BusinessSiteContent({
 export function BusinessSite(props: {
   business: Business;
   preview?: boolean;
-  compactPreview?: boolean;
   data?: import("../../services/workspace").PublicCatalog;
 }) {
   const [language, setLanguage] = useState<Language>(
@@ -619,7 +510,7 @@ export function BusinessSite(props: {
       } catch {}
   };
   return (
-    <I18nProvider language={language} documentLanguage={!props.preview}>
+    <I18nProvider language={language}>
       <BusinessSiteContent
         {...props}
         language={language}

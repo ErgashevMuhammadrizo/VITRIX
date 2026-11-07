@@ -9,7 +9,7 @@ import {
 } from "react";
 import { I18nProvider, createTranslator } from "../i18n/runtime";
 import { preferenceApi } from "../services/api";
-import { authApi, setApiLanguage } from "../services/auth";
+import { authApi } from "../services/auth";
 import { workspaceApi, publicApi, emptyWorkspace } from "../services/workspace";
 import { dictionaries, type Language, type TranslationKey } from "../i18n";
 import type { Database, User } from "../types";
@@ -17,7 +17,6 @@ import { uid } from "../lib/utils";
 import { toast, Toaster } from "sonner";
 type Context = {
   db: Database;
-  dataRevision: number;
   user: User | undefined;
   ready: boolean;
   error: string;
@@ -31,11 +30,6 @@ type Context = {
   logout: () => Promise<void>;
   reset: () => void;
   reload: () => Promise<void>;
-  mergeCollection: (
-    entity: "products" | "categories" | "users" | "businesses",
-    items: unknown[],
-    replace?: boolean,
-  ) => void;
   requestPlan: (id: string) => Promise<void>;
   reviewPlan: (id: string, approve: boolean) => Promise<void>;
   language: Language;
@@ -57,7 +51,6 @@ export function AppProvider({
   const dbRef = useRef(db);
   const [user, setUser] = useState<User>();
   const [ready, setReady] = useState(false);
-  const [dataRevision, setDataRevision] = useState(0);
   const [error, setError] = useState("");
   const [language, setLanguage] = useState<Language>(initialLanguage);
   const __t = createTranslator(language);
@@ -93,8 +86,8 @@ export function AppProvider({
             if (active)
               setError(
                 e instanceof Error
-                  ? e.message
-                  : "Ma’lumotlarni ochib bo‘lmadi.",
+                  ? __t(e.message)
+                  : __t("Ma\u2019lumotlarni ochib bo\u2018lmadi."),
               );
           }
         }
@@ -115,7 +108,6 @@ export function AppProvider({
     };
   }, []);
   useEffect(() => {
-    setApiLanguage(language);
     document.documentElement.dataset.theme = dark ? "dark" : "light";
     document.documentElement.lang = language;
     if (ready)
@@ -134,24 +126,16 @@ export function AppProvider({
         fn(after);
         const saved = await workspaceApi.save(before, after);
         apply(saved);
-        setDataRevision((n) => n + 1);
-        // Refresh small statistics/metadata after edits without reloading all records.
-        void workspaceApi
-          .summary()
-          .then((meta) =>
-            apply({
-              ...dbRef.current,
-              analytics: meta.analytics,
-              counts: meta.counts,
-              collections: meta.collections,
-            }),
-          )
-          .catch(() => {});
         if (message) toast.success(message);
         return true;
       } catch (e) {
+        if (e instanceof Error && "status" in e && e.status === 409) {
+          await reload().catch(() => {});
+        }
         toast.error(
-          e instanceof Error ? __t(e.message) : __t("Saqlash bajarilmadi."),
+          e instanceof Error
+            ? __t(e.message)
+            : __t("Saqlash bajarilmadi."),
         );
         return false;
       }
@@ -168,22 +152,6 @@ export function AppProvider({
       <Store.Provider
         value={{
           db,
-          dataRevision,
-          mergeCollection: (entity, items, replace = false) => {
-            const next = structuredClone(dbRef.current);
-            const rows = items as {
-              id: string;
-            }[];
-            (next[entity] as unknown[]) = replace
-              ? rows
-              : [
-                  ...next[entity].filter(
-                    (v) => !rows.some((r) => r.id === v.id),
-                  ),
-                  ...rows,
-                ].slice(-200);
-            apply(next);
-          },
           user,
           ready,
           error,

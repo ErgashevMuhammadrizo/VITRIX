@@ -1,12 +1,6 @@
 import catalogue from "./catalogue.json";
 import type { Language } from "./index";
-const entries = catalogue as Record<
-  string,
-  {
-    ru: string;
-    en: string;
-  }
->;
+const entries = catalogue as Record<string, { ru: string; en: string }>;
 export function translate(
   value: unknown,
   language: Language = "uz",

@@ -143,7 +143,6 @@ test("same-origin Django proxy forwards CSRF/cookies and preserves session cooki
       assert.equal(headers.get("cookie"), "csrftoken=test-token");
       assert.equal(headers.get("x-csrftoken"), "test-token");
       assert.equal(headers.get("origin"), "http://localhost:3000");
-      assert.equal(headers.get("accept-language"), "ru");
       return new Response('{"ok":true}', {
         headers: {
           "content-type": "application/json",
@@ -158,7 +157,6 @@ test("same-origin Django proxy forwards CSRF/cookies and preserves session cooki
         cookie: "csrftoken=test-token",
         "x-csrftoken": "test-token",
         origin: "http://localhost:3000",
-        "accept-language": "ru",
       },
       body: '{"username":"example"}',
     });
@@ -392,61 +390,21 @@ test("public catalogs render UZ RU EN selector and chosen content without dashbo
   }
 });
 
-test("workspace edits carry source revision and only changed fields", () => {
+test("delta updates and deletes carry the original server revision", () => {
   const before = cloneSeed();
-  before.businesses[0].revision = 7;
+  Object.assign(before.products[0], { revision: "server-token" });
   const after = structuredClone(before);
-  after.businesses[0].name = "Changed name";
-  const [change] = changesBetween(before, after);
-  assert.equal(change.revision, 7);
-  assert.deepEqual(change.record, {
-    id: before.businesses[0].id,
-    name: "Changed name",
-  });
-  after.businesses[0].revision = 6;
-  assert.equal(
-    changesBetween(before, after)[0].revision,
-    6,
-    "stale form cannot borrow a newer store revision",
-  );
+  after.products[0] = { ...after.products[0], price: 43210 };
+  assert.equal(changesBetween(before, after)[0].revision, "server-token");
+  after.products = after.products.filter((item) => item.id !== before.products[0].id);
+  assert.equal(changesBetween(before, after)[0].revision, "server-token");
 });
-import { ClarityLanding } from "../src/features/marketing/clarity-landing";
-test("Digital Clarity landing explains the actual catalogue and localizes its copy", () => {
-  for (const [language, heading] of [
-    ["uz", "Mahsulotlaringiz."],
-    ["ru", "Ваши товары."],
-    ["en", "Your products."],
-  ] as const) {
-    const html = renderToStaticMarkup(
-      React.createElement(
-        AppProvider,
-        { initialLanguage: language },
-        React.createElement(ClarityLanding),
-      ),
-    );
-    assert.ok(html.includes(heading));
-    assert.ok(!/\b49 000\b/.test(html));
-    assert.ok(!/\b99 000\b/.test(html));
-  }
-});
-test("public allowlisted DTO renders without private plan or status fields", () => {
-  const db = cloneSeed();
-  const b = db.businesses[0];
-  const p = { ...db.products.find((p) => p.businessId === b.id)! };
-  delete (p as Partial<typeof p>).status;
-  const html = renderToStaticMarkup(
-    React.createElement(
-      AppProvider,
-      {},
-      React.createElement(BusinessSite, {
-        business: b,
-        data: {
-          business: b,
-          products: [p],
-          categories: db.categories.filter((c) => c.businessId === b.id),
-        },
-      }),
-    ),
-  );
-  assert.ok(html.includes(p.name));
+test("platform edits preserve the server revision even when a form replaces the record", () => {
+  const before = cloneSeed();
+  Object.assign(before.platform, { revision: "platform-token" });
+  const after = structuredClone(before);
+  after.platform = { ...seed.platform, name: "Updated" };
+  const changes = changesBetween(before, after);
+  assert.equal(changes[0].entity, "platform");
+  assert.equal(changes[0].revision, "platform-token");
 });

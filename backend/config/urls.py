@@ -10,8 +10,8 @@ admin.site.site_title = "VITRIX Admin"
 
 from django.conf import settings
 from django.conf.urls.static import static
-from django.views.static import serve
+from accounts.media import media
 
 urlpatterns += [
-    path("media/<path:path>", serve, {"document_root": settings.MEDIA_ROOT})
+    path("media/<path:path>", media)
 ]

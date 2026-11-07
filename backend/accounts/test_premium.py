@@ -42,7 +42,9 @@ class PremiumTests(TestCase):
         )
 
     def change(self, data):
-        self.b.refresh_from_db()
+        from .security import revision
+        current = Business.objects.get(pk=self.b.pk)
+        data = {"revision": revision(current), **data}
         return self.client.patch(
             "/api/v1/workspace/",
             json.dumps(
@@ -50,7 +52,6 @@ class PremiumTests(TestCase):
                     "changes": [
                         {
                             "entity": "businesses",
-                            "revision": self.b.revision,
                             "op": "upsert",
                             "record": {"id": str(self.b.pk), **data},
                         }
@@ -256,7 +257,6 @@ class PremiumTests(TestCase):
                     "changes": [
                         {
                             "entity": "businesses",
-                            "revision": self.b.revision,
                             "op": "upsert",
                             "record": {"id": str(self.other_b.pk), "colorMode": "dark"},
                         }
@@ -271,71 +271,48 @@ class PremiumTests(TestCase):
         self.assertEqual(self.client.get("/api/v1/health/").status_code, 200)
 
     def test_new_plan_prices_and_guest_price_access(self):
-        self.assertEqual(Plan.objects.get(pk="pro").price, 49000)
-        self.assertEqual(Plan.objects.get(pk="vip").price, 99000)
+        self.assertEqual(Plan.objects.get(pk='pro').price,49000)
+        self.assertEqual(Plan.objects.get(pk='vip').price,99000)
         self.client.logout()
-        self.assertEqual(self.client.get("/api/v1/plans/").status_code, 401)
-        self.assertEqual(self.client.get("/api/v1/public/config/").json()["plans"], [])
+        self.assertEqual(self.client.get('/api/v1/plans/').status_code,401)
+        self.assertEqual(self.client.get('/api/v1/public/config/').json()['plans'],[])
         self.client.force_login(self.owner)
-        plans = self.client.get("/api/v1/plans/").json()["plans"]
-        self.assertEqual(next(p for p in plans if p["id"] == "pro")["price"], 49000)
+        plans=self.client.get('/api/v1/plans/').json()['plans']
+        self.assertEqual(next(p for p in plans if p['id']=='pro')['price'],49000)
 
     def test_content_translations_saved_and_returned_publicly(self):
-        translations = {
-            "uz": {"name": "Asosiy"},
-            "ru": {"name": "Магазин", "description": "Описание"},
-            "en": {"name": "Shop", "description": "Description"},
-        }
-        self.assertEqual(self.change({"translations": translations}).status_code, 200)
-        data = self.client.get("/api/v1/public/businesses/" + self.b.slug + "/").json()
-        self.assertEqual(data["business"]["translations"], translations)
+        translations={'uz':{'name':'Asosiy'},'ru':{'name':'Магазин','description':'Описание'},'en':{'name':'Shop','description':'Description'}}
+        self.assertEqual(self.change({'translations':translations}).status_code,200)
+        data=self.client.get('/api/v1/public/businesses/'+self.b.slug+'/').json()
+        self.assertEqual(data['business']['translations'],translations)
 
     def test_content_translations_validation(self):
-        for value in [
-            [],
-            {"fr": {"name": "Test"}},
-            {"ru": {"ownerId": "100"}},
-            {"en": {"name": 100}},
-            {"ru": {"name": "x" * 101}},
-        ]:
-            self.assertEqual(self.change({"translations": value}).status_code, 400)
+        for value in [[],{'fr':{'name':'Test'}},{'ru':{'ownerId':'100'}},{'en':{'name':100}},{'ru':{'name':'x'*101}}]:
+            self.assertEqual(self.change({'translations':value}).status_code,400)
 
     def test_api_error_language(self):
         self.client.logout()
-        r = self.client.get("/api/v1/workspace/", HTTP_ACCEPT_LANGUAGE="ru")
-        self.assertEqual(r.status_code, 401)
-        self.assertEqual(r.json()["detail"], "Войдите в аккаунт.")
-        r = self.client.get("/api/v1/workspace/", HTTP_ACCEPT_LANGUAGE="en")
-        self.assertEqual(r.json()["detail"], "Log in to your account.")
+        r=self.client.get('/api/v1/workspace/',HTTP_ACCEPT_LANGUAGE='ru')
+        self.assertEqual(r.status_code,401)
+        self.assertEqual(r.json()['detail'],'Войдите в аккаунт.')
+        r=self.client.get('/api/v1/workspace/',HTTP_ACCEPT_LANGUAGE='en')
+        self.assertEqual(r.json()['detail'],'Log in to your account.')
 
-    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
     def test_verification_email_follows_language(self):
         from django.core import mail
-
         self.client.logout()
-        r = self.client.post(
-            "/api/v1/auth/request-code/",
-            json.dumps({"email": "english@example.com"}),
-            content_type="application/json",
-            HTTP_ACCEPT_LANGUAGE="en",
-        )
-        self.assertEqual(r.status_code, 200)
-        self.assertIn("verification code", mail.outbox[-1].subject)
-        self.assertIn("Do not share it.", mail.outbox[-1].body)
-        self.assertIn("DEALS", mail.outbox[-1].body)
+        r=self.client.post('/api/v1/auth/request-code/',json.dumps({'email':'english@example.com'}),content_type='application/json',HTTP_ACCEPT_LANGUAGE='en')
+        self.assertEqual(r.status_code,200)
+        self.assertIn('verification code',mail.outbox[-1].subject)
+        self.assertIn('Do not share it.',mail.outbox[-1].body)
+        self.assertIn('DEALS',mail.outbox[-1].body)
 
     def test_telegram_draft_language_and_new_price(self):
-        PlatformSettings.objects.update_or_create(
-            pk=1, defaults={"subscriptionTelegram": "myoperator"}
-        )
-        r = self.client.post(
-            "/api/v1/subscriptions/telegram/",
-            json.dumps({"planId": "vip"}),
-            content_type="application/json",
-            HTTP_ACCEPT_LANGUAGE="en",
-        )
-        self.assertEqual(r.status_code, 200)
-        text = parse_qs(urlparse(r.json()["url"]).query)["text"][0]
-        self.assertIn("Hello!", text)
-        self.assertIn("99 000 UZS", text)
-        self.assertIn(f"VX-{self.owner.pk:06d}", text)
+        PlatformSettings.objects.update_or_create(pk=1,defaults={'subscriptionTelegram':'myoperator'})
+        r=self.client.post('/api/v1/subscriptions/telegram/',json.dumps({'planId':'vip'}),content_type='application/json',HTTP_ACCEPT_LANGUAGE='en')
+        self.assertEqual(r.status_code,200)
+        text=parse_qs(urlparse(r.json()['url']).query)['text'][0]
+        self.assertIn('Hello!',text)
+        self.assertIn('99 000 UZS',text)
+        self.assertIn(f'VX-{self.owner.pk:06d}',text)

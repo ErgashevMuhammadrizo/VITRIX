@@ -1,0 +1,1 @@
+Real Next 16.4.1 → Django HTTP integration: PASS (login, cookies, CSRF, en locale, stale revision, reset password null, no-store, security headers).

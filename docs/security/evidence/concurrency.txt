@@ -1,0 +1,2 @@
+8 independent processes: 3/8 attempts allowed for a limit of 3.
+Two concurrent writes using the same revision: HTTP 200 and HTTP 409.

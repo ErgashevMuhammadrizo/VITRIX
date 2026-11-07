@@ -1,9 +1,8 @@
 "use client";
-import { useCollection } from "../../hooks/use-collection";
 import { useTranslator } from "../../i18n/runtime";
 import { AdminSubscriptions } from "./admin-subscriptions";
 import { AccountId, accountId } from "../../components/ui/account-id";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { authApi } from "../../services/auth";
 import { productCapacity } from "../../services/plans";
 import Link from "next/link";
@@ -20,6 +19,7 @@ import {
   Trash2,
   ExternalLink,
   ShieldCheck,
+  Check,
   ArrowUpRight,
 } from "lucide-react";
 import { useApp } from "../../stores/app-store";
@@ -35,7 +35,7 @@ import {
 import { ProductManager } from "../products/product-manager";
 import { Stats } from "../dashboard/dashboard";
 import { date, money, uid } from "../../lib/utils";
-import type { Plan, User, Business } from "../../types";
+import type { Plan, User } from "../../types";
 import { toast } from "sonner";
 export function AdminPage({ section }: { section: string }) {
   const __t = useTranslator();
@@ -84,24 +84,18 @@ function AdminOverview() {
         items={[
           {
             label: __t("Foydalanuvchilar"),
-            value: db.collections?.users ?? db.users.length,
+            value: db.users.length,
             icon: Users,
           },
-          {
-            label: __t("Bizneslar"),
-            value: db.collections?.businesses ?? db.businesses.length,
-            icon: Store,
-          },
+          { label: __t("Bizneslar"), value: db.businesses.length, icon: Store },
           {
             label: __t("Jami saytlar"),
-            value: db.collections?.businesses ?? db.businesses.length,
+            value: db.businesses.length,
             icon: Globe,
           },
           {
             label: __t("Faol saytlar"),
-            value:
-              db.collections?.activeBusinesses ??
-              db.businesses.filter((b) => b.active).length,
+            value: db.businesses.filter((b) => b.active).length,
             icon: Globe,
           },
           {
@@ -117,7 +111,7 @@ function AdminOverview() {
           },
           {
             label: __t("Jami tashriflar"),
-            value: db.events.filter((e) => e.kind === "visit").length,
+            value: db.events.filter((e) => e.kind === "visit").reduce((sum, event) => sum + (event.count ?? 1), 0),
             icon: Eye,
           },
         ]}
@@ -174,10 +168,43 @@ function UserManager() {
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const [detail, setDetail] = useState<User>();
+  const [loadError, setLoadError] = useState("");
+  useEffect(() => {
+    let active = true;
+    authApi
+      .users()
+      .then(({ users }) => {
+        if (active)
+          update((d) => {
+            d.users = users;
+          }, "");
+      })
+      .catch((e) => {
+        if (active) setLoadError(__t(e.message));
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
   const [del, setDel] = useState<User>();
-  const query = useCollection<User>("users", { q, status, page, pageSize: 8 });
-  const items = query.items;
-  const current = page;
+  const items = db.users.filter(
+    (u) =>
+      (
+        accountId(u.id) +
+        " " +
+        u.firstName +
+        " " +
+        u.lastName +
+        " " +
+        u.email +
+        " " +
+        u.username
+      )
+        .toLowerCase()
+        .includes(q.toLowerCase()) &&
+      (!status || String(u.active) === status),
+  );
+  const current = Math.min(page, Math.max(1, Math.ceil(items.length / 8)));
   return (
     <>
       <div className="page-title">
@@ -186,9 +213,9 @@ function UserManager() {
           <p>{__t("Akkauntlar va ularga tegishli bizneslar.")}</p>
         </div>
       </div>
-      {query.error && (
+      {loadError && (
         <p className="error" role="alert">
-          {__t(query.error)}
+          {loadError}
         </p>
       )}
       <div className="toolbar">
@@ -222,7 +249,7 @@ function UserManager() {
             </tr>
           </thead>
           <tbody>
-            {items.map((u) => (
+            {items.slice((current - 1) * 8, current * 8).map((u) => (
               <tr key={u.id}>
                 <td>
                   <button className="text-link" onClick={() => setDetail(u)}>
@@ -283,7 +310,7 @@ function UserManager() {
         </table>
         {!items.length && <Empty />}
       </div>
-      <Pagination page={current} total={query.total} onChange={setPage} />
+      <Pagination page={current} total={items.length} onChange={setPage} />
       {detail && (
         <Modal
           title={__t("Foydalanuvchi tafsilotlari")}
@@ -346,14 +373,13 @@ function BusinessManager() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
   const [detail, setDetail] = useState<string>();
-  const [page, setPage] = useState(1);
-  const query = useCollection<Business>("businesses", {
-    q,
-    status,
-    page,
-    pageSize: 8,
-  });
-  const items = query.items;
+  const items = db.businesses.filter(
+    (b) =>
+      (accountId(b.ownerId) + " " + b.name + " " + b.slug)
+        .toLowerCase()
+        .includes(q.toLowerCase()) &&
+      (!status || String(b.active) === status),
+  );
   const b = db.businesses.find((b) => b.id === detail);
   return (
     <>
@@ -405,9 +431,7 @@ function BusinessManager() {
                   <AccountId id={b.accountId || b.ownerId} />
                 </td>
                 <td>
-                  {b.ownerEmail ||
-                    db.users.find((u) => u.id === b.ownerId)?.email ||
-                    "—"}
+                  {db.users.find((u) => u.id === b.ownerId)?.email ?? "—"}
                 </td>
                 <td>
                   {db.products.filter((p) => p.businessId === b.id).length}
@@ -448,7 +472,6 @@ function BusinessManager() {
         </table>
         {!items.length && <Empty />}
       </div>
-      <Pagination page={page} total={query.total} onChange={setPage} />
       {b && (
         <Modal title={b.name} onClose={() => setDetail(undefined)}>
           <AccountId id={b.accountId || b.ownerId} />
@@ -481,7 +504,7 @@ function BusinessManager() {
 }
 function Plans() {
   const __t = useTranslator();
-  const { db, update } = useApp();
+  const { db, update, reviewPlan } = useApp();
   const [edit, setEdit] = useState<Plan | null | undefined>();
   const [del, setDel] = useState<Plan>();
   return (

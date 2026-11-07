@@ -13,20 +13,17 @@ const LanguageContext = createContext<Language>("uz");
 export function I18nProvider({
   language,
   children,
-  documentLanguage = false,
 }: {
   language: Language;
   children?: ReactNode;
-  documentLanguage?: boolean;
 }) {
   useEffect(() => {
-    if (!documentLanguage) return;
     const old = document.documentElement.lang;
     document.documentElement.lang = language;
     return () => {
       document.documentElement.lang = old;
     };
-  }, [language, documentLanguage]);
+  }, [language]);
   return (
     <LanguageContext.Provider value={language}>
       {children}

@@ -1,9 +1,7 @@
 import type { ContentTranslations } from "../types";
 import type { Language } from "./index";
 export function localizedContent<
-  T extends {
-    translations?: ContentTranslations;
-  },
+  T extends { translations?: ContentTranslations },
 >(record: T, language: Language): T {
   const translated = record.translations?.[language];
   if (!translated) return record;
